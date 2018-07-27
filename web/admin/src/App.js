@@ -15,10 +15,14 @@
  */
 
 import React, { Component } from 'react'
+import '@doubledutch/react-components/lib/base.css'
 import './App.css'
-
+import {CSVLink} from 'react-csv'
 import client from '@doubledutch/admin-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
+import CodeSection from "./CodeSection"
+import AdminSection from "./AdminSection"
+import ReportSection from "./ReportSection"
 const fbc = FirebaseConnector(client, 'codeofconduct')
 
 fbc.initializeAppWithSimpleBackend()
@@ -26,50 +30,112 @@ fbc.initializeAppWithSimpleBackend()
 export default class App extends Component {
   constructor() {
     super()
-
-    this.state = { sharedTasks: [] }
+    this.state = { 
+      allUsers: [],
+      admins: [],
+      isCodeBoxDisplay: true,
+      isAdminBoxDisplay: true,
+      isReportsBoxDisplay: true,
+      codeOfConduct: {},
+      codeOfConductDraft: {},
+      reports: []
+    }
+    this.signin = fbc.signinAdmin()
+    .then(user => this.user = user)
+    .catch(err => console.error(err))
   }
 
   componentDidMount() {
-    fbc.signinAdmin()
-    .then(user => {
-      const sharedRef = fbc.database.public.allRef('tasks')
-      sharedRef.on('child_added', data => {
-        this.setState({ sharedTasks: [...this.state.sharedTasks, {...data.val(), key: data.key }] })
+    this.signin.then(() => {
+      client.getUsers().then(users => {
+      this.setState({allUsers: users, isSignedIn: true})
+      const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
+      const codeOfConductDraftRef = fbc.database.public.adminRef('codeOfConductDraft')  
+      const userStatusRef = fbc.database.private.adminableUserRef('status')
+      const adminsRef = fbc.database.public.adminRef("admins")
+      const userReportsRef = fbc.database.private.adminableUsersRef('report')
+
+      userReportsRef.on('child_added', data => {
+        this.setState({ reports: [...this.state.reports, {...data.val(), key: data.key }]})
       })
-      sharedRef.on('child_removed', data => {
-        this.setState({ sharedTasks: this.state.sharedTasks.filter(x => x.key !== data.key) })
-      })  
+
+      codeOfConductRef.on('child_added', data => { 
+        this.setState({ codeOfConduct: {...data.val(), key: data.key } })
+      })
+
+      codeOfConductRef.on('child_changed', data => {
+        this.setState({ codeOfConduct: {...data.val(), key: data.key } })
+      })
+
+      adminsRef.on('child_added', data => {
+        this.setState({ admins: [...this.state.admins, {...data.val(), key: data.key }] })
+      })
+
+      adminsRef.on('child_removed', data => {
+        this.setState({ admins: this.state.admins.filter(x => x.key !== data.key) })
+      })
+
+      codeOfConductDraftRef.on('child_added', data => {
+        this.setState({ codeOfConductDraft: {...data.val(), key: data.key } })
+      })
+
+      codeOfConductDraftRef.on('child_changed', data => {
+        this.setState({ codeOfConductDraft: {...data.val(), key: data.key } })
+      })
+
+      userStatusRef.on('child_added', data => {
+        let showPage = "home"
+        if (Object.values(data.val()).accepted) showPage="app"
+        this.setState({ userStatus: {...data.val(), key: data.key }, currentPage: showPage })
+      })
+      
+    })
     })
   }
 
   render() {
     return (
       <div className="App">
-        <p className="App-intro">
-          This is a sample admin page. Developers should replace this page, or remove the <code>web/admin</code> folder entirely
-        </p>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        <h3>Public tasks:</h3>
-        <ul>
-          { this.state.sharedTasks.map(task => {
-            const { image, firstName, lastName } = task.creator
-            return (
-              <li key={task.key}>
-                <img className="avatar" src={image} alt="" />
-                <span> {firstName} {lastName} - {task.text} - </span>
-                <button onClick={()=>this.markComplete(task)}>Mark complete</button>
-              </li>
-            )
-          }) }
-        </ul>
+        <CodeSection handleChange={this.handleChange} isCodeBoxDisplay={this.state.isCodeBoxDisplay} codeOfConduct={this.state.codeOfConduct} codeOfConductDraft={this.state.codeOfConductDraft} saveCodeOfConduct={this.saveCodeOfConduct} saveDraftCodeOfConduct={this.saveDraftCodeOfConduct}/>
+        <AdminSection handleChange={this.handleChange} isAdminBoxDisplay={this.state.isAdminBoxDisplay} admins={this.state.admins} users={this.state.allUsers} onAdminSelected={this.onAdminSelected} onAdminDeselected={this.onAdminDeselected}/>
+        <ReportSection handleChange={this.handleChange} isReportsBoxDisplay={this.state.isReportsBoxDisplay} reports={this.state.reports}/>
       </div>
     )
   }
 
-  markComplete(task) {
-    fbc.database.public.allRef('tasks').child(task.key).remove()
+  onAdminSelected = attendee => {
+    fbc.database.public.adminRef("admins").push(attendee)
   }
+
+  onAdminDeselected = attendee => {
+    const newAttendee = this.state.admins.find(a => a.id === attendee.id)
+    if (newAttendee.key) fbc.database.public.adminRef("admins").child(newAttendee.key).remove()
+  }
+
+  handleChange = (name, value) => {
+    this.setState({[name]: value});
+  }
+
+  saveCodeOfConduct = (input) => {
+    //On initial launching of the app this fbc object would not exist. In that case the default is to be on. On first action we would set the object to the expected state and from there use update.
+    if (Object.keys(this.state.codeOfConduct).length === 0) {
+      fbc.database.public.adminRef('codeOfConduct').push({"text": input})
+      this.saveDraftCodeOfConduct(input)
+    }
+    else {
+      fbc.database.public.adminRef('codeOfConduct').child(this.state.codeOfConduct.key).update({"text": input})
+      this.saveDraftCodeOfConduct(input)
+    }
+  }
+
+  saveDraftCodeOfConduct = (input) => {
+    //On initial launching of the app this fbc object would not exist. In that case the default is to be on. On first action we would set the object to the expected state and from there use update.
+    if (Object.keys(this.state.codeOfConductDraft).length === 0) {
+      fbc.database.public.adminRef('codeOfConductDraft').push({"text": input})
+    }
+    else {
+      fbc.database.public.adminRef('codeOfConductDraft').child(this.state.codeOfConductDraft.key).update({"text": input})
+    }
+  }
+
 }
