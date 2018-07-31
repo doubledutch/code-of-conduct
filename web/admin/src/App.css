@@ -34,16 +34,197 @@ html, body, select{
   font: inherit;
 }
 
-/* .avatar {
-  width: 40px;
-} */
-
 .titleText {
-  margin-top: 5px;
+  margin-top: 20px;
+  width: 280px;
 }
 
 .button-margin {
   margin: 10px;
+}
+
+.verticalMargin {
+  height: 20px;
+}
+
+.reportsBox {
+  border: 1px solid #E3ECF8;
+  border-radius: 5px;	
+  flex: 1;
+  margin-bottom: 40px;
+  min-height: 400px;
+  background-color: #FCFCFC
+}
+
+
+.modalRow{
+  display: flex;
+  flex: 1;
+  flex-flow:  row wrap;
+  align-items: center;
+}
+
+.react-select{
+  width: 280px;
+}
+
+.react-select__control{
+  height: 43px;
+}
+
+.selectTitle{
+  margin-top: 10px;
+  margin-bottom: 0.4em;
+}
+
+
+
+
+.dropdownTitle{
+  margin-top: 20px;
+}
+
+.headerBox{
+  display: flex;
+  flex-flow: nowrap;
+  height: 45px;
+}
+
+.flexSpace {
+  flex: 1
+}
+
+.reportsContainer{
+  display: flex;
+  flex: 1;
+  flex-flow: nowrap;
+}
+.smallSpacer{
+  width: 20px;
+}
+.largeSpacer{
+  width: 40px;
+}
+
+.reportCellBox{
+  flex: 1;
+  background-color: white;
+  border-bottom: 1px solid #E3ECF8;
+  padding: 20px;
+}
+
+.cellTopBox{
+  display: flex;
+  flex: 1;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+
+.avatar{
+  height: 20px;
+  width: 20px;
+  background-color: #73aaf3;
+  border-radius: 50%;
+  margin-right: 4px;
+  color: white;
+  text-align: center;
+}
+
+.floatRight{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cellName {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  max-width: 150px;
+} 
+
+.cellName1 {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  max-width: 150px;
+  margin-right: 5px;
+} 
+
+.dateText{
+  color: #CDCDCD;
+}
+
+.cellDescription {
+  margin-top: 0px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.Modal {
+  position: absolute;
+  width: 650px;
+  border: 1px solid #CDCDCD;
+  border-radius: 4px;
+  background-color: #FFFFFF;
+  /* padding: 16px 21px; */
+}
+
+.Overlay {
+  position: fixed;
+  top: 20%;
+  left: 20%;
+  background-color: #ffffff;
+}
+
+.errorText {
+  color: red;
+  margin: 0px;
+}
+
+.h2NoPadding{
+  padding: 0px;
+  margin: 0px;
+}
+
+.closeButton {
+  border: none;
+  color: #CDCDCD;
+  font-size: 18px;
+}
+
+.centerModalBox{
+  padding: 20px;
+  border-top: 1px solid #CDCDCD;
+  border-bottom: 1px solid #CDCDCD
+}
+.topModalBox{
+  padding: 16px 20px;
+  display: flex;
+  flex-flow: nowrap;
+}
+
+.bottomModalBox {
+  padding: 16px 20px;
+  display: flex;
+  flex-flow: nowrap;
+  justify-content: flex-end;
+}
+
+.borderButton {
+  background-color: white;
+  margin-right: 15px;
+  padding: 0.7em 1.2em;
+  border-radius: 0.4em;
+  border: 1px solid #5193dd;
+  color: #5193dd;
 }
 /* 
 .searchBar {
@@ -294,24 +475,24 @@ textarea {
   height: 30px;
   color: #4A4A4A;
 } */
-
+/* 
 .catNumbText {
   width: 30px;
   border: none;
   margin-left: 8px;
   border-bottom: 1px solid #AAB9CA;
   color: #4A4A4A;
-}
+} */
 
-
+/* 
 .cellName{
-  width: 200px; 
+  max-width: 200px; 
   overflow:hidden;
   white-space:nowrap;
   text-overflow:ellipsis;
-}
+} */
 
-.catNameText {
+/* .catNameText {
   width: 190px;
   border: none;
   border-bottom: 1px solid #AAB9CA;
@@ -331,13 +512,13 @@ textarea {
   font-size: 12px;
   padding: 0;
   margin: 0px 5px 0 0;
-}
+} */
 /* 
 .payload {
   color: #888;
   font-style: italic;
 } */
-
+/* 
 .is-done {
   background-color: #58dd63;
-}
+} */

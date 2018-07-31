@@ -16,8 +16,9 @@
 
 import React, { Component } from 'react'
 import './App.css'
-import client from '@doubledutch/admin-client'
-import { TextInput, AttendeeSelector } from '@doubledutch/react-components'
+import LeftReport from "./LeftReport"
+import RightReport from "./RightReport"
+import { ENGINE_METHOD_CIPHERS } from 'constants';
 
 export default class ReportSection extends Component {
   constructor() {
@@ -29,33 +30,25 @@ export default class ReportSection extends Component {
     }
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   this.setState({input: nextProps.codeOfConductDraft.text})
-  // }
-
-
   render() {
-    console.log(this.props.reports)
+    const reports = Object.values(this.props.reports)
+    console.log(Object.values(this.props.reports))
+    const newReports = reports.filter(report => report.status === "Received").sort((a,b) => b.dateCreate - a.dateCreate)
+    const resolvedReports = reports.filter(report => report.status !== "Received").sort((a,b) => b.dateCreate - a.dateCreate)
     return (
       <div className="sectionContainer">
         <div className="containerRow">
           <h2 className="titleWithDescription">Reported Violations</h2>
           <button className="displayButton" onClick={() => this.props.handleChange("isReportsBoxDisplay", !this.props.isReportsBoxDisplay)}>{(this.props.isReportsBoxDisplay ? "Hide Section" : "View Section")}</button>
         </div>
-        { this.props.isReportsBoxDisplay && <div className="reportsBox">
-          <div>
-            {this.props.reports.map(item =>{
-              return (
-                <p>{item.description}</p>
-              )
-            })}
-          </div>
-
-          </div> }
+        { this.props.isReportsBoxDisplay && <div className="reportsContainer">
+          <LeftReport reports = {newReports} resolveItem={this.props.resolveItem} showMakeReport={this.props.showMakeReport}/>
+          <span className="largeSpacer"/>
+          <RightReport reports = {resolvedReports} viewResolution={this.props.viewResolution}/>
+          </div> 
+        }
         </div>
     )
   }
-
- 
 
 }

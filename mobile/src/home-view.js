@@ -50,7 +50,7 @@ export default class HomeView extends Component {
     this.signin.then(() => {
       const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
       const userStatusRef = fbc.database.private.adminableUserRef('status')
-      const userReportsRef = fbc.database.private.adminableUserRef('report')
+      const userReportsRef = fbc.database.private.adminableUserRef('reports')
       const adminsRef = fbc.database.public.adminRef("admins")
       const wireListeners = () => {
 
@@ -169,7 +169,7 @@ export default class HomeView extends Component {
     const newReport =  Object.assign({}, blankReport)
     let newItem = this.state.currentReport
     newItem.dateCreate = new Date().getTime()
-    fbc.database.private.adminableUserRef('report').push(newItem)
+    fbc.database.private.adminableUserRef('reports').push(newItem)
     .then(() => this.setState({currentPage: "app", currentAppPage: "home", currentReport: newReport}))
     .catch (x => console.error(x)) 
   }

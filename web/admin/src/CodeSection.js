@@ -55,7 +55,7 @@ export default class CodeSection extends Component {
             onChange={e => this.setState({input: e.target.value})}
             className="completeText" /> }
             <div className="codeButtonsContainer">
-              <p>*DoubleDutch Disclaimer</p>
+              <p>DoubleDutch hereby disclaims any and all liability in connection with this Code of Conduct.</p>
               <div style={{flex: 1}}/>
               { isDraftChanges && <button onClick={() => this.props.saveDraftCodeOfConduct(this.state.input)}className="dd-bordered">Save as Draft</button> }
               { isPublishChanges && <button onClick={()=>this.props.saveCodeOfConduct(this.state.input)}className="dd-bordered button-margin">Publish to App</button> }

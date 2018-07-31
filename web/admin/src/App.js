@@ -20,9 +20,16 @@ import './App.css'
 import {CSVLink} from 'react-csv'
 import client from '@doubledutch/admin-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
+import {
+  mapPerPrivateAdminableushedDataToStateObjects,
+  mapPerUserPublicPushedDataToStateObjects,
+  mapPerUserPrivateAdminablePushedDataToStateObjects,
+  mapPerUserPrivateAdminablePushedDataToObjectOfStateObjects
+} from '@doubledutch/firebase-connector'
 import CodeSection from "./CodeSection"
 import AdminSection from "./AdminSection"
 import ReportSection from "./ReportSection"
+import ModalView from "./ModalView"
 const fbc = FirebaseConnector(client, 'codeofconduct')
 
 fbc.initializeAppWithSimpleBackend()
@@ -38,7 +45,11 @@ export default class App extends Component {
       isReportsBoxDisplay: true,
       codeOfConduct: {},
       codeOfConductDraft: {},
-      reports: []
+      reports: [],
+      showModal: false,
+      modal: "resolve",
+      currentReport: {},
+      dropDownUsers: []
     }
     this.signin = fbc.signinAdmin()
     .then(user => this.user = user)
@@ -48,16 +59,15 @@ export default class App extends Component {
   componentDidMount() {
     this.signin.then(() => {
       client.getUsers().then(users => {
-      this.setState({allUsers: users, isSignedIn: true})
+      let dropDownUsers = []
+      users.forEach(user => dropDownUsers.push(Object.assign({}, {value: user.id, label: user.firstName + " " + user.lastName, className: "dropdownText"})))
+      this.setState({allUsers: users, isSignedIn: true, dropDownUsers})
       const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
       const codeOfConductDraftRef = fbc.database.public.adminRef('codeOfConductDraft')  
-      const userStatusRef = fbc.database.private.adminableUserRef('status')
+      // const userStatusRef = fbc.database.private.adminableUserRef('status')
       const adminsRef = fbc.database.public.adminRef("admins")
-      const userReportsRef = fbc.database.private.adminableUsersRef('report')
-
-      userReportsRef.on('child_added', data => {
-        this.setState({ reports: [...this.state.reports, {...data.val(), key: data.key }]})
-      })
+      const userReportsRef = fbc.database.private.adminableUsersRef()
+      mapPerUserPrivateAdminablePushedDataToStateObjects(fbc, 'reports', this, 'reports', (userId, key, value) => key)
 
       codeOfConductRef.on('child_added', data => { 
         this.setState({ codeOfConduct: {...data.val(), key: data.key } })
@@ -83,12 +93,6 @@ export default class App extends Component {
         this.setState({ codeOfConductDraft: {...data.val(), key: data.key } })
       })
 
-      userStatusRef.on('child_added', data => {
-        let showPage = "home"
-        if (Object.values(data.val()).accepted) showPage="app"
-        this.setState({ userStatus: {...data.val(), key: data.key }, currentPage: showPage })
-      })
-      
     })
     })
   }
@@ -96,9 +100,10 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
+        <ModalView modal={this.state.modal} showModal={this.state.showModal} closeModal={this.closeModal} currentReport={this.state.currentReport} completeResolution={this.completeResolution} users={this.state.dropDownUsers} completeReport={this.completeReport}/>
         <CodeSection handleChange={this.handleChange} isCodeBoxDisplay={this.state.isCodeBoxDisplay} codeOfConduct={this.state.codeOfConduct} codeOfConductDraft={this.state.codeOfConductDraft} saveCodeOfConduct={this.saveCodeOfConduct} saveDraftCodeOfConduct={this.saveDraftCodeOfConduct}/>
         <AdminSection handleChange={this.handleChange} isAdminBoxDisplay={this.state.isAdminBoxDisplay} admins={this.state.admins} users={this.state.allUsers} onAdminSelected={this.onAdminSelected} onAdminDeselected={this.onAdminDeselected}/>
-        <ReportSection handleChange={this.handleChange} isReportsBoxDisplay={this.state.isReportsBoxDisplay} reports={this.state.reports}/>
+        <ReportSection handleChange={this.handleChange} showMakeReport={this.showMakeReport} isReportsBoxDisplay={this.state.isReportsBoxDisplay} reports={this.state.reports} resolveItem={this.resolveItem} viewResolution={this.viewResolution}/>
       </div>
     )
   }
@@ -118,14 +123,46 @@ export default class App extends Component {
 
   saveCodeOfConduct = (input) => {
     //On initial launching of the app this fbc object would not exist. In that case the default is to be on. On first action we would set the object to the expected state and from there use update.
-    if (Object.keys(this.state.codeOfConduct).length === 0) {
-      fbc.database.public.adminRef('codeOfConduct').push({"text": input})
-      this.saveDraftCodeOfConduct(input)
+    if (window.confirm("Are you sure you want to publish the code of conduct")) {
+      if (Object.keys(this.state.codeOfConduct).length === 0) {
+        fbc.database.public.adminRef('codeOfConduct').push({"text": input})
+        this.saveDraftCodeOfConduct(input)
+      }
+      else {
+        fbc.database.public.adminRef('codeOfConduct').child(this.state.codeOfConduct.key).update({"text": input})
+        this.saveDraftCodeOfConduct(input)
+      }
     }
-    else {
-      fbc.database.public.adminRef('codeOfConduct').child(this.state.codeOfConduct.key).update({"text": input})
-      this.saveDraftCodeOfConduct(input)
-    }
+  }
+
+  resolveItem = (item) => {
+    this.setState({currentReport: item, showModal: true, modal:"resolve"})
+  }
+  viewResolution = (item) => {
+    this.setState({currentReport: item, showModal: true, modal:"resolution"})
+  }
+
+  showMakeReport = () => {
+    this.setState({showModal: true, modal:"report"})
+  }
+  completeResolution = (resolution, resolutionPerson) => {
+    fbc.database.private.adminableUsersRef(this.state.currentReport.userId).child('reports').child(this.state.currentReport.id).update({status: "Resolved", resolution, resolutionPerson})
+    this.setState({currentReport: {}, showModal: false})
+  }
+
+  completeReport = (report, reportPerson, userID) => {
+    const behalfUser = this.state.allUsers.find(user => user.id === userID)
+    const newReport =  Object.assign({}, blankReport)
+    newReport.description = report
+    newReport.dateCreate = new Date().getTime()
+    newReport.creator = behalfUser
+    newReport.reportPerson = reportPerson
+    fbc.database.private.adminableUsersRef(userID).child('reports').push(newReport)
+    .then(() => this.setState({showModal: false}))
+  }
+
+  closeModal = () => {
+    this.setState({showModal: false})
   }
 
   saveDraftCodeOfConduct = (input) => {
@@ -138,4 +175,12 @@ export default class App extends Component {
     }
   }
 
+}
+
+const blankReport = {
+  isAnom: false,
+  creator: client.currentUser,
+  preferredContact: "",
+  description: "",
+  status: "Received"
 }
