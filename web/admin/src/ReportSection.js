@@ -16,9 +16,9 @@
 
 import React, { Component } from 'react'
 import './App.css'
+import {CSVLink} from 'react-csv'
 import LeftReport from "./LeftReport"
 import RightReport from "./RightReport"
-import { ENGINE_METHOD_CIPHERS } from 'constants';
 
 export default class ReportSection extends Component {
   constructor() {
@@ -32,14 +32,13 @@ export default class ReportSection extends Component {
 
   render() {
     const reports = Object.values(this.props.reports)
-    console.log(Object.values(this.props.reports))
     const newReports = reports.filter(report => report.status === "Received").sort((a,b) => b.dateCreate - a.dateCreate)
     const resolvedReports = reports.filter(report => report.status !== "Received").sort((a,b) => b.dateCreate - a.dateCreate)
     return (
       <div className="sectionContainer">
         <div className="containerRow">
           <h2 className="titleWithDescription">Reported Violations</h2>
-          <button className="displayButton" onClick={() => this.props.handleChange("isReportsBoxDisplay", !this.props.isReportsBoxDisplay)}>{(this.props.isReportsBoxDisplay ? "Hide Section" : "View Section")}</button>
+          <button className="displayButton" onClick={() => this.props.handleChange("isReportsBoxDisplay", !this.props.isReportsBoxDisplay)}>{(this.props.isReportsBoxDisplay ? "Hide Section" : "Show Section")}</button>
         </div>
         { this.props.isReportsBoxDisplay && <div className="reportsContainer">
           <LeftReport reports = {newReports} resolveItem={this.props.resolveItem} showMakeReport={this.props.showMakeReport}/>
@@ -47,8 +46,25 @@ export default class ReportSection extends Component {
           <RightReport reports = {resolvedReports} viewResolution={this.props.viewResolution}/>
           </div> 
         }
+          <CSVLink className="csvButton" data={this.parseData(reports)} filename={"questions.csv"}>Export Violations</CSVLink>
         </div>
     )
+  }
+
+  parseData = (reports) => {
+    let parsedReports = []
+    reports.map(report => {
+      let item = {}
+      item.dateCreated = new Date(report.dateCreate).toDateString()
+      item.user = report.isAnom ? "anonymous" : report.creator.firstName + " " + report.creator.lastName
+      item.description = report.description
+      item.status = report.status
+      item.reportMadeBy = report.reportPerson || item.user
+      item.resolution = report.resolution
+      item.resolutionBy = report.resolutionPerson
+      parsedReports.push({...item})
+    })
+    return parsedReports
   }
 
 }

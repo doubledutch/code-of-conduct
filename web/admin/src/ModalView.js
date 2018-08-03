@@ -98,7 +98,7 @@ export default class ModalView extends Component {
     return (
       <div>
         <div className="topModalBox">
-          <h2 className="h2NoPadding">Resolution Details</h2>
+          <h2 className="h2NoPadding">Report a violation</h2>
           <div style={{flex:1}}/>
           <button className="closeButton" onClick={this.props.closeModal}>X</button>
         </div>
@@ -144,7 +144,7 @@ export default class ModalView extends Component {
         </div>
         <div className="bottomModalBox">
           <button className="borderButton" onClick={this.props.closeModal}>Cancel</button>
-          <button className="dd-bordered" onClick={this.completeReport}>Resolve</button>
+          <button className="dd-bordered" onClick={this.completeReport}>Report</button>
         </div>
       </div>
     )
@@ -185,6 +185,7 @@ export default class ModalView extends Component {
   completeResolution = () => {
     if (this.state.resolution.trim().length && this.state.resolutionPerson.trim().length) {
       this.props.completeResolution(this.state.resolution.trim(), this.state.resolutionPerson.trim())
+      this.setState({resolution: "", resolutionPerson: ""})
     }
     else {
       this.setState({isError: true})
@@ -194,6 +195,7 @@ export default class ModalView extends Component {
   completeReport = () => {
     if (this.state.report.trim().length && this.state.reportPerson.trim().length && this.state.currentUser.value) {
       this.props.completeReport(this.state.report.trim(), this.state.reportPerson.trim(), this.state.currentUser.value)
+      this.setState({report: "", reportPerson: "", currentUser: {}})
     }
     else {
       this.setState({isError: true})

@@ -17,7 +17,6 @@
 import React, { Component } from 'react'
 import '@doubledutch/react-components/lib/base.css'
 import './App.css'
-import {CSVLink} from 'react-csv'
 import client from '@doubledutch/admin-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
 import {

@@ -36,15 +36,15 @@ export default class ReportsSubView extends Component {
     return (
       <View style={s.container}>
         <Text style={s.titleText}>REPORTED VIOLATIONS</Text>
-        {reports.length > 0 && <View style={s.border}/> }
-        {reports.length > 0 && <View style={{marginTop: 10}}>
+        <View style={s.border}/>
+        <View style={{marginTop: 10}}>
           <FlatList 
           data={reports}
           renderItem={({item}) => {
             return <ReportsSubViewCell report={item} showReport={this.props.showReport}/>
           }} 
           />
-        </View>}
+        </View>
       </View>
     )
   }

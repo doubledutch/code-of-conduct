@@ -40,7 +40,7 @@ export default class CodeSection extends Component {
       <div className="sectionContainer">
         <div className="containerRow">
           <h2 className="titleWithDescription">Code of Conduct</h2>
-          <button className="displayButton" onClick={() => this.props.handleChange("isCodeBoxDisplay", !this.props.isCodeBoxDisplay)}>{(this.props.isCodeBoxDisplay ? "Hide Section" : "View Section")}</button>
+          <button className="displayButton" onClick={() => this.props.handleChange("isCodeBoxDisplay", !this.props.isCodeBoxDisplay)}>{(this.props.isCodeBoxDisplay ? "Hide Section" : "Show Section")}</button>
         </div>
         { this.props.isCodeBoxDisplay && <div>
           {this.state.showStaticBox && !this.props.codeOfConductDraft.text ? <button onClick={this.openEditText} value="boxButton"  className="placeHolderTextBox">

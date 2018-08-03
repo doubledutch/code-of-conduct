@@ -32,7 +32,7 @@ export default class AdminSection extends Component {
       <div className="sectionContainer">
         <div className="containerRow">
           <h2 className="titleWithDescription">Trusted Persons</h2>
-          <button className="displayButton" onClick={() => this.props.handleChange("isAdminBoxDisplay", !this.props.isAdminBoxDisplay)}>{(this.props.isAdminBoxDisplay ? "Hide Section" : "View Section")}</button>
+          <button className="displayButton" onClick={() => this.props.handleChange("isAdminBoxDisplay", !this.props.isAdminBoxDisplay)}>{(this.props.isAdminBoxDisplay ? "Hide Section" : "Show Section")}</button>
         </div>
         { this.props.isAdminBoxDisplay && <div className="attendeeBox">
           <p className="titleDescription">Trusted Persons are people that are able to listen and handle reported incidents. They should have training in this area and an image attached to their attendee profile to help attendees find them easily.</p>

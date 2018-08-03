@@ -39,8 +39,9 @@ export default class ReportCell extends Component {
             <p className="dateText">{new Date(report.dateCreate).toDateString()}</p>
           </div> 
           : <div className="cellTopBox">
+            {report.reportPerson && <p className="avatar">{report.reportPerson.charAt(0)}</p>}
             {report.reportPerson && <p className='cellName1'>{report.reportPerson} for {" "}</p>}
-            {report.creator.image && <img className="avatar" src={report.creator.image} alt="avatar"/> }
+            {report.creator.image ? <img className="avatar" src={report.creator.image} alt="avatar"/> : <p className="avatar">{report.creator.firstName.charAt(0) + report.creator.lastName.charAt(0)}</p>}
             <p className="cellName">{report.creator.firstName + " " + report.creator.lastName}</p>
             <span className="smallSpacer"/>
             <p className="dateText">{new Date(report.dateCreate).toDateString()}</p>

@@ -36,10 +36,11 @@ export default class AppView extends Component {
   }
 
   renderHome() {
+    const reports = this.props.reports || []
     return (
       <ScrollView style={{flex: 1}}>
         <CodeOfConductSubView codeOfConduct={this.props.codeOfConduct} showCodeOfConduct={this.props.showCodeOfConduct}/>
-        <ReportsSubView reports={this.props.reports} showReport={this.props.showReport}/>
+        {reports.length > 0 && <ReportsSubView reports={this.props.reports} showReport={this.props.showReport}/>}
         <MakeReportSubView showModal={this.props.showModal} admins={this.props.admins}/>
       </ScrollView>
     )

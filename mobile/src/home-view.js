@@ -117,7 +117,7 @@ export default class HomeView extends Component {
       case "app":
         return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
       default:
-        return <AcceptView codeOfConduct={this.state.codeOfConduct}/>
+        return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
     }
   }
 
