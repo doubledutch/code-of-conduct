@@ -38,12 +38,9 @@ export default class ModalView extends Component {
 
   render() {
 
-    const {modal, currentReport} = this.props
-
     return (
       <Modal 
       isOpen={this.props.showModal}
-      // onAfterOpen={this.makeFocus}
       onRequestClose={this.props.closeModal}
       contentLabel="Modal"
       className="Modal"
@@ -67,6 +64,11 @@ export default class ModalView extends Component {
     }
   }
 
+  closeModal = () => {
+    this.setState({reportPerson: "", resolutionPerson: "", resolution: "", report: "", search: "", currentUser: {}, isError: false})
+    this.props.closeModal()
+  }
+
   renderViewResolution = () => {
     const {currentReport} = this.props
     return (
@@ -74,7 +76,7 @@ export default class ModalView extends Component {
         <div className="topModalBox">
           <h2 className="h2NoPadding">Resolution Details</h2>
           <div style={{flex:1}}/>
-          <button className="closeButton" onClick={this.props.closeModal}>X</button>
+          <button className="closeButton" onClick={this.closeModal}>X</button>
         </div>
         <div className="centerModalBox">
           <p>How was this incident resolved?</p>
@@ -100,7 +102,7 @@ export default class ModalView extends Component {
         <div className="topModalBox">
           <h2 className="h2NoPadding">Report a violation</h2>
           <div style={{flex:1}}/>
-          <button className="closeButton" onClick={this.props.closeModal}>X</button>
+          <button className="closeButton" onClick={this.closeModal}>X</button>
         </div>
         <div className="centerModalBox">
           <TextInput multiline label="What happened"

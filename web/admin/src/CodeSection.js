@@ -36,10 +36,16 @@ export default class CodeSection extends Component {
   render() {
     const isDraftChanges = (this.state.input !== this.props.codeOfConductDraft.text)
     const isPublishChanges = (this.state.input !== this.props.codeOfConduct.text)
+    const currentState = this.findCurrentState()
+    const publishTime = this.props.codeOfConduct.publishTime ? new Date(this.props.codeOfConduct.publishTime).toLocaleString() : ""
     return (
       <div className="sectionContainer">
-        <div className="containerRow">
+        <div className="codeOfConductContainerRow">
           <h2 className="titleWithDescription">Code of Conduct</h2>
+          {currentState === "Published" && <p className="statusTextGreen">{currentState}</p>}
+          {currentState === "Draft" && <p className="statusTextYellow">{currentState}</p>}
+          <p className="timeText">{publishTime}</p>
+          <div className="flex"/>
           <button className="displayButton" onClick={() => this.props.handleChange("isCodeBoxDisplay", !this.props.isCodeBoxDisplay)}>{(this.props.isCodeBoxDisplay ? "Hide Section" : "Show Section")}</button>
         </div>
         { this.props.isCodeBoxDisplay && <div>
@@ -63,6 +69,19 @@ export default class CodeSection extends Component {
           </div> }
         </div>
     )
+  }
+
+  findCurrentState = () => {
+    let stateText = ""
+    if (this.props.codeOfConductDraft.text) {
+      if (this.props.codeOfConduct.text === this.props.codeOfConductDraft.text) {
+        stateText = "Published"
+      }
+      else {
+        stateText = "Draft"
+      }
+    }
+    return stateText
   }
 
   openEditText = (e) => {

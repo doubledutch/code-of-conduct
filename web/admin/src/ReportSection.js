@@ -35,7 +35,7 @@ export default class ReportSection extends Component {
     const newReports = reports.filter(report => report.status === "Received").sort((a,b) => b.dateCreate - a.dateCreate)
     const resolvedReports = reports.filter(report => report.status !== "Received").sort((a,b) => b.dateCreate - a.dateCreate)
     return (
-      <div className="sectionContainer">
+      <div className="sectionContainerSpace">
         <div className="containerRow">
           <h2 className="titleWithDescription">Reported Violations</h2>
           <button className="displayButton" onClick={() => this.props.handleChange("isReportsBoxDisplay", !this.props.isReportsBoxDisplay)}>{(this.props.isReportsBoxDisplay ? "Hide Section" : "Show Section")}</button>
