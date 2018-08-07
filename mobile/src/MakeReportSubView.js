@@ -47,7 +47,7 @@ export default class MakeReportSubView extends Component {
       <View>
         <Text style={s.headerTitleText}>REPORT A VIOLATION</Text>
         <Text style={s.title}>Message the Organizers</Text>
-        <Text style={s.description}>Send a description of the violation to the event organize, and they will see to it the situation is resolved</Text>
+        <Text style={s.description}>Send a description of the violation to the event organizer, and they will see to it the situation is resolved</Text>
         <TouchableOpacity style={s.button} onPress={this.props.showModal}><Text style={s.buttonText}>Report a Violation</Text></TouchableOpacity>
       </View>
     )

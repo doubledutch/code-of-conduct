@@ -32,7 +32,8 @@ export default class ReportsSubView extends Component {
   }
 
   render() {
-    const reports = this.props.reports || []
+    let reports = this.props.reports || []
+    reports.sort((a,b) => b.dateCreate - a.dateCreate)
     return (
       <View style={s.container}>
         <Text style={s.titleText}>REPORTED VIOLATIONS</Text>

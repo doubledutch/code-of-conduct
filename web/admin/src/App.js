@@ -147,7 +147,7 @@ export default class App extends Component {
     this.setState({showModal: true, modal:"report"})
   }
   completeResolution = (resolution, resolutionPerson) => {
-    fbc.database.private.adminableUsersRef(this.state.currentReport.userId).child('reports').child(this.state.currentReport.id).update({status: "Resolved", resolution, resolutionPerson})
+    fbc.database.private.adminableUsersRef(this.state.currentReport.userId).child('reports').child(this.state.currentReport.id).update({status: "Resolved", resolution, resolutionPerson, dateCreate: new Date().getTime()})
     this.setState({currentReport: {}, showModal: false})
   }
 
@@ -163,7 +163,7 @@ export default class App extends Component {
   }
 
   closeModal = () => {
-    this.setState({showModal: false})
+    this.setState({showModal: false, })
   }
 
   saveDraftCodeOfConduct = (input) => {

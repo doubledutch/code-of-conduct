@@ -86,8 +86,8 @@ export default class ModalView extends Component {
           <p>{currentReport.resolutionPerson}</p>
         </div>
         <div className="bottomModalBox">
-          <button className="borderButton" onClick={this.props.closeModal}>Cancel</button>
-          <button className="dd-bordered" onClick={this.props.closeModal}>Done</button>
+          <button className="borderButton" onClick={this.closeModal}>Cancel</button>
+          <button className="dd-bordered" onClick={this.closeModal}>Done</button>
         </div>
       </div>
     )
@@ -145,7 +145,7 @@ export default class ModalView extends Component {
             </div>
         </div>
         <div className="bottomModalBox">
-          <button className="borderButton" onClick={this.props.closeModal}>Cancel</button>
+          <button className="borderButton" onClick={this.closeModal}>Cancel</button>
           <button className="dd-bordered" onClick={this.completeReport}>Report</button>
         </div>
       </div>
@@ -158,7 +158,7 @@ export default class ModalView extends Component {
         <div className="topModalBox">
           <h2 className="h2NoPadding">Resolution Details</h2>
           <div style={{flex:1}}/>
-          <button className="closeButton" onClick={this.props.closeModal}>X</button>
+          <button className="closeButton" onClick={this.closeModal}>X</button>
         </div>
         <div className="centerModalBox">
           <TextInput multiline label="How was this incident resolved?"
@@ -177,7 +177,7 @@ export default class ModalView extends Component {
             {(this.state.isError && this.state.resolutionPerson.trim().length === 0) && <p className="errorText">*Please complete field</p>}
         </div>
         <div className="bottomModalBox">
-          <button className="borderButton" onClick={this.props.closeModal}>Cancel</button>
+          <button className="borderButton" onClick={this.closeModal}>Cancel</button>
           <button className="dd-bordered" onClick={this.completeResolution}>Resolve</button>
         </div>
       </div>

@@ -24,6 +24,7 @@ import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
 import AcceptView from "./AcceptView"
 import AppView from "./AppView"
+import ReportsSubView from './ReportsSubView';
 const fbc = FirebaseConnector(client, 'codeofconduct')
 
 fbc.initializeAppWithSimpleBackend()
@@ -80,9 +81,16 @@ export default class HomeView extends Component {
           this.setState({ reports: [...this.state.reports, {...data.val(), key: data.key }]})
         })
 
-        // userReportstRef.on('child_changed', data => {
-        //   this.setState({ reports: {...data.val(), key: data.key } })
-        // })
+        userReportsRef.on('child_changed', data => {
+          let reports = this.state.reports
+          for (var i in reports) {
+            if (reports[i].key === data.key) {
+              reports[i] = data.val()
+              reports[i].key = data.key
+              this.setState({reports})
+            }
+          }
+        })
 
       }
 
@@ -168,6 +176,7 @@ export default class HomeView extends Component {
   saveReport = () => {
     const newReport =  Object.assign({}, blankReport)
     let newItem = this.state.currentReport
+    newItem.description = newItem.description.trim()
     newItem.dateCreate = new Date().getTime()
     fbc.database.private.adminableUserRef('reports').push(newItem)
     .then(() => this.setState({currentPage: "app", currentAppPage: "home", currentReport: newReport}))

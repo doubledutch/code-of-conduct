@@ -38,13 +38,14 @@ export default class CodeSection extends Component {
     const isPublishChanges = (this.state.input !== this.props.codeOfConduct.text)
     const currentState = this.findCurrentState()
     const publishTime = this.props.codeOfConduct.publishTime ? new Date(this.props.codeOfConduct.publishTime).toLocaleString() : ""
+    const isString = this.state.input ? this.state.input.trim().length > 0 : false
     return (
       <div className="sectionContainer">
         <div className="codeOfConductContainerRow">
           <h2 className="titleWithDescription">Code of Conduct</h2>
           {currentState === "Published" && <p className="statusTextGreen">{currentState}</p>}
           {currentState === "Draft" && <p className="statusTextYellow">{currentState}</p>}
-          <p className="timeText">{publishTime}</p>
+          {this.props.isCodeBoxDisplay && <p className="timeText">{publishTime}</p>}
           <div className="flex"/>
           <button className="displayButton" onClick={() => this.props.handleChange("isCodeBoxDisplay", !this.props.isCodeBoxDisplay)}>{(this.props.isCodeBoxDisplay ? "Hide Section" : "Show Section")}</button>
         </div>
@@ -63,8 +64,8 @@ export default class CodeSection extends Component {
             <div className="codeButtonsContainer">
               <p>DoubleDutch hereby disclaims any and all liability in connection with this Code of Conduct.</p>
               <div style={{flex: 1}}/>
-              { isDraftChanges && <button onClick={() => this.props.saveDraftCodeOfConduct(this.state.input)}className="dd-bordered">Save as Draft</button> }
-              { isPublishChanges && <button onClick={()=>this.props.saveCodeOfConduct(this.state.input)}className="dd-bordered button-margin">Publish to App</button> }
+              { isDraftChanges && isString && <button onClick={() => this.props.saveDraftCodeOfConduct(this.state.input)}className="dd-bordered">Save as Draft</button> }
+              { isPublishChanges && isString && <button onClick={()=>this.props.saveCodeOfConduct(this.state.input)}className="dd-bordered button-margin">Publish to App</button> }
             </div>
           </div> }
         </div>

@@ -275,11 +275,13 @@ html, body, select{
   flex-flow: nowrap;
   margin: 0px;
   padding: 0px;
+  background-color: white;
 }
 
 .placeHolderText{
   margin: 0px;
   color: #abbac9;
+  background-color: white;
 }
 
 .placeHolderTextBox {
@@ -291,6 +293,7 @@ html, body, select{
   padding: 10px 10px 80px 10px;
   border-radius: 5px;
   width: 100%;
+  background-color: white;
 }
 
 .displayButton {
@@ -349,11 +352,11 @@ button.displayButton:focus, button.displayButton:active {
 }
 
 .timeText {
-  margin-top: 20px;
+  margin-top: 23px;
 }
 
 .statusTextGreen {
-  margin: 8px 5px 0px 20px;
+  margin: 9px 5px 0px 20px;
   background-color: #87CD40;
   padding: 2px 10px;
   color: white;
@@ -361,7 +364,7 @@ button.displayButton:focus, button.displayButton:active {
 }
 
 .statusTextYellow {
-  margin: 8px 5px 0px 20px;
+  margin: 9px 5px 0px 20px;
   background-color: #FBA821;
   padding: 2px 10px;
   color: white;
