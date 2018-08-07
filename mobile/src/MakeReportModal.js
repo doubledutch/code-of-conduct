@@ -70,7 +70,7 @@ export default class MakeReportModal extends Component {
         </View>
         <View style={s.bottomButtons}>
           <View style={s.rightBox}>
-          {(this.state.isError && this.props.currentReport.description.trim.length === 0) && <Text style={{color:"red", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter a description</Text>}
+          {(this.state.isError && this.props.currentReport.description.trim().length === 0) && <Text style={{color:"red", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter a description</Text>}
             <View style={s.anomBox}>
               <View style={{flex: 1, flexDirection: "row"}}>
                 <TouchableOpacity onPress={() => this.updateItem("isAnom", !this.props.currentReport.isAnom)}><Image style={s.checkButton} source={{uri: this.props.currentReport.isAnom ? "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_active.png" : "https://dml2n2dpleynv.cloudfront.net/extensions/question-and-answer/checkbox_inactive.png" }}/></TouchableOpacity>
@@ -93,34 +93,36 @@ export default class MakeReportModal extends Component {
     const { currentReport } = this.props
     return (
       <View style={{display: "flex", paddingBottom: 40, marginTop: 30}}>
-        <Text style={s.headerTitleText}>Preferred Contact Method</Text>
-        <View style={{marginLeft: 10}}>
-          <View style={{flexDirection: "row"}}>
-            <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
-              <TouchableOpacity onPress={() => this.updateItem("preferredContact", "email")} style={{padding: 10}}>
-                {RadioButton(currentReport, "email")}
-              </TouchableOpacity>
-              <Text style={s.radioTitle}>Email</Text>
+        {!this.props.currentReport.isAnom && <View>
+          <Text style={s.headerTitleText}>Preferred Contact Method</Text>
+          <View style={{marginLeft: 10}}>
+            <View style={{flexDirection: "row"}}>
+              <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
+                <TouchableOpacity onPress={() => this.updateItem("preferredContact", "email")} style={{padding: 10}}>
+                  {RadioButton(currentReport, "email")}
+                </TouchableOpacity>
+                <Text style={s.radioTitle}>Email</Text>
+              </View>
+              <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
+                <TouchableOpacity onPress={() => this.updateItem("preferredContact", "inapp")} style={{padding: 10}}>
+                {RadioButton(currentReport, "inapp")}
+                </TouchableOpacity>
+                <Text style={s.radioTitle}>In-App Message</Text>
+              </View>
             </View>
-            <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
-              <TouchableOpacity onPress={() => this.updateItem("preferredContact", "inapp")} style={{padding: 10}}>
-              {RadioButton(currentReport, "inapp")}
-              </TouchableOpacity>
-              <Text style={s.radioTitle}>In-App Message</Text>
+            <View style={{flexDirection: "row"}}>
+              <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
+                <TouchableOpacity onPress={() => this.updateItem("preferredContact", "phone")} style={{padding: 10}}>
+                  {RadioButton(currentReport, "phone")}
+                </TouchableOpacity>
+                <Text style={s.radioTitle}>Phone Call</Text>
+              </View>
             </View>
+            {(this.state.isError && currentReport.preferredContact.length === 0) && <Text style={{color:"red", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please select a preferred contact method</Text>}
+            {this.props.currentReport.preferredContact === "phone" && <TextInput style={this.state.isError ? s.phoneInputError : s.phoneInput} placeholder="555-555-5555" keyboardType="phone-pad" value={this.props.currentReport.phone} onChangeText={phone => this.props.updateItem("phone", phone)} />}
+            {(this.state.isError && !this.checkPhone() && this.props.currentReport.preferredContact === "phone") && <Text style={{color: "red", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter valid phone</Text>}
           </View>
-          <View style={{flexDirection: "row"}}>
-            <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
-              <TouchableOpacity onPress={() => this.updateItem("preferredContact", "phone")} style={{padding: 10}}>
-                {RadioButton(currentReport, "phone")}
-              </TouchableOpacity>
-              <Text style={s.radioTitle}>Phone Call</Text>
-            </View>
-          </View>
-          {(this.state.isError && currentReport.preferredContact.length === 0) && <Text style={{color:"red", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please select a preferred contact method</Text>}
-          {this.props.currentReport.preferredContact === "phone" && <TextInput style={this.state.isError ? s.phoneInputError : s.phoneInput} placeholder="555-555-5555" keyboardType="phone-pad" value={this.props.currentReport.phone} onChangeText={phone => this.props.updateItem("phone", phone)} />}
-          {(this.state.isError && !this.checkPhone() && this.props.currentReport.preferredContact === "phone") && <Text style={{color: "red", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter valid phone</Text>}
-        </View>
+        </View> }
         <TouchableOpacity style={s.sendButton} onPress={this.checkValues}><Text style={s.sendButtonText}>Report Violation</Text></TouchableOpacity>
       </View>
     )
@@ -131,6 +133,9 @@ export default class MakeReportModal extends Component {
     let phoneStatus = true
     if (report.preferredContact === "phone") {
       phoneStatus = this.checkPhone()
+    }
+    if (report.isAnom && report.description.trim().length > 0) {
+      this.props.saveReport()
     }
     if (report.preferredContact.length > 0 && phoneStatus && report.description.trim().length > 0) {
       this.props.saveReport()
