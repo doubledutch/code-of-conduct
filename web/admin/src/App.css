@@ -153,18 +153,12 @@ html, body, select{
 .cellName {
   text-overflow: ellipsis;
   overflow: hidden;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-all;
   max-width: 150px;
 } 
 
 .cellName1 {
   text-overflow: ellipsis;
   overflow: hidden;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-all;
   max-width: 150px;
   margin-right: 5px;
 } 

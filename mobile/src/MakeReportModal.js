@@ -18,7 +18,6 @@ export default class MakeReportModal extends Component {
   }
 
   render() {
-    console.log("here")
     return (
       <View style={{flex: 1}}>
         {this.renderTopBox()}
@@ -28,7 +27,6 @@ export default class MakeReportModal extends Component {
   }
 
   renderTopBox = () => {
-    console.log("top")
     const newStyle = {
       flex: 1,
       fontSize: 18,
@@ -89,7 +87,6 @@ export default class MakeReportModal extends Component {
   }
 
   radioButtonsSection = () => {
-    console.log("here")
     const { currentReport } = this.props
     return (
       <View style={{display: "flex", paddingBottom: 40, marginTop: 30}}>

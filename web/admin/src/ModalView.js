@@ -111,7 +111,7 @@ export default class ModalView extends Component {
             placeholder="Describe the incident"
             maxLength={250}
           />
-           {(this.state.isError && this.state.resolution.trim().length === 0) && <p className="errorText">*Please complete field</p>}
+           {(this.state.isError && this.state.report.trim().length === 0) && <p className="errorText">*Please complete field</p>}
            <div className="modalRow">
             <div>
               <TextInput label="Reporter"
@@ -120,7 +120,7 @@ export default class ModalView extends Component {
                 placeholder="Name"
                 maxLength={50}
                 className="titleText" />
-                {(this.state.isError && this.state.resolutionPerson.trim().length === 0) && <p className="errorText">*Please enter a name</p>}
+                {(this.state.isError && this.state.reportPerson.trim().length === 0) && <p className="errorText">*Please enter a name</p>}
             </div>
             <div className="flexSpace"/>
             <div className="selectBox">
