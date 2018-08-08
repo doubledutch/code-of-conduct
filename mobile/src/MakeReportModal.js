@@ -147,9 +147,9 @@ export default class MakeReportModal extends Component {
 
   checkPhone = () => {
     const report = this.props.currentReport
-    let phoneNum = "1"
+    let phoneNum = "a"
     if (report.phone) phoneNum = report.phone
-    return phoneNum.match(/\d/g).length===10
+    return phoneNum.match(/\d/g) !== null
   }
 
 
