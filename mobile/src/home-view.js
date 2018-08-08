@@ -82,14 +82,8 @@ export default class HomeView extends Component {
         })
 
         userReportsRef.on('child_changed', data => {
-          let reports = this.state.reports
-          for (var i in reports) {
-            if (reports[i].key === data.key) {
-              reports.splice(i, 1)
-              reports.push({...data.val(), key: data.key})
-            }
-          }
-          this.setState({ reports })
+          
+          this.setState(prevState => ({reports: prevState.reports.map(r => r.key === data.key ? {...data.val(), key: data.key} : r)}))
         })
 
       }

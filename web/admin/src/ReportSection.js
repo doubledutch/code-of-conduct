@@ -46,28 +46,24 @@ export default class ReportSection extends Component {
           <RightReport reports = {resolvedReports} viewResolution={this.props.viewResolution}/>
           </div> 
         }
-          <CSVLink className="csvButton" data={this.parseData(reports)} filename={"questions.csv"}>Export list</CSVLink>
+          <CSVLink className="csvButton" data={getCsvData(reports)} filename={"questions.csv"}>Export list</CSVLink>
         </div>
     )
   }
+}
 
-  parseData = (reports) => {
-    let parsedReports = []
-    reports.forEach(report => {
-      const user = report.isAnom ? "anonymous" : report.creator.firstName + " " + report.creator.lastName
-      const dateCreated = new Date(report.dateCreate).toDateString()
-      let item = {
-        dateCreated,
-        user,
-        description : report.description,
-        status : report.status,
-        reportMadeBy : report.reportPerson || user,
-        resolution : report.resolution,
-        resolutionBy : report.resolutionPerson
-      }
-      parsedReports.push({...item})
-    })
-    return parsedReports
-  }
-
+function getCsvData(reports) {
+  return reports.map(report => {
+    const user = report.isAnom ? "anonymous" : report.creator.firstName + " " + report.creator.lastName
+    const dateCreated = new Date(report.dateCreate).toDateString()
+    return {
+      dateCreated,
+      user,
+      description: report.description,
+      status: report.status,
+      reportMadeBy: report.reportPerson || user,
+      resolution: report.resolution,
+      resolutionBy: report.resolutionPerson
+    }
+  })
 }
