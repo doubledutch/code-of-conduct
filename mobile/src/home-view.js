@@ -86,9 +86,10 @@ export default class HomeView extends Component {
           for (var i in reports) {
             if (reports[i].key === data.key) {
               reports.splice(i, 1)
-              this.setState({ reports: [...this.state.reports, {...data.val(), key: data.key }]})
+              reports.push({...data.val(), key: data.key})
             }
           }
+          this.setState({ reports })
         })
 
       }

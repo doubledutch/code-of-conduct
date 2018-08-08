@@ -32,13 +32,13 @@ export default class ReportsSubView extends Component {
   }
 
   render() {
-    let reports = this.props.reports || []
+    const reports = this.props.reports || []
     reports.sort((a,b) => b.dateCreate - a.dateCreate)
     return (
       <View style={s.container}>
         <Text style={s.titleText}>REPORTED VIOLATIONS</Text>
         <View style={s.border}/>
-        <View style={{marginTop: 10}}>
+        <View style={s.listContainer}>
           <FlatList 
           data={reports}
           renderItem={({item}) => {
@@ -62,6 +62,9 @@ const s = ReactNative.StyleSheet.create({
     height: 1,
     flex: 1,
     backgroundColor: "gray"
+  },
+  listContainer: {
+    marginTop: 10
   },
   titleText: {
     fontSize: 18,

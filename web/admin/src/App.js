@@ -163,7 +163,7 @@ export default class App extends Component {
   }
 
   closeModal = () => {
-    this.setState({showModal: false, })
+    this.setState({showModal: false})
   }
 
   saveDraftCodeOfConduct = (input) => {

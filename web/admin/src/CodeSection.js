@@ -38,7 +38,7 @@ export default class CodeSection extends Component {
     const isPublishChanges = (this.state.input !== this.props.codeOfConduct.text)
     const currentState = this.findCurrentState()
     const publishTime = this.props.codeOfConduct.publishTime ? new Date(this.props.codeOfConduct.publishTime).toLocaleString() : ""
-    const isString = this.state.input ? this.state.input.trim().length > 0 : false
+    const inputIsNotEmpty = this.state.input ? this.state.input.trim().length > 0 : false
     return (
       <div className="sectionContainer">
         <div className="codeOfConductContainerRow">
@@ -64,8 +64,8 @@ export default class CodeSection extends Component {
             <div className="codeButtonsContainer">
               <p>DoubleDutch hereby disclaims any and all liability in connection with this Code of Conduct.</p>
               <div style={{flex: 1}}/>
-              { isDraftChanges && isString && <button onClick={() => this.props.saveDraftCodeOfConduct(this.state.input)}className="dd-bordered">Save as Draft</button> }
-              { isPublishChanges && isString && <button onClick={()=>this.props.saveCodeOfConduct(this.state.input)}className="dd-bordered button-margin">Publish to App</button> }
+              { isDraftChanges && inputIsNotEmpty && <button onClick={() => this.props.saveDraftCodeOfConduct(this.state.input)}className="dd-bordered">Save as Draft</button> }
+              { isPublishChanges && inputIsNotEmpty && <button onClick={()=>this.props.saveCodeOfConduct(this.state.input)}className="dd-bordered button-margin">Publish to App</button> }
             </div>
           </div> }
         </div>

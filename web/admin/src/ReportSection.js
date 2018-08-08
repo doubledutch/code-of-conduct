@@ -53,15 +53,16 @@ export default class ReportSection extends Component {
 
   parseData = (reports) => {
     let parsedReports = []
-    reports.map(report => {
-      let item = {}
-      item.dateCreated = new Date(report.dateCreate).toDateString()
-      item.user = report.isAnom ? "anonymous" : report.creator.firstName + " " + report.creator.lastName
-      item.description = report.description
-      item.status = report.status
-      item.reportMadeBy = report.reportPerson || item.user
-      item.resolution = report.resolution
-      item.resolutionBy = report.resolutionPerson
+    reports.forEach(report => {
+      let item = {
+        dateCreated = new Date(report.dateCreate).toDateString(),
+        user = report.isAnom ? "anonymous" : report.creator.firstName + " " + report.creator.lastName,
+        description = report.description,
+        status = report.status,
+        reportMadeBy = report.reportPerson || item.user,
+        resolution = report.resolution,
+        resolutionBy = report.resolutionPerson
+      }
       parsedReports.push({...item})
     })
     return parsedReports
