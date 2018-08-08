@@ -47,7 +47,7 @@ export default class MakeReportSubView extends Component {
       <View>
         <Text style={s.headerTitleText}>REPORT A VIOLATION</Text>
         <Text style={s.title}>Message the Organizers</Text>
-        <Text style={s.description}>Send a description of the violation to the event organize, and they will see to it the situation is resolved</Text>
+        <Text style={s.description}>Send a description of the violation to the event organizer, and they will see to it the situation is resolved</Text>
         <TouchableOpacity style={s.button} onPress={this.props.showModal}><Text style={s.buttonText}>Report a Violation</Text></TouchableOpacity>
       </View>
     )
@@ -77,8 +77,7 @@ export default class MakeReportSubView extends Component {
          return (
            <View style={s.userCell} key={i}>
               <Avatar user={person} size={40}/>
-              <Text style={s.firstName}>{person.firstName}</Text>
-              <Text style={s.lastName}>{person.lastName}</Text>
+              <Text numberOfLines={2} ellipsizeMode={"tail"} style={s.name}>{person.firstName + " " + person.lastName}</Text>
               <View style={{flex: 1}}/>
               <TouchableOpacity style={s.messageButton} onPress={() => client.openURL(`dd://profile/${person.id}`)}>
                 <Text style={s.buttonText}>Message</Text>
@@ -115,6 +114,12 @@ const s = ReactNative.StyleSheet.create({
     flexDirection: "column",
     flexWrap: 'wrap',
     marginTop: 10,
+  },
+  name:{
+    fontSize: 14,
+    color: "#3D4A4D",
+    marginLeft: 10,
+    maxWidth: 100
   },
   firstName:{
     fontSize: 14,

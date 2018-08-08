@@ -17,7 +17,6 @@
 import React, { Component } from 'react'
 import '@doubledutch/react-components/lib/base.css'
 import './App.css'
-import {CSVLink} from 'react-csv'
 import client from '@doubledutch/admin-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
 import {
@@ -125,11 +124,13 @@ export default class App extends Component {
     //On initial launching of the app this fbc object would not exist. In that case the default is to be on. On first action we would set the object to the expected state and from there use update.
     if (window.confirm("Are you sure you want to publish the code of conduct")) {
       if (Object.keys(this.state.codeOfConduct).length === 0) {
-        fbc.database.public.adminRef('codeOfConduct').push({"text": input})
+        const publishTime = new Date().getTime()
+        fbc.database.public.adminRef('codeOfConduct').push({"text": input, publishTime})
         this.saveDraftCodeOfConduct(input)
       }
       else {
-        fbc.database.public.adminRef('codeOfConduct').child(this.state.codeOfConduct.key).update({"text": input})
+        const publishTime = new Date().getTime()
+        fbc.database.public.adminRef('codeOfConduct').child(this.state.codeOfConduct.key).update({"text": input, publishTime})
         this.saveDraftCodeOfConduct(input)
       }
     }
@@ -146,7 +147,7 @@ export default class App extends Component {
     this.setState({showModal: true, modal:"report"})
   }
   completeResolution = (resolution, resolutionPerson) => {
-    fbc.database.private.adminableUsersRef(this.state.currentReport.userId).child('reports').child(this.state.currentReport.id).update({status: "Resolved", resolution, resolutionPerson})
+    fbc.database.private.adminableUsersRef(this.state.currentReport.userId).child('reports').child(this.state.currentReport.id).update({status: "Resolved", resolution, resolutionPerson, dateCreate: new Date().getTime()})
     this.setState({currentReport: {}, showModal: false})
   }
 
@@ -168,10 +169,12 @@ export default class App extends Component {
   saveDraftCodeOfConduct = (input) => {
     //On initial launching of the app this fbc object would not exist. In that case the default is to be on. On first action we would set the object to the expected state and from there use update.
     if (Object.keys(this.state.codeOfConductDraft).length === 0) {
-      fbc.database.public.adminRef('codeOfConductDraft').push({"text": input})
+      const publishTime = new Date().getTime()
+      fbc.database.public.adminRef('codeOfConductDraft').push({"text": input, publishTime})
     }
     else {
-      fbc.database.public.adminRef('codeOfConductDraft').child(this.state.codeOfConductDraft.key).update({"text": input})
+      const publishTime = new Date().getTime()
+      fbc.database.public.adminRef('codeOfConductDraft').child(this.state.codeOfConductDraft.key).update({"text": input, publishTime})
     }
   }
 

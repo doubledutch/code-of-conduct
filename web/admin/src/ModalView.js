@@ -38,12 +38,9 @@ export default class ModalView extends Component {
 
   render() {
 
-    const {modal, currentReport} = this.props
-
     return (
       <Modal 
       isOpen={this.props.showModal}
-      // onAfterOpen={this.makeFocus}
       onRequestClose={this.props.closeModal}
       contentLabel="Modal"
       className="Modal"
@@ -67,6 +64,11 @@ export default class ModalView extends Component {
     }
   }
 
+  closeModal = () => {
+    this.setState({reportPerson: "", resolutionPerson: "", resolution: "", report: "", search: "", currentUser: {}, isError: false})
+    this.props.closeModal()
+  }
+
   renderViewResolution = () => {
     const {currentReport} = this.props
     return (
@@ -74,7 +76,7 @@ export default class ModalView extends Component {
         <div className="topModalBox">
           <h2 className="h2NoPadding">Resolution Details</h2>
           <div style={{flex:1}}/>
-          <button className="closeButton" onClick={this.props.closeModal}>X</button>
+          <button className="closeButton" onClick={this.closeModal}>X</button>
         </div>
         <div className="centerModalBox">
           <p>How was this incident resolved?</p>
@@ -84,8 +86,8 @@ export default class ModalView extends Component {
           <p>{currentReport.resolutionPerson}</p>
         </div>
         <div className="bottomModalBox">
-          <button className="borderButton" onClick={this.props.closeModal}>Cancel</button>
-          <button className="dd-bordered" onClick={this.props.closeModal}>Done</button>
+          <button className="borderButton" onClick={this.closeModal}>Cancel</button>
+          <button className="dd-bordered" onClick={this.closeModal}>Done</button>
         </div>
       </div>
     )
@@ -98,9 +100,9 @@ export default class ModalView extends Component {
     return (
       <div>
         <div className="topModalBox">
-          <h2 className="h2NoPadding">Resolution Details</h2>
+          <h2 className="h2NoPadding">Report a violation</h2>
           <div style={{flex:1}}/>
-          <button className="closeButton" onClick={this.props.closeModal}>X</button>
+          <button className="closeButton" onClick={this.closeModal}>X</button>
         </div>
         <div className="centerModalBox">
           <TextInput multiline label="What happened"
@@ -109,7 +111,7 @@ export default class ModalView extends Component {
             placeholder="Describe the incident"
             maxLength={250}
           />
-           {(this.state.isError && this.state.resolution.trim().length === 0) && <p className="errorText">*Please complete field</p>}
+           {(this.state.isError && this.state.report.trim().length === 0) && <p className="errorText">*Please complete field</p>}
            <div className="modalRow">
             <div>
               <TextInput label="Reporter"
@@ -118,7 +120,7 @@ export default class ModalView extends Component {
                 placeholder="Name"
                 maxLength={50}
                 className="titleText" />
-                {(this.state.isError && this.state.resolutionPerson.trim().length === 0) && <p className="errorText">*Please enter a name</p>}
+                {(this.state.isError && this.state.reportPerson.trim().length === 0) && <p className="errorText">*Please enter a name</p>}
             </div>
             <div className="flexSpace"/>
             <div className="selectBox">
@@ -143,8 +145,8 @@ export default class ModalView extends Component {
             </div>
         </div>
         <div className="bottomModalBox">
-          <button className="borderButton" onClick={this.props.closeModal}>Cancel</button>
-          <button className="dd-bordered" onClick={this.completeReport}>Resolve</button>
+          <button className="borderButton" onClick={this.closeModal}>Cancel</button>
+          <button className="dd-bordered" onClick={this.completeReport}>Report</button>
         </div>
       </div>
     )
@@ -156,7 +158,7 @@ export default class ModalView extends Component {
         <div className="topModalBox">
           <h2 className="h2NoPadding">Resolution Details</h2>
           <div style={{flex:1}}/>
-          <button className="closeButton" onClick={this.props.closeModal}>X</button>
+          <button className="closeButton" onClick={this.closeModal}>X</button>
         </div>
         <div className="centerModalBox">
           <TextInput multiline label="How was this incident resolved?"
@@ -175,7 +177,7 @@ export default class ModalView extends Component {
             {(this.state.isError && this.state.resolutionPerson.trim().length === 0) && <p className="errorText">*Please complete field</p>}
         </div>
         <div className="bottomModalBox">
-          <button className="borderButton" onClick={this.props.closeModal}>Cancel</button>
+          <button className="borderButton" onClick={this.closeModal}>Cancel</button>
           <button className="dd-bordered" onClick={this.completeResolution}>Resolve</button>
         </div>
       </div>
@@ -185,6 +187,7 @@ export default class ModalView extends Component {
   completeResolution = () => {
     if (this.state.resolution.trim().length && this.state.resolutionPerson.trim().length) {
       this.props.completeResolution(this.state.resolution.trim(), this.state.resolutionPerson.trim())
+      this.setState({resolution: "", resolutionPerson: ""})
     }
     else {
       this.setState({isError: true})
@@ -194,6 +197,7 @@ export default class ModalView extends Component {
   completeReport = () => {
     if (this.state.report.trim().length && this.state.reportPerson.trim().length && this.state.currentUser.value) {
       this.props.completeReport(this.state.report.trim(), this.state.reportPerson.trim(), this.state.currentUser.value)
+      this.setState({report: "", reportPerson: "", currentUser: {}})
     }
     else {
       this.setState({isError: true})
