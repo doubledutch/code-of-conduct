@@ -154,6 +154,8 @@ html, body, select{
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 150px;
+  line-height: 14px;
+  max-height: 28px;
 } 
 
 .cellName1 {
@@ -161,6 +163,8 @@ html, body, select{
   overflow: hidden;
   max-width: 150px;
   margin-right: 5px;
+  line-height: 14px;
+  max-height: 28px;
 } 
 
 .dateText{

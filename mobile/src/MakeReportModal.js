@@ -76,7 +76,7 @@ export default class MakeReportModal extends Component {
               </View>
               <View style={{flexDirection: "row", height: 25, marginTop: 10, alignItems: "center", justifyContent: "flex-end"}}>
                 <Avatar user={client.currentUser} size={25}/>
-                <Text style={s.nameText}>{client.currentUser.firstName + " " + client.currentUser.lastName}</Text>
+                <Text numberOfLines={2} ellipsizeMode={"tail"} style={s.nameText}>{client.currentUser.firstName + " " + client.currentUser.lastName}</Text>
               </View>
             </View>
           </View>
@@ -265,6 +265,7 @@ const s = ReactNative.StyleSheet.create({
     fontSize: 14,
     color: '#364247',
     marginLeft: 10,
+    width: 100
   },
   counter: {
     justifyContent: 'center',
