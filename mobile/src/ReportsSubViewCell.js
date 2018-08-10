@@ -35,11 +35,15 @@ export default class ReportsSubViewCell extends Component {
           <View style={{flexDirection: "row", alignItems: "center"}}>
             <View style={{flex: 1, marginRight: 15}}>
               <Text style={s.description} ellipsizeMode={"tail"} numberOfLines={1}>{report.description}</Text>
-              <View style={{flexDirection: "row", marginTop: 5}}>
-                <Text style={s.headingText}>Reported: </Text>
-                <Text style={[{marginRight: 15}, s.description]}>{this.convertTime(report.dateCreate)}</Text>
-                <Text style={s.headingText}>Status: </Text>
-                <Text style={report.status === "Received" ? s.yellowText : s.greenText}>{report.status}</Text>
+              <View style={{ marginTop: 5, flexDirection: "row", flexWrap:"wrap"}}>
+                <View style={{flexDirection: "row"}}>
+                  <Text style={s.headingText}>Reported: </Text>
+                  <Text style={[{marginRight: 15}, s.description]}>{this.convertTime(report.dateCreate)}</Text>
+                </View>
+                <View style={{flexDirection: "row"}}>
+                  <Text style={s.headingText}>Status: </Text>
+                  <Text style={report.status === "Received" ? s.yellowText : s.greenText}>{report.status}</Text>
+                </View>
               </View>
             </View>
             <Text style={{fontSize: 25, color: client.primaryColor}}>></Text>
@@ -63,7 +67,7 @@ const s = ReactNative.StyleSheet.create({
   cell: {
     marginBottom: 10,
     paddingLeft: 15,
-    paddingRight: 15
+    paddingRight: 15,
   },
   description: {
     color: "#A1A1A1",

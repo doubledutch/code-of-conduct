@@ -44,7 +44,7 @@ export default class ViewReportModal extends Component {
             <Text style={s.headingText}>Reported:</Text>
             <Text style={s.description}>{this.convertTime(currentReport.dateCreate)}</Text>
           </View>
-          <View style={{flex: 1, flexDirection: "row"}}>
+          <View style={{flexDirection: "row"}}>
             <Text style={s.headingText}>Status: </Text>
             <Text style={currentReport.status === "Received" ? s.yellowText : s.greenText}>{currentReport.status}</Text>
           </View>
@@ -102,8 +102,8 @@ const s = ReactNative.StyleSheet.create({
   boxHeader: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 15
+    marginBottom: 15,
+    flexWrap: "wrap",
   },
   headerContainer: {
     flexDirection: "row", 

@@ -122,7 +122,7 @@ export default class App extends Component {
 
   saveCodeOfConduct = (input) => {
     //On initial launching of the app this fbc object would not exist. In that case the default is to be on. On first action we would set the object to the expected state and from there use update.
-    if (window.confirm("Are you sure you want to publish the code of conduct")) {
+    if (window.confirm("Are you sure you want to publish the code of conduct?")) {
       if (Object.keys(this.state.codeOfConduct).length === 0) {
         const publishTime = new Date().getTime()
         fbc.database.public.adminRef('codeOfConduct').push({"text": input, publishTime})
