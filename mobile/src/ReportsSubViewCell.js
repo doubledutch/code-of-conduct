@@ -32,17 +32,21 @@ export default class ReportsSubViewCell extends Component {
     return (
       <View>
         <TouchableOpacity style={s.cell} onPress={()=>this.props.showReport(report)}>
-          <View style={{flexDirection: "row", alignItems: "center"}}>
-            <View style={{flex: 1, marginRight: 15}}>
+          <View style={s.inCellContainer}>
+            <View style={s.leftContainer}>
               <Text style={s.description} ellipsizeMode={"tail"} numberOfLines={1}>{report.description}</Text>
-              <View style={{flexDirection: "row", marginTop: 5}}>
-                <Text style={s.headingText}>Reported: </Text>
-                <Text style={[{marginRight: 15}, s.description]}>{this.convertTime(report.dateCreate)}</Text>
-                <Text style={s.headingText}>Status: </Text>
-                <Text style={report.status === "Received" ? s.yellowText : s.greenText}>{report.status}</Text>
+              <View style={s.bottomRow}>
+                <View style={s.row}>
+                  <Text style={s.headingText}>Reported: </Text>
+                  <Text style={s.timeText}>{this.convertTime(report.dateCreate)}</Text>
+                </View>
+                <View style={s.row}>
+                  <Text style={s.headingText}>Status: </Text>
+                  <Text style={report.status === "Received" ? s.yellowText : s.greenText}>{report.status}</Text>
+                </View>
               </View>
             </View>
-            <Text style={{fontSize: 25, color: client.primaryColor}}>></Text>
+            <Text style={s.icon}>></Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -63,7 +67,31 @@ const s = ReactNative.StyleSheet.create({
   cell: {
     marginBottom: 10,
     paddingLeft: 15,
-    paddingRight: 15
+    paddingRight: 15,
+  },
+  timeText: {
+    color: "#A1A1A1",
+    marginRight: 15
+  },
+  icon:{
+    fontSize: 25, 
+    color: client.primaryColor
+  },
+  row: {
+    flexDirection: "row"
+  },
+  inCellContainer: {
+    flexDirection: "row", 
+    alignItems: "center"
+  },
+  leftContainer:{
+    flex: 1, 
+    marginRight: 15
+  },
+  bottomRow:{ 
+    marginTop: 5, 
+    flexDirection: "row", 
+    flexWrap:"wrap"
   },
   description: {
     color: "#A1A1A1",
