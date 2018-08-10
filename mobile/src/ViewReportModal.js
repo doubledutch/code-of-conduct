@@ -27,7 +27,7 @@ export default class ViewReportModal extends Component {
     return (
       <View style={s.container}>
         {this.renderHeaderBar()}
-        <ScrollView style={{flex: 1, backgroundColor: "#EFEFEF"}}>
+        <ScrollView style={s.scroll}>
           {this.renderReportBox()}
         </ScrollView>
       </View>
@@ -38,13 +38,13 @@ export default class ViewReportModal extends Component {
   renderReportBox = () => {
     const {currentReport} = this.props
     return (
-      <View style={{padding: 15, backgroundColor: "white"}}>
+      <View style={s.container}>
         <View style={s.boxHeader}>
-          <View style={{flexDirection: "row", marginRight: 20}}>
+          <View style={s.leftRow}>
             <Text style={s.headingText}>Reported:</Text>
             <Text style={s.description}>{this.convertTime(currentReport.dateCreate)}</Text>
           </View>
-          <View style={{flexDirection: "row"}}>
+          <View style={s.row}>
             <Text style={s.headingText}>Status: </Text>
             <Text style={currentReport.status === "Received" ? s.yellowText : s.greenText}>{currentReport.status}</Text>
           </View>
@@ -77,7 +77,21 @@ export default class ViewReportModal extends Component {
 }
 
 const s = ReactNative.StyleSheet.create({
-
+  container: {
+    padding: 15, 
+    backgroundColor: "white"
+  },
+  scroll: {
+    flex: 1, 
+    backgroundColor: "#EFEFEF"
+  },
+  leftRow: {
+    flexDirection: "row", 
+    marginRight: 20
+  },
+  row: {
+    flexDirection: "row"
+  },
   description: {
     color: "#A1A1A1",
   },
