@@ -97,7 +97,6 @@ export default class App extends Component {
   }
 
   render() {
-    console.log(Object.keys(this.state.codeOfConduct).length === 0)
     return (
       <div className="App">
         <ModalView modal={this.state.modal} showModal={this.state.showModal} closeModal={this.closeModal} currentReport={this.state.currentReport} completeResolution={this.completeResolution} users={this.state.dropDownUsers} completeReport={this.completeReport}/>
