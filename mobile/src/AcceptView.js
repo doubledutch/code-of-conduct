@@ -33,7 +33,8 @@ export default class AcceptView extends Component {
     return (
         <ScrollView style={{flex: 1, backgroundColor: "white"}}>
           {this.props.codeOfConduct.text && <View style={{paddingBottom: 50}}>
-            <Text style={s.title}>{client.currentEvent.name + " Code of Conduct"}</Text>
+            <Text style={s.titleTop}>{client.currentEvent.name}</Text>
+            <Text style={s.title}>{"Code of Conduct"}</Text>
             <Text style={s.text}>{this.getText()}</Text>
             <TouchableOpacity style={s.noBorderButton}><Text style={s.noBorderText}>I do not agree to the code of conduct</Text></TouchableOpacity>
             <TouchableOpacity onPress={this.props.markAccepted} style={s.launchButton}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
@@ -57,13 +58,21 @@ const s = ReactNative.StyleSheet.create({
     fontSize: 18,
     color: "#4B4B4B",
     margin: 20,
-    marginTop: 0
+    marginTop: 0,
   },
-
+  titleTop: {
+    fontSize: 22,
+    color: "#4B4B4B",
+    margin: 20,
+    marginBottom: 5,
+    textAlign: "center"
+  },
   title: {
     fontSize: 22,
     color: "#4B4B4B",
-    margin: 20
+    margin: 20,
+    marginTop: 0,
+    textAlign: "center"
   },
 
   launchButton: {
