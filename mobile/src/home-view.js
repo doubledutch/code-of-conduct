@@ -123,10 +123,10 @@ export default class HomeView extends Component {
 
   
   markAccepted = () => {
+    client.dismissLandingPage(true)
     fbc.database.private.adminableUserRef('status').push({
       accepted: true
       })
-    .then(() => this.setState({currentPage: "app"}))
     .catch (x => console.error(x))    
   }
   
