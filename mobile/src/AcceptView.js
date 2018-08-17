@@ -33,21 +33,20 @@ export default class AcceptView extends Component {
     const {codeOfConduct} = this.props
   
     return (
-      <View style={{flex: 1}}>
+      <View style={s.flex}>
       { codeOfConduct
         ? codeOfConduct.text
-          ? 
-        <ScrollView style={{flex: 1, backgroundColor: "white"}}>
-          <View style={{paddingBottom: 50}}>
-                  <Text style={s.titleTop}>{client.currentEvent.name}</Text>
-                  <Text style={s.title}>{"Code of Conduct"}</Text>
-                  <Text style={s.text}>{this.getText()}</Text>
-                  <TouchableOpacity style={s.noBorderButton}><Text style={s.noBorderText}>I do not agree to the code of conduct</Text></TouchableOpacity>
-                  <TouchableOpacity onPress={this.props.markAccepted} style={s.launchButton}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
-                </View>
-        </ScrollView>
-        : <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}><Text style={s.helpText}>No Code of Conduct has been set</Text></View>
-        :  null
+          ? <ScrollView style={s.scrollView}>
+              <View style={s.paddingBottom}>
+                <Text style={s.titleTop}>{client.currentEvent.name}</Text>
+                <Text style={s.title}>{"Code of Conduct"}</Text>
+                <Text style={s.text}>{this.getText()}</Text>
+                <TouchableOpacity style={s.noBorderButton}><Text style={s.noBorderText}>I do not agree to the code of conduct</Text></TouchableOpacity>
+                <TouchableOpacity onPress={this.props.markAccepted} style={s.launchButton}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
+              </View>
+            </ScrollView>
+          : <View style={s.helpTextView}><Text style={s.helpText}>No Code of Conduct has been set</Text></View>
+        : null
       }
       </View>
    
@@ -69,6 +68,21 @@ const s = ReactNative.StyleSheet.create({
     color: "#4B4B4B",
     margin: 20,
     marginTop: 0,
+  },
+  helpTextView: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  flex: {
+    flex: 1
+  },
+  paddingBottom: {
+    paddingBottom: 50
+  },
+  scroll: {
+    flex: 1,
+    backgroundColor: "white"
   },
   helpText: {
     fontSize: 18,
