@@ -25,6 +25,7 @@ import FirebaseConnector from '@doubledutch/firebase-connector'
 import AcceptView from "./AcceptView"
 import AppView from "./AppView"
 import ReportsSubView from './ReportsSubView';
+import LoadingView from "./LoadingView"
 const fbc = FirebaseConnector(client, 'codeofconduct')
 
 fbc.initializeAppWithSimpleBackend()
@@ -34,12 +35,14 @@ export default class HomeView extends Component {
     super()
     this.state = {
       currentPage: "home", 
-      codeOfConduct: {},
+      codeOfConduct: null,
       reports: [],
       currentReport: {},
       userStatus: {},
       currentAppPage: "home",
-      admins: []
+      admins: [],
+      isLoggedIn: false,
+      logInFailed: false
     }
 
     this.signin = fbc.signin()
@@ -54,13 +57,9 @@ export default class HomeView extends Component {
       const userReportsRef = fbc.database.private.adminableUserRef('reports')
       const adminsRef = fbc.database.public.adminRef("admins")
       const wireListeners = () => {
-
-        codeOfConductRef.on('child_added', data => {
-          this.setState({ codeOfConduct: {...data.val(), key: data.key } })
-        })
-
-        codeOfConductRef.on('child_changed', data => {
-          this.setState({ codeOfConduct: {...data.val(), key: data.key } })
+        codeOfConductRef.on('value', data => {
+          const codeOfConduct = data.val() || {}
+          this.setState({ codeOfConduct})
         })
 
         adminsRef.on('child_added', data => {
@@ -82,32 +81,25 @@ export default class HomeView extends Component {
         })
 
         userReportsRef.on('child_changed', data => {
-          
           this.setState(prevState => ({reports: prevState.reports.map(r => r.key === data.key ? {...data.val(), key: data.key} : r)}))
         })
 
-      }
+        //The function below will hide the login screen component with a 1/2 second delay to provide an oppt for firebase data to downlaod
+        this.hideLogInScreen = setTimeout(() => {
+          this.setState( {isLoggedIn: true})
+        }, 500)
 
-      fbc.database.private.adminableUserRef('adminToken').once('value', async data => {
-        const longLivedToken = data.val()
-        if (longLivedToken) {
-          console.log('Attendee appears to be admin.  Logging out and logging in w/ admin token.')
-          await firebase.auth().signOut()
-          client.longLivedToken = longLivedToken
-          await fbc.signinAdmin()
-          console.log('Re-logged in as admin')
-          this.setState({isAdmin: true})
-        }
-        wireListeners()
-      })
-    })
+      }
+      wireListeners()
+
+    }).catch(()=> this.setState({logInFailed: true}))
   }
 
   render() {
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
         <TitleBar title="Code of Conduct" client={client} signin={this.signin} />
-        {this.renderPage()}
+        {this.state.isLoggedIn ? this.renderPage() : <LoadingView LogInFailed={this.state.LogInFailed}/>}
       </KeyboardAvoidingView>
     )
   }

@@ -30,16 +30,26 @@ export default class AcceptView extends Component {
   }
 
   render() {
+    const {codeOfConduct} = this.props
+  
     return (
+      <View style={{flex: 1}}>
+      { codeOfConduct
+        ? codeOfConduct.text
+          ? 
         <ScrollView style={{flex: 1, backgroundColor: "white"}}>
-          {this.props.codeOfConduct.text && <View style={{paddingBottom: 50}}>
-            <Text style={s.titleTop}>{client.currentEvent.name}</Text>
-            <Text style={s.title}>{"Code of Conduct"}</Text>
-            <Text style={s.text}>{this.getText()}</Text>
-            <TouchableOpacity style={s.noBorderButton}><Text style={s.noBorderText}>I do not agree to the code of conduct</Text></TouchableOpacity>
-            <TouchableOpacity onPress={this.props.markAccepted} style={s.launchButton}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
-          </View>}
+          <View style={{paddingBottom: 50}}>
+                  <Text style={s.titleTop}>{client.currentEvent.name}</Text>
+                  <Text style={s.title}>{"Code of Conduct"}</Text>
+                  <Text style={s.text}>{this.getText()}</Text>
+                  <TouchableOpacity style={s.noBorderButton}><Text style={s.noBorderText}>I do not agree to the code of conduct</Text></TouchableOpacity>
+                  <TouchableOpacity onPress={this.props.markAccepted} style={s.launchButton}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
+                </View>
         </ScrollView>
+        : <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}><Text style={s.helpText}>No Code of Conduct has been set</Text></View>
+        :  null
+      }
+      </View>
    
     )
   }
@@ -59,6 +69,12 @@ const s = ReactNative.StyleSheet.create({
     color: "#4B4B4B",
     margin: 20,
     marginTop: 0,
+  },
+  helpText: {
+    fontSize: 18,
+    color: "#4B4B4B",
+    margin: 20,
+    textAlign: "center",
   },
   titleTop: {
     fontSize: 22,

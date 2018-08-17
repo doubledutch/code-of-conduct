@@ -34,7 +34,8 @@ export default class CodeSection extends Component {
 
 
   render() {
-    const isDraftChanges = (this.state.input !== this.props.codeOfConductDraft.text)
+    const { codeOfConduct, codeOfConductDraft } = this.props
+    const isDraftChanges = (this.state.input !== codeOfConductDraft.text)
     const isPublishChanges = (this.state.input !== this.props.codeOfConduct.text)
     const currentState = this.findCurrentState()
     const publishTime = this.props.codeOfConduct.publishTime ? new Date(this.props.codeOfConduct.publishTime).toLocaleString() : ""
