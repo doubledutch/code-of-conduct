@@ -22,11 +22,13 @@ import client from '@doubledutch/rn-client'
 
 
 export default class AcceptView extends Component {
-  constructor() {
-    super()
-    this.state = {
-    }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.codeOfConduct !== prevProps.codeOfConduct) {
+      if (this.props.codeOfConduct.text) {
+      }
+      else client.dismissLandingPage(false)
+    }
   }
 
   render() {
@@ -45,7 +47,7 @@ export default class AcceptView extends Component {
                 <TouchableOpacity onPress={this.props.markAccepted} style={s.launchButton}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
               </View>
             </ScrollView>
-          : <View style={s.helpTextView}><Text style={s.helpText}>No Code of Conduct has been set</Text>{client.dismissLandingPage(false)}</View>
+          : <View style={s.helpTextView}><Text style={s.helpText}>No Code of Conduct has been set</Text></View>
         : null
       }
       </View>
