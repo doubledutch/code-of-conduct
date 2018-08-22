@@ -45,7 +45,7 @@ export default class AcceptView extends Component {
                 <TouchableOpacity onPress={this.props.markAccepted} style={s.launchButton}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
               </View>
             </ScrollView>
-          : <View style={s.helpTextView}><Text style={s.helpText}>No Code of Conduct has been set</Text></View>
+          : <View style={s.helpTextView}><Text style={s.helpText}>No Code of Conduct has been set</Text>{client.dismissLandingPage(false)}</View>
         : null
       }
       </View>
