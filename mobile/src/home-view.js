@@ -34,7 +34,7 @@ export default class HomeView extends Component {
   constructor() {
     super()
     this.state = {
-      currentPage: "home", 
+      // currentPage: "home", 
       codeOfConduct: null,
       reports: [],
       currentReport: {},
@@ -73,7 +73,7 @@ export default class HomeView extends Component {
         userStatusRef.on('child_added', data => {
           let showPage = "home"
           if (data.val().accepted) showPage="app"
-          this.setState({ userStatus: {...data.val(), key: data.key }, currentPage: showPage })
+          this.setState({ userStatus: {...data.val(), key: data.key } })
         })
 
         userReportsRef.on('child_added', data => {
@@ -105,15 +105,22 @@ export default class HomeView extends Component {
   }
 
   renderPage = () => {
-    switch (this.state.currentPage) {
-      case 'home':
-        return <AcceptView codeOfConduct={this.state.codeOfConduct} markAccepted={this.markAccepted}/>
-      case "app":
-        return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
-      default:
-        return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
+    if (this.props.version) {
+      return <AcceptView codeOfConduct={this.state.codeOfConduct} markAccepted={this.markAccepted}/>
+    }
+    else {
+      return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
     }
   }
+    // switch (this.state.currentPage) {
+    //   case 'home':
+    //     return <AcceptView codeOfConduct={this.state.codeOfConduct} markAccepted={this.markAccepted}/>
+    //   case "app":
+    //     return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
+    //   default:
+    //     return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
+    // }
+  
 
   updateItem = (variable, input) => {
     const updatedItem = Object.assign({},this.state.currentReport)
@@ -123,9 +130,10 @@ export default class HomeView extends Component {
 
   
   markAccepted = () => {
-    fbc.database.private.adminableUserRef('status').push({
+    const {version} = this.props
+    fbc.database.private.adminableUserRef('status').child(version).set({
       accepted: true
-      })
+    })
     .catch (x => console.error(x))    
     client.dismissLandingPage(true)
   }
@@ -165,7 +173,7 @@ export default class HomeView extends Component {
     newItem.description = newItem.description.trim()
     newItem.dateCreate = new Date().getTime()
     fbc.database.private.adminableUserRef('reports').push(newItem)
-    .then(() => this.setState({currentPage: "app", currentAppPage: "home", currentReport: newReport}))
+    .then(() => this.setState({currentAppPage: "home", currentReport: newReport}))
     .catch (x => console.error(x)) 
   }
 

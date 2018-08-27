@@ -22,12 +22,18 @@ import client from '@doubledutch/rn-client'
 
 
 export default class AcceptView extends Component {
+  constructor(props) {
+    super(props)
+    this.checkForNoCodeOfConduct(props)
+  }
 
   componentDidUpdate(prevProps) {
-    if (this.props.codeOfConduct !== prevProps.codeOfConduct) {
-      if (this.props.codeOfConduct.text) {
-      }
-      else client.dismissLandingPage(false)
+    this.checkForNoCodeOfConduct(this.props)
+  }
+
+  checkForNoCodeOfConduct(props) {
+    if (props.codeOfConduct && !props.codeOfConduct.text) {
+      client.dismissLandingPage(false)
     }
   }
 
@@ -54,6 +60,12 @@ export default class AcceptView extends Component {
    
     )
   }
+
+  // autoDismissCode = () => {
+  //   if (!this.props.codeOfConduct.text || ) {
+  //     client.dismissLandingPage(false)
+  //   }
+  // }
 
   getText = () => {
     if (this.props.codeOfConduct.text) {
