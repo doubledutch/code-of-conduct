@@ -15,7 +15,6 @@
  */
 
 import React, { Component } from 'react'
-import './App.css'
 import {CSVLink} from 'react-csv'
 import LeftReport from "./LeftReport"
 import RightReport from "./RightReport"
