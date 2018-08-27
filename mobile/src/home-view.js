@@ -34,7 +34,6 @@ export default class HomeView extends Component {
   constructor() {
     super()
     this.state = {
-      // currentPage: "home", 
       codeOfConduct: null,
       reports: [],
       currentReport: {},
@@ -71,8 +70,6 @@ export default class HomeView extends Component {
         })
 
         userStatusRef.on('child_added', data => {
-          let showPage = "home"
-          if (data.val().accepted) showPage="app"
           this.setState({ userStatus: {...data.val(), key: data.key } })
         })
 
@@ -112,15 +109,6 @@ export default class HomeView extends Component {
       return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
     }
   }
-    // switch (this.state.currentPage) {
-    //   case 'home':
-    //     return <AcceptView codeOfConduct={this.state.codeOfConduct} markAccepted={this.markAccepted}/>
-    //   case "app":
-    //     return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
-    //   default:
-    //     return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
-    // }
-  
 
   updateItem = (variable, input) => {
     const updatedItem = Object.assign({},this.state.currentReport)
