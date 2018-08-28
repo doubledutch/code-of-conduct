@@ -61,12 +61,6 @@ export default class AcceptView extends Component {
     )
   }
 
-  // getText = () => {
-  //   if (this.props.codeOfConduct.text) {
-  //     return this.props.codeOfConduct.text.replace(/<br\s*\/?>/g, '\n')
-  //   }
-  // }
-
 
 }
 

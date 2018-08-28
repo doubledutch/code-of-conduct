@@ -96,8 +96,6 @@ export default class CodeSection extends Component {
 
 }
 
-// const defaultCode = `All attendees, speakers, sponsors and volunteers at our event are required to agree with
-// All attendees, speakers, sponsors and volunteers at our event are required to agree with`
 const defaultCode = `All attendees, speakers, sponsors and volunteers at our event are required to agree with
 the following code of conduct. Organizers will enforce this code throughout the event. We are
 expecting cooperation from all participants to help ensure a safe environment for everybody. 
