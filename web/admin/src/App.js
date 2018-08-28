@@ -18,8 +18,8 @@ import React, { Component } from 'react'
 import '@doubledutch/react-components/lib/base.css'
 import './App.css'
 import client from '@doubledutch/admin-client'
-import FirebaseConnector from '@doubledutch/firebase-connector'
-import {
+import md5 from 'md5'
+import FirebaseConnector, {
   mapPerUserPrivateAdminablePushedDataToStateObjects,
 } from '@doubledutch/firebase-connector'
 import CodeSection from "./CodeSection"
@@ -109,10 +109,12 @@ export default class App extends Component {
   }
 
   saveCodeOfConduct = (input) => {
-    if (window.confirm("Are you sure you want to publish the code of conduct?")) {
-        const publishTime = new Date().getTime()
-        fbc.database.public.adminRef('codeOfConduct').set({"text": input, publishTime})
-        this.saveDraftCodeOfConduct(input)
+    if (window.confirm('Are you sure you want to publish the code of conduct? Attendees will have to confirm acceptance of the new code of conduct.')) {
+      const publishTime = new Date().getTime()
+      fbc.database.public.adminRef('codeOfConduct').set({text: input, publishTime}).then(() => {
+        updateLandingUrls(input)
+      })
+      this.saveDraftCodeOfConduct(input)
     }
   }
 
@@ -150,7 +152,40 @@ export default class App extends Component {
       const publishTime = new Date().getTime()
       fbc.database.public.adminRef('codeOfConductDraft').set({"text": input, publishTime})
   }
+}
 
+function updateLandingUrls(codeOfConductText) {
+  const url = `dd://extensions/codeofconduct?version=${md5(codeOfConductText)}`
+
+  client.cmsRequest('GET', '/api/config').then(config => {
+    if (!config) return
+    // Update the LandingUrls setting. The checksum of the code of conduct ensures
+    // that attendees will have to re-accept.
+
+    const settings = [].concat(...config.Configuration.Groups.map(g => g.Settings))
+    const landingUrlsSetting = settings.find(s => s.Name === 'LandingUrls')
+    if (landingUrlsSetting && landingUrlsSetting.Value) {
+      let landingUrls = []
+      try {
+        landingUrls = JSON.parse(landingUrlsSetting.Value).filter(url => url.startsWith)
+        if (!landingUrls.length) landingUrls = []
+      } catch (e) {
+        // Default to starting with an empty list.
+      }
+
+      const existingIndex = landingUrls.findIndex(url => url.startsWith('dd://extensions/codeofconduct'))
+      if (existingIndex >= 0) {
+        landingUrls[existingIndex] = url
+      } else {
+        landingUrls.push(url)
+      }
+
+      const newValue = JSON.stringify(landingUrls)
+      console.log(`Updating LandingUrls from ${landingUrlsSetting.Value} to ${newValue}`)
+      landingUrlsSetting.Value = newValue
+      client.cmsRequest('PUT', '/api/config', config)
+    }
+  })
 }
 
 const blankReport = {
