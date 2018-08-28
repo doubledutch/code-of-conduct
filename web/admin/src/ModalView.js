@@ -15,8 +15,6 @@
  */
 
 import React, { Component } from 'react'
-import './App.css'
-import client from '@doubledutch/admin-client'
 import Modal  from 'react-modal'
 import {TextInput} from '@doubledutch/react-components'
 import Select from 'react-select';

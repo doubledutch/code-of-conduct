@@ -20,10 +20,7 @@ import './App.css'
 import client from '@doubledutch/admin-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
 import {
-  mapPerPrivateAdminableushedDataToStateObjects,
-  mapPerUserPublicPushedDataToStateObjects,
   mapPerUserPrivateAdminablePushedDataToStateObjects,
-  mapPerUserPrivateAdminablePushedDataToObjectOfStateObjects
 } from '@doubledutch/firebase-connector'
 import CodeSection from "./CodeSection"
 import AdminSection from "./AdminSection"
@@ -58,35 +55,32 @@ export default class App extends Component {
   componentDidMount() {
     this.signin.then(() => {
       client.getUsers().then(users => {
-      let dropDownUsers = []
-      users.forEach(user => dropDownUsers.push(Object.assign({}, {value: user.id, label: user.firstName + " " + user.lastName, className: "dropdownText"})))
-      this.setState({allUsers: users, isSignedIn: true, dropDownUsers})
-      const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
-      const codeOfConductDraftRef = fbc.database.public.adminRef('codeOfConductDraft')  
-      const adminsRef = fbc.database.public.adminRef("admins")
-      const userReportsRef = fbc.database.private.adminableUsersRef()
-      mapPerUserPrivateAdminablePushedDataToStateObjects(fbc, 'reports', this, 'reports', (userId, key, value) => key)
+        let dropDownUsers = []
+        users.forEach(user => dropDownUsers.push(Object.assign({}, {value: user.id, label: user.firstName + " " + user.lastName, className: "dropdownText"})))
+        this.setState({allUsers: users, isSignedIn: true, dropDownUsers})
+        const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
+        const codeOfConductDraftRef = fbc.database.public.adminRef('codeOfConductDraft')  
+        const adminsRef = fbc.database.public.adminRef("admins")
+        mapPerUserPrivateAdminablePushedDataToStateObjects(fbc, 'reports', this, 'reports', (userId, key, value) => key)
 
-      codeOfConductRef.on('value', data => {
-        const codeOfConduct = data.val() || {}
-        this.setState({ codeOfConduct })
+        codeOfConductRef.on('value', data => {
+          const codeOfConduct = data.val() || {}
+          this.setState({ codeOfConduct })
+        })
+
+        codeOfConductDraftRef.on('value', data => { 
+          const codeOfConductDraft = data.val() || {}
+          this.setState({ codeOfConductDraft })
+        })
+
+        adminsRef.on('child_added', data => {
+          this.setState({ admins: [...this.state.admins, {...data.val(), key: data.key }] })
+        })
+
+        adminsRef.on('child_removed', data => {
+          this.setState({ admins: this.state.admins.filter(x => x.key !== data.key) })
+        })
       })
-
-      codeOfConductDraftRef.on('value', data => { 
-        const codeOfConductDraft = data.val() || {}
-        this.setState({ codeOfConductDraft })
-      })
-
-
-      adminsRef.on('child_added', data => {
-        this.setState({ admins: [...this.state.admins, {...data.val(), key: data.key }] })
-      })
-
-      adminsRef.on('child_removed', data => {
-        this.setState({ admins: this.state.admins.filter(x => x.key !== data.key) })
-      })
-
-    })
     })
   }
 

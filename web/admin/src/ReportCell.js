@@ -15,9 +15,6 @@
  */
 
 import React, { Component } from 'react'
-import './App.css'
-import { TextInput, AttendeeSelector } from '@doubledutch/react-components'
-import client, {Avatar} from '@doubledutch/admin-client'
 
 export default class ReportCell extends Component {
   constructor() {

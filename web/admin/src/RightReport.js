@@ -15,8 +15,7 @@
  */
 
 import React, { Component } from 'react'
-import './App.css'
-import ReportCell from "./ReportCell"
+import ReportCell from './ReportCell'
 
 export default class RightReport extends Component {
   constructor() {

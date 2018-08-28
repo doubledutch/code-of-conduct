@@ -34,11 +34,11 @@ export default class CodeSection extends Component {
 
 
   render() {
-    const { codeOfConduct, codeOfConductDraft } = this.props
+    const { codeOfConduct, codeOfConductDraft, handleChange, isCodeBoxDisplay, saveCodeOfConduct, saveDraftCodeOfConduct } = this.props
     const isDraftChanges = (this.state.input !== codeOfConductDraft.text)
-    const isPublishChanges = (this.state.input !== this.props.codeOfConduct.text)
+    const isPublishChanges = (this.state.input !== codeOfConduct.text)
     const currentState = this.findCurrentState()
-    const publishTime = this.props.codeOfConduct.publishTime ? new Date(this.props.codeOfConduct.publishTime).toLocaleString() : ""
+    const publishTime = codeOfConduct.publishTime ? new Date(codeOfConduct.publishTime).toLocaleString() : ""
     const inputIsNotEmpty = this.state.input ? this.state.input.trim().length > 0 : false
     return (
       <div className="sectionContainer">
@@ -46,12 +46,12 @@ export default class CodeSection extends Component {
           <h2 className="titleWithDescription">Code of Conduct</h2>
           {currentState === "Published" && <p className="statusTextGreen">{currentState}</p>}
           {currentState === "Draft" && <p className="statusTextYellow">{currentState}</p>}
-          {this.props.isCodeBoxDisplay && <p className="timeText">{publishTime}</p>}
+          {isCodeBoxDisplay && <p className="timeText">{publishTime}</p>}
           <div className="flex"/>
-          <button className="displayButton" onClick={() => this.props.handleChange("isCodeBoxDisplay", !this.props.isCodeBoxDisplay)}>{(this.props.isCodeBoxDisplay ? "Hide Section" : "Show Section")}</button>
+          <button className="displayButton" onClick={() => handleChange("isCodeBoxDisplay", !isCodeBoxDisplay)}>{(isCodeBoxDisplay ? "Hide Section" : "Show Section")}</button>
         </div>
-        { this.props.isCodeBoxDisplay && <div>
-          {this.state.showStaticBox && !this.props.codeOfConductDraft.text ? <button onClick={this.openEditText} value="boxButton"  className="placeHolderTextBox">
+        { isCodeBoxDisplay && <div>
+          {this.state.showStaticBox && !codeOfConductDraft.text ? <button onClick={this.openEditText} value="boxButton"  className="placeHolderTextBox">
             <span className="placeHolderTextLine">
               <p className="placeHolderText">Enter code of conduct text here or</p>
               <button value="defaultButton"  onClick={this.addDefaultCode} className="noBorderButtonBlue">add default code of conduct</button>
@@ -65,8 +65,8 @@ export default class CodeSection extends Component {
             <div className="codeButtonsContainer">
               <p>DoubleDutch hereby disclaims any and all liability in connection with this Code of Conduct.</p>
               <div style={{flex: 1}}/>
-              { isDraftChanges && inputIsNotEmpty && <button onClick={() => this.props.saveDraftCodeOfConduct(this.state.input)}className="dd-bordered">Save as Draft</button> }
-              { isPublishChanges && inputIsNotEmpty && <button onClick={()=>this.props.saveCodeOfConduct(this.state.input)}className="dd-bordered button-margin">Publish to App</button> }
+              { isDraftChanges && inputIsNotEmpty && <button onClick={() => saveDraftCodeOfConduct(this.state.input)}className="dd-bordered">Save as Draft</button> }
+              { isPublishChanges && inputIsNotEmpty && <button onClick={() => saveCodeOfConduct(this.state.input)}className="dd-bordered button-margin">Publish to App</button> }
             </div>
           </div> }
         </div>
