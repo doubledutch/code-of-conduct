@@ -63,12 +63,6 @@ export default class MakeReportSubView extends Component {
     )
   }
 
-  getText = () => {
-    if (this.props.codeOfConduct.text) {
-      return this.props.codeOfConduct.text.replace(/<br\s*\/?>/g, '\n')
-    }
-  }
-
   trustedPersonsTable = () => {
     const admins = this.props.admins || []
     if (admins.length > 0) return (

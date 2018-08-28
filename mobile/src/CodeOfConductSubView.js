@@ -24,19 +24,14 @@ import client from '@doubledutch/rn-client'
 export default class CodeOfConductSubView extends Component {
 
   render() {
+    const code = this.props.codeOfConduct ? this.props.codeOfConduct.text : ""
     return (
       <View style={s.container}>
         <Text style={s.titleText}>CODE OF CONDUCT</Text>
-        <Text style={s.shortCode}>{this.getText()}</Text>
+        <Text style={s.shortCode}>{code}</Text>
         <TouchableOpacity style={s.tabButton} onPress={this.props.showCodeOfConduct}><Text style={s.tabButtonText}>{"View Full Code of Conduct"}</Text></TouchableOpacity>
       </View>
     )
-  }
-
-  getText = () => {
-    if (this.props.codeOfConduct.text) {
-      return this.props.codeOfConduct.text.replace(/<br\s*\/?>/g, '\n')
-    }
   }
 
 }

@@ -24,20 +24,15 @@ import client from '@doubledutch/rn-client'
 export default class CodeOfConductModal extends Component {
 
   render() {
+    const code = this.props.codeOfConduct ? this.props.codeOfConduct.text : ""
     return (
       <View style={s.container}>
         {this.renderHeaderBar()}
         <ScrollView style={{flex: 1}}>
-          <Text style={s.completeCode}>{this.getText()}</Text>
+          <Text style={s.completeCode}>{code}</Text>
         </ScrollView>
       </View>
     )
-  }
-
-  getText = () => {
-    if (this.props.codeOfConduct.text) {
-      return this.props.codeOfConduct.text.replace(/<br\s*\/?>/g, '\n')
-    }
   }
 
   renderHeaderBar = () => {

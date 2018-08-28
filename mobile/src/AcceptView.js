@@ -48,7 +48,7 @@ export default class AcceptView extends Component {
               <View style={s.paddingBottom}>
                 <Text style={s.titleTop}>{client.currentEvent.name}</Text>
                 <Text style={s.title}>{"Code of Conduct"}</Text>
-                <Text style={s.text}>{this.getText()}</Text>
+                <Text style={s.text}>{this.props.codeOfConduct.text}</Text>
                 <TouchableOpacity style={s.noBorderButton} onPress={()=>client.openURL('dd://switchevent')}><Text style={s.noBorderText}>I do not agree to the code of conduct</Text></TouchableOpacity>
                 <TouchableOpacity onPress={this.props.markAccepted} style={s.launchButton}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
               </View>
@@ -61,17 +61,11 @@ export default class AcceptView extends Component {
     )
   }
 
-  // autoDismissCode = () => {
-  //   if (!this.props.codeOfConduct.text || ) {
-  //     client.dismissLandingPage(false)
+  // getText = () => {
+  //   if (this.props.codeOfConduct.text) {
+  //     return this.props.codeOfConduct.text.replace(/<br\s*\/?>/g, '\n')
   //   }
   // }
-
-  getText = () => {
-    if (this.props.codeOfConduct.text) {
-      return this.props.codeOfConduct.text.replace(/<br\s*\/?>/g, '\n')
-    }
-  }
 
 
 }

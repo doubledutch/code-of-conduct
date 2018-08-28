@@ -70,11 +70,11 @@ export default class HomeView extends Component {
         })
 
         userStatusRef.on('child_added', data => {
-          this.setState({ userStatus: {...data.val(), key: data.key } })
+          this.setState({ userStatus: {...data.val(), key: data.key} })
         })
 
         userReportsRef.on('child_added', data => {
-          this.setState({ reports: [...this.state.reports, {...data.val(), key: data.key }]})
+          this.setState({ reports: [...this.state.reports, {...data.val(), key: data.key }] })
         })
 
         userReportsRef.on('child_changed', data => {
@@ -83,7 +83,7 @@ export default class HomeView extends Component {
 
         //The function below will hide the login screen component with a 1/2 second delay to provide an oppt for firebase data to downlaod
         this.hideLogInScreen = setTimeout(() => {
-          this.setState( {isLoggedIn: true})
+          this.setState({isLoggedIn: true})
         }, 500)
 
       }
@@ -122,8 +122,8 @@ export default class HomeView extends Component {
     fbc.database.private.adminableUserRef('status').child(version).set({
       accepted: true
     })
-    .catch (x => console.error(x))    
-    client.dismissLandingPage(true)
+    .catch(x => console.error(x))
+    .then(() => client.dismissLandingPage(true))    
   }
   
 
