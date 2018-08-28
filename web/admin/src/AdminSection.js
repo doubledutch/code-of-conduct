@@ -17,7 +17,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import client from '@doubledutch/admin-client'
-import { TextInput, AttendeeSelector } from '@doubledutch/react-components'
+import { AttendeeSelector } from '@doubledutch/react-components'
 
 export default class AdminSection extends Component {
   constructor() {

@@ -15,34 +15,30 @@
  */
 
 import React, { Component } from 'react'
-import ReportCell from './ReportCell'
+import ReactNative, {Text, View} from 'react-native'
+import Spinner from 'react-native-loading-spinner-overlay';
 
-export default class RightReport extends Component {
-  constructor() {
-    super()
-    this.state = {
-      // admins: [],
-      // input: "",
-      // clickable:true
-    }
-  }
+export default class LoadingView extends Component {
 
   render() {
-    const {reports} = this.props
     return (
-      <div style={{flex: 1}}>
-        <div className="headerBox">
-          <p>Resolved ({reports.length})</p>
-        </div>
-        <div className="reportsBox">
-          {reports.map(report =>{
-            return (
-              <ReportCell report={report} resolveItem={this.props.resolveItem} key={report.id} viewResolution={this.props.viewResolution}/>
-            )
-          })}
-        </div>
-      </div>
-    )
+      <View style={s.container}>
+        {!this.props.logInFailed ? <Spinner visible={true} textContent={"Loading..."} textStyle={{color: '#FFF'}} size={"large"}/>
+        : <Text style={s.errorText}>Error connecting to database</Text>}
+      </View>
+    );
   }
 
 }
+
+const s = ReactNative.StyleSheet.create({
+  container: {
+    flex: 1, 
+    alignItems: "center", 
+    justifyContent: "center"
+  },
+  errorText: {
+    fontSize: 18,
+    color: "#4B4B4B"
+  }
+})

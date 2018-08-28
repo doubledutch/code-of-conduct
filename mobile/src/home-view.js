@@ -25,6 +25,7 @@ import FirebaseConnector from '@doubledutch/firebase-connector'
 import AcceptView from "./AcceptView"
 import AppView from "./AppView"
 import ReportsSubView from './ReportsSubView';
+import LoadingView from "./LoadingView"
 const fbc = FirebaseConnector(client, 'codeofconduct')
 
 fbc.initializeAppWithSimpleBackend()
@@ -33,13 +34,14 @@ export default class HomeView extends Component {
   constructor() {
     super()
     this.state = {
-      currentPage: "home", 
-      codeOfConduct: {},
+      codeOfConduct: null,
       reports: [],
       currentReport: {},
       userStatus: {},
       currentAppPage: "home",
-      admins: []
+      admins: [],
+      isLoggedIn: false,
+      logInFailed: false
     }
 
     this.signin = fbc.signin()
@@ -54,13 +56,9 @@ export default class HomeView extends Component {
       const userReportsRef = fbc.database.private.adminableUserRef('reports')
       const adminsRef = fbc.database.public.adminRef("admins")
       const wireListeners = () => {
-
-        codeOfConductRef.on('child_added', data => {
-          this.setState({ codeOfConduct: {...data.val(), key: data.key } })
-        })
-
-        codeOfConductRef.on('child_changed', data => {
-          this.setState({ codeOfConduct: {...data.val(), key: data.key } })
+        codeOfConductRef.on('value', data => {
+          const codeOfConduct = data.val() || {}
+          this.setState({ codeOfConduct})
         })
 
         adminsRef.on('child_added', data => {
@@ -72,54 +70,43 @@ export default class HomeView extends Component {
         })
 
         userStatusRef.on('child_added', data => {
-          let showPage = "home"
-          if (data.val().accepted) showPage="app"
-          this.setState({ userStatus: {...data.val(), key: data.key }, currentPage: showPage })
+          this.setState({ userStatus: {...data.val(), key: data.key} })
         })
 
         userReportsRef.on('child_added', data => {
-          this.setState({ reports: [...this.state.reports, {...data.val(), key: data.key }]})
+          this.setState({ reports: [...this.state.reports, {...data.val(), key: data.key }] })
         })
 
         userReportsRef.on('child_changed', data => {
-          
           this.setState(prevState => ({reports: prevState.reports.map(r => r.key === data.key ? {...data.val(), key: data.key} : r)}))
         })
 
-      }
+        //The function below will hide the login screen component with a 1/2 second delay to provide an oppt for firebase data to downlaod
+        this.hideLogInScreen = setTimeout(() => {
+          this.setState({isLoggedIn: true})
+        }, 500)
 
-      fbc.database.private.adminableUserRef('adminToken').once('value', async data => {
-        const longLivedToken = data.val()
-        if (longLivedToken) {
-          console.log('Attendee appears to be admin.  Logging out and logging in w/ admin token.')
-          await firebase.auth().signOut()
-          client.longLivedToken = longLivedToken
-          await fbc.signinAdmin()
-          console.log('Re-logged in as admin')
-          this.setState({isAdmin: true})
-        }
-        wireListeners()
-      })
-    })
+      }
+      wireListeners()
+
+    }).catch(()=> this.setState({logInFailed: true}))
   }
 
   render() {
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
         <TitleBar title="Code of Conduct" client={client} signin={this.signin} />
-        {this.renderPage()}
+        {this.state.isLoggedIn ? this.renderPage() : <LoadingView LogInFailed={this.state.LogInFailed}/>}
       </KeyboardAvoidingView>
     )
   }
 
   renderPage = () => {
-    switch (this.state.currentPage) {
-      case 'home':
-        return <AcceptView codeOfConduct={this.state.codeOfConduct} markAccepted={this.markAccepted}/>
-      case "app":
-        return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
-      default:
-        return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
+    if (this.props.version) {
+      return <AcceptView codeOfConduct={this.state.codeOfConduct} markAccepted={this.markAccepted}/>
+    }
+    else {
+      return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem}/>
     }
   }
 
@@ -131,11 +118,12 @@ export default class HomeView extends Component {
 
   
   markAccepted = () => {
-    fbc.database.private.adminableUserRef('status').push({
+    const {version} = this.props
+    fbc.database.private.adminableUserRef('status').child(version).set({
       accepted: true
-      })
-    .then(() => this.setState({currentPage: "app"}))
-    .catch (x => console.error(x))    
+    })
+    .catch(x => console.error(x))
+    .then(() => client.dismissLandingPage(true))    
   }
   
 
@@ -173,7 +161,7 @@ export default class HomeView extends Component {
     newItem.description = newItem.description.trim()
     newItem.dateCreate = new Date().getTime()
     fbc.database.private.adminableUserRef('reports').push(newItem)
-    .then(() => this.setState({currentPage: "app", currentAppPage: "home", currentReport: newReport}))
+    .then(() => this.setState({currentAppPage: "home", currentReport: newReport}))
     .catch (x => console.error(x)) 
   }
 

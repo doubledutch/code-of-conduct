@@ -22,33 +22,50 @@ import client from '@doubledutch/rn-client'
 
 
 export default class AcceptView extends Component {
-  constructor() {
-    super()
-    this.state = {
-    }
+  constructor(props) {
+    super(props)
+    this.checkForNoCodeOfConduct(props)
+  }
 
+  componentDidUpdate(prevProps) {
+    this.checkForNoCodeOfConduct(this.props)
+  }
+
+  checkForNoCodeOfConduct(props) {
+    if (props.codeOfConduct && !props.codeOfConduct.text) {
+      client.dismissLandingPage(false)
+    }
   }
 
   render() {
+    const {codeOfConduct} = this.props
+  
     return (
-        <ScrollView style={{flex: 1, backgroundColor: "white"}}>
-          {this.props.codeOfConduct.text && <View style={{paddingBottom: 50}}>
-            <Text style={s.titleTop}>{client.currentEvent.name}</Text>
-            <Text style={s.title}>{"Code of Conduct"}</Text>
-            <Text style={s.text}>{this.getText()}</Text>
-            <TouchableOpacity style={s.noBorderButton}><Text style={s.noBorderText}>I do not agree to the code of conduct</Text></TouchableOpacity>
-            <TouchableOpacity onPress={this.props.markAccepted} style={s.launchButton}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
-          </View>}
-        </ScrollView>
+      <View style={s.flex}>
+      { codeOfConduct
+        ? codeOfConduct.text
+          ? <ScrollView style={s.scrollView}>
+              <View style={s.paddingBottom}>
+                <Text style={s.titleTop}>{client.currentEvent.name}</Text>
+                <Text style={s.title}>{"Code of Conduct"}</Text>
+                <Text style={s.text}>{this.props.codeOfConduct.text}</Text>
+                <TouchableOpacity style={s.noBorderButton} onPress={()=>client.openURL('dd://switchevent')}><Text style={s.noBorderText}>I do not agree to the code of conduct</Text></TouchableOpacity>
+                <TouchableOpacity onPress={this.props.markAccepted} style={s.launchButton}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
+              </View>
+            </ScrollView>
+          : <View style={s.helpTextView}><Text style={s.helpText}>No Code of Conduct has been set</Text></View>
+        : null
+      }
+      </View>
    
     )
   }
 
-  getText = () => {
-    if (this.props.codeOfConduct.text) {
-      return this.props.codeOfConduct.text.replace(/<br\s*\/?>/g, '\n')
-    }
-  }
+  // getText = () => {
+  //   if (this.props.codeOfConduct.text) {
+  //     return this.props.codeOfConduct.text.replace(/<br\s*\/?>/g, '\n')
+  //   }
+  // }
 
 
 }
@@ -59,6 +76,27 @@ const s = ReactNative.StyleSheet.create({
     color: "#4B4B4B",
     margin: 20,
     marginTop: 0,
+  },
+  helpTextView: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  flex: {
+    flex: 1
+  },
+  paddingBottom: {
+    paddingBottom: 50
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: "white"
+  },
+  helpText: {
+    fontSize: 18,
+    color: "#4B4B4B",
+    margin: 20,
+    textAlign: "center",
   },
   titleTop: {
     fontSize: 22,

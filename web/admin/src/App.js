@@ -20,10 +20,7 @@ import './App.css'
 import client from '@doubledutch/admin-client'
 import FirebaseConnector from '@doubledutch/firebase-connector'
 import {
-  mapPerPrivateAdminableushedDataToStateObjects,
-  mapPerUserPublicPushedDataToStateObjects,
   mapPerUserPrivateAdminablePushedDataToStateObjects,
-  mapPerUserPrivateAdminablePushedDataToObjectOfStateObjects
 } from '@doubledutch/firebase-connector'
 import CodeSection from "./CodeSection"
 import AdminSection from "./AdminSection"
@@ -58,41 +55,32 @@ export default class App extends Component {
   componentDidMount() {
     this.signin.then(() => {
       client.getUsers().then(users => {
-      let dropDownUsers = []
-      users.forEach(user => dropDownUsers.push(Object.assign({}, {value: user.id, label: user.firstName + " " + user.lastName, className: "dropdownText"})))
-      this.setState({allUsers: users, isSignedIn: true, dropDownUsers})
-      const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
-      const codeOfConductDraftRef = fbc.database.public.adminRef('codeOfConductDraft')  
-      // const userStatusRef = fbc.database.private.adminableUserRef('status')
-      const adminsRef = fbc.database.public.adminRef("admins")
-      const userReportsRef = fbc.database.private.adminableUsersRef()
-      mapPerUserPrivateAdminablePushedDataToStateObjects(fbc, 'reports', this, 'reports', (userId, key, value) => key)
+        let dropDownUsers = []
+        users.forEach(user => dropDownUsers.push(Object.assign({}, {value: user.id, label: user.firstName + " " + user.lastName, className: "dropdownText"})))
+        this.setState({allUsers: users, isSignedIn: true, dropDownUsers})
+        const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
+        const codeOfConductDraftRef = fbc.database.public.adminRef('codeOfConductDraft')  
+        const adminsRef = fbc.database.public.adminRef("admins")
+        mapPerUserPrivateAdminablePushedDataToStateObjects(fbc, 'reports', this, 'reports', (userId, key, value) => key)
 
-      codeOfConductRef.on('child_added', data => { 
-        this.setState({ codeOfConduct: {...data.val(), key: data.key } })
+        codeOfConductRef.on('value', data => {
+          const codeOfConduct = data.val() || {}
+          this.setState({ codeOfConduct })
+        })
+
+        codeOfConductDraftRef.on('value', data => { 
+          const codeOfConductDraft = data.val() || {}
+          this.setState({ codeOfConductDraft })
+        })
+
+        adminsRef.on('child_added', data => {
+          this.setState({ admins: [...this.state.admins, {...data.val(), key: data.key }] })
+        })
+
+        adminsRef.on('child_removed', data => {
+          this.setState({ admins: this.state.admins.filter(x => x.key !== data.key) })
+        })
       })
-
-      codeOfConductRef.on('child_changed', data => {
-        this.setState({ codeOfConduct: {...data.val(), key: data.key } })
-      })
-
-      adminsRef.on('child_added', data => {
-        this.setState({ admins: [...this.state.admins, {...data.val(), key: data.key }] })
-      })
-
-      adminsRef.on('child_removed', data => {
-        this.setState({ admins: this.state.admins.filter(x => x.key !== data.key) })
-      })
-
-      codeOfConductDraftRef.on('child_added', data => {
-        this.setState({ codeOfConductDraft: {...data.val(), key: data.key } })
-      })
-
-      codeOfConductDraftRef.on('child_changed', data => {
-        this.setState({ codeOfConductDraft: {...data.val(), key: data.key } })
-      })
-
-    })
     })
   }
 
@@ -121,18 +109,10 @@ export default class App extends Component {
   }
 
   saveCodeOfConduct = (input) => {
-    //On initial launching of the app this fbc object would not exist. In that case the default is to be on. On first action we would set the object to the expected state and from there use update.
     if (window.confirm("Are you sure you want to publish the code of conduct?")) {
-      if (Object.keys(this.state.codeOfConduct).length === 0) {
         const publishTime = new Date().getTime()
-        fbc.database.public.adminRef('codeOfConduct').push({"text": input, publishTime})
+        fbc.database.public.adminRef('codeOfConduct').set({"text": input, publishTime})
         this.saveDraftCodeOfConduct(input)
-      }
-      else {
-        const publishTime = new Date().getTime()
-        fbc.database.public.adminRef('codeOfConduct').child(this.state.codeOfConduct.key).update({"text": input, publishTime})
-        this.saveDraftCodeOfConduct(input)
-      }
     }
   }
 
@@ -167,15 +147,8 @@ export default class App extends Component {
   }
 
   saveDraftCodeOfConduct = (input) => {
-    //On initial launching of the app this fbc object would not exist. In that case the default is to be on. On first action we would set the object to the expected state and from there use update.
-    if (Object.keys(this.state.codeOfConductDraft).length === 0) {
       const publishTime = new Date().getTime()
-      fbc.database.public.adminRef('codeOfConductDraft').push({"text": input, publishTime})
-    }
-    else {
-      const publishTime = new Date().getTime()
-      fbc.database.public.adminRef('codeOfConductDraft').child(this.state.codeOfConductDraft.key).update({"text": input, publishTime})
-    }
+      fbc.database.public.adminRef('codeOfConductDraft').set({"text": input, publishTime})
   }
 
 }
