@@ -77,9 +77,6 @@ html, body, select{
   margin-bottom: 0.4em;
 }
 
-
-
-
 .dropdownTitle{
   margin-top: 20px;
 }
@@ -119,7 +116,6 @@ html, body, select{
   flex-flow: row wrap;
   align-items: center;
 }
-
 
 .avatar{
   height: 20px;
@@ -288,10 +284,10 @@ html, body, select{
   border: 0.06em solid #abbac9;
   margin-top: 0.4em;
   margin-bottom: 0.5em;
-  padding: 10px 10px 80px 10px;
+  padding: 10px;
   border-radius: 5px;
   width: 100%;
-  background-color: white;
+  background-color: red;
 }
 
 .displayButton {
