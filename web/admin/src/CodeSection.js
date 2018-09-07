@@ -51,12 +51,12 @@ export default class CodeSection extends Component {
           <button className="displayButton" onClick={() => handleChange("isCodeBoxDisplay", !isCodeBoxDisplay)}>{(isCodeBoxDisplay ? "Hide Section" : "Show Section")}</button>
         </div>
         { isCodeBoxDisplay && <div>
-          {this.state.showStaticBox && !codeOfConductDraft.text ? <button onClick={this.openEditText} value="boxButton"  className="placeHolderTextBox">
+          {this.state.showStaticBox && !codeOfConductDraft.text ? <div onClick={this.openEditText} value="boxButton"  className="placeHolderTextBox">
             <span className="placeHolderTextLine">
               <p className="placeHolderText">Enter code of conduct text here or</p>
               <button value="defaultButton"  onClick={this.addDefaultCode} className="noBorderButtonBlue">add default code of conduct</button>
             </span>
-          </button> : <TextInput 
+          </div> : <TextInput 
             multiline
             autoFocus={!this.state.showStaticBox}
             value={this.state.input}
@@ -87,7 +87,7 @@ export default class CodeSection extends Component {
   }
 
   openEditText = (e) => {
-    if (e.target.value === "boxButton") this.setState({showStaticBox: false, input: this.props.codeOfConductDraft.text || ''})
+    if (e.target.value !== "defaultButton") this.setState({showStaticBox: false, input: this.props.codeOfConductDraft.text || ''})
   }
 
   addDefaultCode = (e) => {

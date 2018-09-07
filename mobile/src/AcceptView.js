@@ -60,6 +60,8 @@ export default class AcceptView extends Component {
    
     )
   }
+
+
 }
 
 const s = ReactNative.StyleSheet.create({
