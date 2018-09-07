@@ -29,7 +29,9 @@ export default class CodeSection extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({input: nextProps.codeOfConductDraft.text})
+    if (nextProps.codeOfConductDraft.text){
+      this.setState({input: nextProps.codeOfConductDraft.text})
+    }
   }
 
 
