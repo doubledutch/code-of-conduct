@@ -164,7 +164,7 @@ function updateLandingUrls(codeOfConductText) {
 
     const settings = [].concat(...config.Configuration.Groups.map(g => g.Settings))
     const landingUrlsSetting = settings.find(s => s.Name === 'LandingUrls')
-    if (landingUrlsSetting && landingUrlsSetting.Value) {
+    if (landingUrlsSetting) {
       let landingUrls = []
       try {
         landingUrls = JSON.parse(landingUrlsSetting.Value).filter(url => url.startsWith)
