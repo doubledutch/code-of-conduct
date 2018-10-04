@@ -95,7 +95,7 @@ export default class HomeView extends Component {
   render() {
     return (
       <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
-        <TitleBar title="Code of Conduct" client={client} signin={this.signin} />
+        {this.props.version ? null : <TitleBar title="Code of Conduct" client={client} signin={this.signin} />}
         {this.state.isLoggedIn ? this.renderPage() : <LoadingView LogInFailed={this.state.LogInFailed}/>}
       </KeyboardAvoidingView>
     )
