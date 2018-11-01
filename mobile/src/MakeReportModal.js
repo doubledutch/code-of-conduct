@@ -13,6 +13,7 @@ export default class MakeReportModal extends Component {
       borderColor: '#EFEFEF',
       inputHeight: 0,
       isError: false,
+      isSaving: false,
       currentContact: ""
     }
   }
@@ -120,7 +121,7 @@ export default class MakeReportModal extends Component {
             {(this.state.isError && !this.checkPhone() && this.props.currentReport.preferredContact === "phone") && <Text style={{color: "red", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter valid phone</Text>}
           </View>
         </View> }
-        <TouchableOpacity style={s.sendButton} onPress={this.checkValues}><Text style={s.sendButtonText}>Report Violation</Text></TouchableOpacity>
+        <TouchableOpacity style={s.sendButton} disabled={this.state.isSaving} onPress={this.checkValues}><Text style={s.sendButtonText}>Report Violation</Text></TouchableOpacity>
       </View>
     )
   }
@@ -132,9 +133,11 @@ export default class MakeReportModal extends Component {
       phoneStatus = this.checkPhone()
     }
     if (report.isAnom && report.description.trim().length > 0) {
+      this.setState({isSaving: true})
       this.props.saveReport()
     }
     if (report.preferredContact.length > 0 && phoneStatus && report.description.trim().length > 0) {
+      this.setState({isSaving: true})
       this.props.saveReport()
     }
     else this.setState({isError: true})
