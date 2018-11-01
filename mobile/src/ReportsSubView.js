@@ -15,21 +15,11 @@
  */
 
 import React, { Component } from 'react'
-import ReactNative, {
-  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, Button, FlatList
-} from 'react-native'
-import client from '@doubledutch/rn-client'
+import { StyleSheet, Text, View, FlatList } from 'react-native'
 import ReportsSubViewCell from "./ReportsSubViewCell"
 
-
-
 export default class ReportsSubView extends Component {
-  constructor() {
-    super()
-    this.state = { 
-      isExpanded: false
-    }
-  }
+  state = { isExpanded: false }
 
   render() {
     const reports = this.props.reports || []
@@ -40,19 +30,16 @@ export default class ReportsSubView extends Component {
         <View style={s.border}/>
         <View style={s.listContainer}>
           <FlatList 
-          data={reports}
-          renderItem={({item}) => {
-            return <ReportsSubViewCell report={item} showReport={this.props.showReport}/>
-          }} 
+            data={reports}
+            renderItem={({item}) => <ReportsSubViewCell report={item} showReport={this.props.showReport} primaryColor={this.props.primaryColor} />} 
           />
         </View>
       </View>
     )
   }
-
 }
 
-const s = ReactNative.StyleSheet.create({
+const s = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
@@ -72,24 +59,4 @@ const s = ReactNative.StyleSheet.create({
     margin: 20,
     marginLeft: 15
   },
-  completeCode: {
-    flex: 1,
-    color: "#A1A1A1"
-  },
-  shortCode: {
-    height: 200,
-    color: "#A1A1A1"
-  },
-  tabButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-    backgroundColor: "white"
-  },
-  tabButtonText: {
-    color: client.primaryColor,
-    fontSize: 14,
-    marginTop: 15,
-    marginBottom: 0
-  }
 })

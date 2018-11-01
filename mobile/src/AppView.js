@@ -15,10 +15,7 @@
  */
 
 import React, { Component } from 'react'
-import ReactNative, {
-  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, Button, ScrollView
-} from 'react-native'
-import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
+import { ScrollView } from 'react-native'
 import CodeOfConductSubView from "./CodeOfConductSubView"
 import ReportsSubView from "./ReportsSubView"
 import MakeReportSubView from "./MakeReportSubView"
@@ -27,43 +24,31 @@ import CodeOfConductModal from "./CodeOfConductModal"
 import ViewReportModal from "./ViewReportModal"
 
 export default class AppView extends Component {
-  constructor() {
-    super()
-    this.state = { 
-    
-    }
-
-  }
-
   renderHome() {
+    const {primaryColor} = this.props
     const reports = this.props.reports || []
     return (
       <ScrollView style={{flex: 1}}>
-        <CodeOfConductSubView codeOfConduct={this.props.codeOfConduct} showCodeOfConduct={this.props.showCodeOfConduct}/>
-        {reports.length > 0 && <ReportsSubView reports={this.props.reports} showReport={this.props.showReport}/>}
-        <MakeReportSubView showModal={this.props.showModal} admins={this.props.admins}/>
+        <CodeOfConductSubView codeOfConduct={this.props.codeOfConduct} showCodeOfConduct={this.props.showCodeOfConduct} primaryColor={primaryColor} />
+        {reports.length > 0 && <ReportsSubView reports={this.props.reports} showReport={this.props.showReport} primaryColor={primaryColor} />}
+        <MakeReportSubView showModal={this.props.showModal} admins={this.props.admins} primaryColor={primaryColor} />
       </ScrollView>
     )
   }
 
   render() {
+    const {currentUser, primaryColor} = this.props
     switch (this.props.currentAppPage) {
       case 'modal':
-        return <MakeReportModal showModal={this.props.showModal} saveReport={this.props.saveReport} currentReport={this.props.currentReport} updateItem={this.props.updateItem} makeReport={this.props.makeReport}/>
+        return <MakeReportModal showModal={this.props.showModal} saveReport={this.props.saveReport} currentReport={this.props.currentReport} updateItem={this.props.updateItem} makeReport={this.props.makeReport} primaryColor={primaryColor} currentUser={currentUser} />
       case "home":
         return this.renderHome()
       case "code":
-        return <CodeOfConductModal codeOfConduct={this.props.codeOfConduct} showCodeOfConduct={this.props.showCodeOfConduct}/>
+        return <CodeOfConductModal codeOfConduct={this.props.codeOfConduct} showCodeOfConduct={this.props.showCodeOfConduct} primaryColor={primaryColor} />
       case "report":
-        return <ViewReportModal currentReport={this.props.currentReport} showReport={this.props.showReport}/>
+        return <ViewReportModal currentReport={this.props.currentReport} showReport={this.props.showReport} primaryColor={primaryColor} />
       default:
         return this.renderHome()
     }
   }
-
-
 }
-
-const s = ReactNative.StyleSheet.create({
-
-})

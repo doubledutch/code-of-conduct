@@ -15,20 +15,11 @@
  */
 
 import React, { Component } from 'react'
-import ReactNative, {
-  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, Button, FlatList
-} from 'react-native'
-import client from '@doubledutch/rn-client'
-
-
+import { StyleSheet, TouchableOpacity, Text, View } from 'react-native'
 
 export default class ReportsSubViewCell extends Component {
-  constructor() {
-    super()
-  }
-
   render() {
-    const {report} = this.props
+    const { primaryColor, report } = this.props
     return (
       <View>
         <TouchableOpacity style={s.cell} onPress={()=>this.props.showReport(report)}>
@@ -46,13 +37,12 @@ export default class ReportsSubViewCell extends Component {
                 </View>
               </View>
             </View>
-            <Text style={s.icon}>></Text>
+            <Text style={[s.icon, {color: primaryColor}]}>></Text>
           </View>
         </TouchableOpacity>
       </View>
     )
   }
-
 
   convertTime = (dateString) => {
     const date = new Date(dateString)
@@ -60,10 +50,9 @@ export default class ReportsSubViewCell extends Component {
       date.toLocaleString('en-US', {month: "2-digit", day: "2-digit", year: "numeric", hour: '2-digit', minute:'2-digit'})
     )
   }
-
 }
 
-const s = ReactNative.StyleSheet.create({
+const s = StyleSheet.create({
   cell: {
     marginBottom: 10,
     paddingLeft: 15,
@@ -75,7 +64,6 @@ const s = ReactNative.StyleSheet.create({
   },
   icon:{
     fontSize: 25, 
-    color: client.primaryColor
   },
   row: {
     flexDirection: "row"

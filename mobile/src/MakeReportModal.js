@@ -1,9 +1,7 @@
 'use strict'
 import React, { Component } from 'react'
-import ReactNative, { TouchableOpacity, View, Text, Image, TextInput, Platform } from 'react-native'
-import client, { Avatar, TitleBar, Color } from '@doubledutch/rn-client'
-const primaryColor = new Color(client.primaryColor).limitLightness(0.9).rgbString()
-
+import { StyleSheet, TouchableOpacity, View, Text, Image, TextInput, Platform } from 'react-native'
+import client, { Avatar, Color } from '@doubledutch/rn-client'
 
 export default class MakeReportModal extends Component {
   constructor(props){
@@ -49,6 +47,7 @@ export default class MakeReportModal extends Component {
       marginBottom: 10,
     }
   
+    const {currentUser} = this.props
 
     let borderColor = this.state.borderColor
     if (this.state.isError && this.props.currentReport.description.trim().length === 0){borderColor = "red"}
@@ -76,8 +75,8 @@ export default class MakeReportModal extends Component {
                 <Text style={s.anomText}>Report anonymously</Text>
               </View>
               <View style={{flexDirection: "row", height: 25, marginTop: 10, alignItems: "center", justifyContent: "flex-end"}}>
-                <Avatar user={client.currentUser} size={25}/>
-                <Text numberOfLines={2} ellipsizeMode={"tail"} style={s.nameText}>{client.currentUser.firstName + " " + client.currentUser.lastName}</Text>
+                <Avatar user={currentUser} size={25}/>
+                <Text numberOfLines={2} ellipsizeMode={"tail"} style={s.nameText}>{currentUser.firstName + " " + currentUser.lastName}</Text>
               </View>
             </View>
           </View>
@@ -88,7 +87,8 @@ export default class MakeReportModal extends Component {
   }
 
   radioButtonsSection = () => {
-    const { currentReport } = this.props
+    const { currentReport, primaryColor } = this.props
+    const sendButtonStyle = {backgroundColor: new Color(primaryColor).limitLightness(0.9).rgbString()}
     return (
       <View style={{display: "flex", paddingBottom: 40, marginTop: 30}}>
         {!this.props.currentReport.isAnom && <View>
@@ -97,13 +97,13 @@ export default class MakeReportModal extends Component {
             <View style={{flexDirection: "row"}}>
               <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
                 <TouchableOpacity onPress={() => this.updateItem("preferredContact", "email")} style={{padding: 10}}>
-                  {RadioButton(currentReport, "email")}
+                  {this.radioButton(currentReport, "email")}
                 </TouchableOpacity>
                 <Text style={s.radioTitle}>Email</Text>
               </View>
               <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
                 <TouchableOpacity onPress={() => this.updateItem("preferredContact", "inapp")} style={{padding: 10}}>
-                {RadioButton(currentReport, "inapp")}
+                {this.radioButton(currentReport, "inapp")}
                 </TouchableOpacity>
                 <Text style={s.radioTitle}>In-App Message</Text>
               </View>
@@ -111,7 +111,7 @@ export default class MakeReportModal extends Component {
             <View style={{flexDirection: "row"}}>
               <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
                 <TouchableOpacity onPress={() => this.updateItem("preferredContact", "phone")} style={{padding: 10}}>
-                  {RadioButton(currentReport, "phone")}
+                  {this.radioButton(currentReport, "phone")}
                 </TouchableOpacity>
                 <Text style={s.radioTitle}>Phone Call</Text>
               </View>
@@ -121,7 +121,7 @@ export default class MakeReportModal extends Component {
             {(this.state.isError && !this.checkPhone() && this.props.currentReport.preferredContact === "phone") && <Text style={{color: "red", paddingTop: 2, fontSize: 12, marginLeft: 10}}>*Please enter valid phone</Text>}
           </View>
         </View> }
-        <TouchableOpacity style={s.sendButton} disabled={this.state.isSaving} onPress={this.checkValues}><Text style={s.sendButtonText}>Report Violation</Text></TouchableOpacity>
+        <TouchableOpacity style={[s.sendButton, sendButtonStyle]} disabled={this.state.isSaving} onPress={this.checkValues}><Text style={s.sendButtonText}>Report Violation</Text></TouchableOpacity>
       </View>
     )
   }
@@ -155,8 +155,6 @@ export default class MakeReportModal extends Component {
     return phoneNum.match(/\d/g) !== null
   }
 
-
-
   _handleSizeChange = event => {
     this.setState({
       inputHeight: event.nativeEvent.contentSize.height
@@ -168,36 +166,31 @@ export default class MakeReportModal extends Component {
     this.setState({anomStatus: !currentAnom})
   }
 
-
-}
-
-function RadioButton(item, status) {
-  return (
-    <View style={[{
+  radioButton = (item, status) => (
+    <View style={{
       height: 24,
       width: 24,
       borderRadius: 12,
       borderWidth: 2,
-      borderColor: client.primaryColor,
+      borderColor: this.props.primaryColor,
       alignItems: 'center',
       justifyContent: 'center',
-    }]}>
+    }}>
       {
         (item.preferredContact === status) ?
           <View style={{
             height: 12,
             width: 12,
             borderRadius: 6,
-            backgroundColor: client.primaryColor,
+            backgroundColor: this.props.primaryColor,
           }}/>
           : null
       }
     </View>
-  );
+  )
 }
 
-
-const s = ReactNative.StyleSheet.create({
+const s = StyleSheet.create({
   modal: {
     flexDirection: 'row',
     backgroundColor: 'white',
@@ -285,7 +278,6 @@ const s = ReactNative.StyleSheet.create({
     marginTop: 20,
     marginRight: 20,
     width: 146,
-    backgroundColor: primaryColor,
     height: 37,
     borderRadius: 4,
     alignSelf: "flex-end"
@@ -302,5 +294,4 @@ const s = ReactNative.StyleSheet.create({
     color: 'white',
     textAlign: 'center'
   },
-
 })

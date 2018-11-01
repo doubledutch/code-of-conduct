@@ -15,14 +15,9 @@
  */
 
 import React, { Component } from 'react'
-import ReactNative, {
-  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, Button, ScrollView
-} from 'react-native'
-import client from '@doubledutch/rn-client'
-
+import { StyleSheet, TouchableOpacity, Text, View, ScrollView } from 'react-native'
 
 export default class ViewReportModal extends Component {
-
   render() {
     return (
       <View style={s.container}>
@@ -33,7 +28,6 @@ export default class ViewReportModal extends Component {
       </View>
     )
   }
-
   
   renderReportBox = () => {
     const {currentReport} = this.props
@@ -62,21 +56,20 @@ export default class ViewReportModal extends Component {
   }
 
   renderHeaderBar = () => {
+    const {primaryColor}= this.props
     return (
       <View style={s.headerContainer}>
         <TouchableOpacity style={s.headerButton} onPress={()=>this.props.showReport("")}>
-          <Text style={s.headerButtonText}>X</Text>
+          <Text style={[s.headerButtonText, {color: primaryColor}]}>X</Text>
         </TouchableOpacity>
         <Text style={s.headerTitle}>Reported Violation</Text>
         <View style={{width: 20, height: 10}}></View>
       </View>
     )
   }
-
-
 }
 
-const s = ReactNative.StyleSheet.create({
+const s = StyleSheet.create({
   container: {
     padding: 15, 
     backgroundColor: "white"
@@ -111,7 +104,6 @@ const s = ReactNative.StyleSheet.create({
     textAlign: "left",
     fontSize: 18,
     fontWeight: "bold",
-    color: client.primaryColor
   },
   boxHeader: {
     flexDirection: "row",
