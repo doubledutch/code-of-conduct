@@ -15,14 +15,9 @@
  */
 
 import React, { Component } from 'react'
-import ReactNative, {
-  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, Button, ScrollView
-} from 'react-native'
-import client from '@doubledutch/rn-client'
-
+import { StyleSheet, TouchableOpacity, Text, View, ScrollView } from 'react-native'
 
 export default class CodeOfConductModal extends Component {
-
   render() {
     const code = this.props.codeOfConduct ? this.props.codeOfConduct.text : ""
     return (
@@ -36,21 +31,20 @@ export default class CodeOfConductModal extends Component {
   }
 
   renderHeaderBar = () => {
+    const {primaryColor} = this.props
     return (
       <View style={s.headerContainer}>
         <TouchableOpacity style={s.headerButton} onPress={this.props.showCodeOfConduct}>
-          <Text style={s.headerButtonText}>X</Text>
+          <Text style={[s.headerButtonText, {color: primaryColor}]}>X</Text>
         </TouchableOpacity>
         <Text style={s.headerTitle}>Code of Conduct</Text>
         <View style={{width: 20, height: 10}}></View>
       </View>
     )
   }
-
-
 }
 
-const s = ReactNative.StyleSheet.create({
+const s = StyleSheet.create({
   headerButton : {
     width: 20,
   },
@@ -58,7 +52,6 @@ const s = ReactNative.StyleSheet.create({
     textAlign: "left",
     fontSize: 18,
     fontWeight: "bold",
-    color: client.primaryColor
   },
   headerContainer: {
     flexDirection: "row", 

@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import '@doubledutch/react-components/lib/base.css'
 import './App.css'
 import client from '@doubledutch/admin-client'
 import md5 from 'md5'
-import FirebaseConnector, {
+import {
+  provideFirebaseConnectorToReactComponent,
   mapPerUserPrivateAdminablePushedDataToStateObjects,
 } from '@doubledutch/firebase-connector'
 import CodeSection from "./CodeSection"
 import AdminSection from "./AdminSection"
 import ReportSection from "./ReportSection"
 import ModalView from "./ModalView"
-const fbc = FirebaseConnector(client, 'codeofconduct')
 
-fbc.initializeAppWithSimpleBackend()
-
-export default class App extends Component {
-  constructor() {
-    super()
+class App extends PureComponent {
+  constructor(props) {
+    super(props)
     this.state = { 
       allUsers: [],
       admins: [],
@@ -47,14 +45,15 @@ export default class App extends Component {
       currentReport: {},
       dropDownUsers: []
     }
-    this.signin = fbc.signinAdmin()
+    this.signin = props.fbc.signinAdmin()
     .then(user => this.user = user)
     .catch(err => console.error(err))
   }
 
   componentDidMount() {
+    const {fbc} = this.props
     this.signin.then(() => {
-      client.getUsers().then(users => {
+      client.getAttendees().then(users => {
         let dropDownUsers = []
         users.forEach(user => dropDownUsers.push(Object.assign({}, {value: user.id, label: user.firstName + " " + user.lastName, className: "dropdownText"})))
         this.setState({allUsers: users, isSignedIn: true, dropDownUsers})
@@ -96,12 +95,12 @@ export default class App extends Component {
   }
 
   onAdminSelected = attendee => {
-    fbc.database.public.adminRef("admins").push(attendee)
+    this.props.fbc.database.public.adminRef("admins").push(attendee)
   }
 
   onAdminDeselected = attendee => {
     const newAttendee = this.state.admins.find(a => a.id === attendee.id)
-    if (newAttendee.key) fbc.database.public.adminRef("admins").child(newAttendee.key).remove()
+    if (newAttendee.key) this.props.fbc.database.public.adminRef("admins").child(newAttendee.key).remove()
   }
 
   handleChange = (name, value) => {
@@ -111,7 +110,7 @@ export default class App extends Component {
   saveCodeOfConduct = (input) => {
     if (window.confirm('Are you sure you want to publish the code of conduct? Attendees will have to confirm acceptance of the new code of conduct.')) {
       const publishTime = new Date().getTime()
-      fbc.database.public.adminRef('codeOfConduct').set({text: input, publishTime}).then(() => {
+      this.props.fbc.database.public.adminRef('codeOfConduct').set({text: input, publishTime}).then(() => {
         updateLandingUrls(input)
       })
       this.saveDraftCodeOfConduct(input)
@@ -129,7 +128,7 @@ export default class App extends Component {
     this.setState({showModal: true, modal:"report"})
   }
   completeResolution = (resolution, resolutionPerson) => {
-    fbc.database.private.adminableUsersRef(this.state.currentReport.userId).child('reports').child(this.state.currentReport.id).update({status: "Resolved", resolution, resolutionPerson, dateCreate: new Date().getTime()})
+    this.props.fbc.database.private.adminableUsersRef(this.state.currentReport.userId).child('reports').child(this.state.currentReport.id).update({status: "Resolved", resolution, resolutionPerson, dateCreate: new Date().getTime()})
     this.setState({currentReport: {}, showModal: false})
   }
 
@@ -140,7 +139,7 @@ export default class App extends Component {
     newReport.dateCreate = new Date().getTime()
     newReport.creator = behalfUser
     newReport.reportPerson = reportPerson
-    fbc.database.private.adminableUsersRef(userID).child('reports').push(newReport)
+    this.props.fbc.database.private.adminableUsersRef(userID).child('reports').push(newReport)
     .then(() => this.setState({showModal: false}))
   }
 
@@ -150,7 +149,7 @@ export default class App extends Component {
 
   saveDraftCodeOfConduct = (input) => {
       const publishTime = new Date().getTime()
-      fbc.database.public.adminRef('codeOfConductDraft').set({"text": input, publishTime})
+      this.props.fbc.database.public.adminRef('codeOfConductDraft').set({"text": input, publishTime})
   }
 }
 
@@ -188,9 +187,10 @@ function updateLandingUrls(codeOfConductText) {
   })
 }
 
+export default provideFirebaseConnectorToReactComponent(client, 'codeofconduct', (props, fbc) => <App {...props} fbc={fbc} />, PureComponent)
+
 const blankReport = {
   isAnom: false,
-  creator: client.currentUser,
   preferredContact: "",
   description: "",
   status: "Received"

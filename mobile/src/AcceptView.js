@@ -15,11 +15,8 @@
  */
 
 import React, { Component } from 'react'
-import ReactNative, {
-  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, ScrollView, View, Image
-} from 'react-native'
+import {StyleSheet, TouchableOpacity, Text, ScrollView, View } from 'react-native'
 import client from '@doubledutch/rn-client'
-
 
 export default class AcceptView extends Component {
   constructor(props) {
@@ -38,7 +35,7 @@ export default class AcceptView extends Component {
   }
 
   render() {
-    const {codeOfConduct} = this.props
+    const {codeOfConduct, currentEvent, primaryColor} = this.props
   
     return (
       <View style={s.flex}>
@@ -46,23 +43,22 @@ export default class AcceptView extends Component {
         ? codeOfConduct.text
           ? <ScrollView style={s.scrollView}>
               <View style={s.paddingBottom}>
-                <Text style={s.titleTop}>{client.currentEvent.name}</Text>
+                <Text style={s.titleTop}>{currentEvent.name}</Text>
                 <Text style={s.title}>{"Code of Conduct"}</Text>
                 <Text style={s.text}>{this.props.codeOfConduct.text}</Text>
                 <TouchableOpacity style={s.noBorderButton} onPress={()=>client.openURL('dd://leaveevent')}><Text style={s.noBorderText}>I do not agree to the code of conduct</Text></TouchableOpacity>
-                <TouchableOpacity onPress={this.props.markAccepted} style={s.launchButton}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
+                <TouchableOpacity onPress={this.props.markAccepted} style={[s.launchButton, {backgroundColor: primaryColor}]}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
               </View>
             </ScrollView>
           : <View style={s.helpTextView}><Text style={s.helpText}>No Code of Conduct has been set</Text></View>
         : null
       }
       </View>
-   
     )
   }
 }
 
-const s = ReactNative.StyleSheet.create({
+const s = StyleSheet.create({
   text: {
     fontSize: 18,
     color: "#4B4B4B",
@@ -107,7 +103,6 @@ const s = ReactNative.StyleSheet.create({
 
   launchButton: {
     height: 46,
-    backgroundColor: client.primaryColor,
     alignItems: "center",
     justifyContent: "center",
     margin: 20,

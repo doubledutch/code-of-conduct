@@ -15,18 +15,16 @@
  */
 
 import React, { Component } from 'react'
-import ReactNative, {
-  KeyboardAvoidingView, Platform, TouchableOpacity, Text, TextInput, View, Button
-} from 'react-native'
+import { StyleSheet, TouchableOpacity, Text, View } from 'react-native'
 import client, { Avatar } from '@doubledutch/rn-client'
 
-
 export default class MakeReportSubView extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = { 
       isModal: false
     }
+    this.s = createStyles(props)
   }
 
   render() {
@@ -48,7 +46,7 @@ export default class MakeReportSubView extends Component {
         <Text style={s.headerTitleText}>REPORT A VIOLATION</Text>
         <Text style={s.title}>Message the Organizers</Text>
         <Text style={s.description}>Send a description of the violation to the event organizer, and they will see to it until the situation is resolved</Text>
-        <TouchableOpacity style={s.button} onPress={this.props.showModal}><Text style={s.buttonText}>Report a Violation</Text></TouchableOpacity>
+        <TouchableOpacity style={[s.button, this.s.primaryBorder]} onPress={this.props.showModal}><Text style={[s.buttonText, this.s.primary]}>Report a Violation</Text></TouchableOpacity>
       </View>
     )
   }
@@ -73,8 +71,8 @@ export default class MakeReportSubView extends Component {
               <Avatar user={person} size={40}/>
               <Text numberOfLines={2} ellipsizeMode={"tail"} style={s.name}>{person.firstName + " " + person.lastName}</Text>
               <View style={{flex: 1}}/>
-              <TouchableOpacity style={s.messageButton} onPress={() => client.openURL(`dd://profile/${person.id}`)}>
-                <Text style={s.buttonText}>Message</Text>
+              <TouchableOpacity style={[s.messageButton, this.s.primaryBorder]} onPress={() => client.openURL(`dd://profile/${person.id}`)}>
+                <Text style={[s.buttonText, this.s.primary]}>Message</Text>
               </TouchableOpacity>
           </View>
          )
@@ -83,16 +81,18 @@ export default class MakeReportSubView extends Component {
     )
   }
 
-
   changeIsExpanded = () => {
     const current = this.state.isExpanded
     this.setState({isExpanded: !current})
   }
-
-
 }
 
-const s = ReactNative.StyleSheet.create({
+const createStyles = ({primaryColor}) => StyleSheet.create({
+  primaryBorder: { borderColor: primaryColor },
+  primary: { color: primaryColor },
+})
+
+const s = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
@@ -136,14 +136,9 @@ const s = ReactNative.StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 0.1,
   },
-  buttonText: {
-    fontSize: 14,
-    color: client.primaryColor
-  },
   messageButton: {
     height: 30,
     width: 88,
-    borderColor: client.primaryColor,
     borderRadius: 5,
     borderWidth: 1,
     alignItems: "center",
@@ -172,14 +167,12 @@ const s = ReactNative.StyleSheet.create({
     justifyContent: "center",
     flex: 1,
     backgroundColor: "white",
-    borderColor: client.primaryColor,
     borderRadius: 5,
     padding: 15,
     borderWidth: 1,
     marginTop: 10
   },
   buttonText: {
-    color: client.primaryColor,
     fontSize: 14,
     fontWeight: "bold"
   }
