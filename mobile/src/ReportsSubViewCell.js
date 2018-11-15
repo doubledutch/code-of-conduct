@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,10 +22,12 @@ export default class ReportsSubViewCell extends Component {
     const { primaryColor, report } = this.props
     return (
       <View>
-        <TouchableOpacity style={s.cell} onPress={()=>this.props.showReport(report)}>
+        <TouchableOpacity style={s.cell} onPress={() => this.props.showReport(report)}>
           <View style={s.inCellContainer}>
             <View style={s.leftContainer}>
-              <Text style={s.description} ellipsizeMode={"tail"} numberOfLines={1}>{report.description}</Text>
+              <Text style={s.description} ellipsizeMode="tail" numberOfLines={1}>
+                {report.description}
+              </Text>
               <View style={s.bottomRow}>
                 <View style={s.row}>
                   <Text style={s.headingText}>Reported: </Text>
@@ -33,22 +35,28 @@ export default class ReportsSubViewCell extends Component {
                 </View>
                 <View style={s.row}>
                   <Text style={s.headingText}>Status: </Text>
-                  <Text style={report.status === "Received" ? s.yellowText : s.greenText}>{report.status}</Text>
+                  <Text style={report.status === 'Received' ? s.yellowText : s.greenText}>
+                    {report.status}
+                  </Text>
                 </View>
               </View>
             </View>
-            <Text style={[s.icon, {color: primaryColor}]}>></Text>
+            <Text style={[s.icon, { color: primaryColor }]}>></Text>
           </View>
         </TouchableOpacity>
       </View>
     )
   }
 
-  convertTime = (dateString) => {
+  convertTime = dateString => {
     const date = new Date(dateString)
-    return ( 
-      date.toLocaleString('en-US', {month: "2-digit", day: "2-digit", year: "numeric", hour: '2-digit', minute:'2-digit'})
-    )
+    return date.toLocaleString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
   }
 }
 
@@ -59,38 +67,38 @@ const s = StyleSheet.create({
     paddingRight: 15,
   },
   timeText: {
-    color: "#A1A1A1",
-    marginRight: 15
+    color: '#A1A1A1',
+    marginRight: 15,
   },
-  icon:{
-    fontSize: 25, 
+  icon: {
+    fontSize: 25,
   },
   row: {
-    flexDirection: "row"
+    flexDirection: 'row',
   },
   inCellContainer: {
-    flexDirection: "row", 
-    alignItems: "center"
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  leftContainer:{
-    flex: 1, 
-    marginRight: 15
+  leftContainer: {
+    flex: 1,
+    marginRight: 15,
   },
-  bottomRow:{ 
-    marginTop: 5, 
-    flexDirection: "row", 
-    flexWrap:"wrap"
+  bottomRow: {
+    marginTop: 5,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   description: {
-    color: "#A1A1A1",
+    color: '#A1A1A1',
   },
   headingText: {
-    color: "#3D4A4D",
+    color: '#3D4A4D',
   },
   yellowText: {
-    color: "#F6B343"
+    color: '#F6B343',
   },
   greenText: {
-    color: "#9AD55E"
-  }
+    color: '#9AD55E',
+  },
 })

@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,11 +19,11 @@ import { StyleSheet, TouchableOpacity, Text, View, ScrollView } from 'react-nati
 
 export default class CodeOfConductModal extends Component {
   render() {
-    const code = this.props.codeOfConduct ? this.props.codeOfConduct.text : ""
+    const code = this.props.codeOfConduct ? this.props.codeOfConduct.text : ''
     return (
       <View style={s.container}>
         {this.renderHeaderBar()}
-        <ScrollView style={{flex: 1}}>
+        <ScrollView style={{ flex: 1 }}>
           <Text style={s.completeCode}>{code}</Text>
         </ScrollView>
       </View>
@@ -31,55 +31,55 @@ export default class CodeOfConductModal extends Component {
   }
 
   renderHeaderBar = () => {
-    const {primaryColor} = this.props
+    const { primaryColor } = this.props
     return (
       <View style={s.headerContainer}>
         <TouchableOpacity style={s.headerButton} onPress={this.props.showCodeOfConduct}>
-          <Text style={[s.headerButtonText, {color: primaryColor}]}>X</Text>
+          <Text style={[s.headerButtonText, { color: primaryColor }]}>X</Text>
         </TouchableOpacity>
         <Text style={s.headerTitle}>Code of Conduct</Text>
-        <View style={{width: 20, height: 10}}></View>
+        <View style={{ width: 20, height: 10 }} />
       </View>
     )
   }
 }
 
 const s = StyleSheet.create({
-  headerButton : {
+  headerButton: {
     width: 20,
   },
   headerButtonText: {
-    textAlign: "left",
+    textAlign: 'left',
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   headerContainer: {
-    flexDirection: "row", 
-    borderBottomColor: "#F0F0F0", 
-    borderBottomWidth: 1, 
-    height: 60, 
-    alignItems: "center", 
+    flexDirection: 'row',
+    borderBottomColor: '#F0F0F0',
+    borderBottomWidth: 1,
+    height: 60,
+    alignItems: 'center',
     paddingLeft: 15,
-    paddingRight: 15
+    paddingRight: 15,
   },
   headerTitle: {
     flex: 1,
     fontSize: 18,
-    color: "#848484",
-    textAlign: "center"
+    color: '#848484',
+    textAlign: 'center',
   },
   container: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     flex: 1,
   },
   titleText: {
     fontSize: 18,
-    color: "#3D4A4D",
-    marginBottom: 20
+    color: '#3D4A4D',
+    marginBottom: 20,
   },
   completeCode: {
     flex: 1,
-    color: "#A1A1A1",
-    padding: 15
+    color: '#A1A1A1',
+    padding: 15,
   },
 })

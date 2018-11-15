@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,79 +23,121 @@ export default class CodeSection extends Component {
     super()
     this.state = {
       showStaticBox: true,
-      input: "",
-      clickable:true
+      input: '',
+      clickable: true,
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.codeOfConductDraft.text){
-      this.setState({input: nextProps.codeOfConductDraft.text})
+    if (nextProps.codeOfConductDraft.text) {
+      this.setState({ input: nextProps.codeOfConductDraft.text })
     }
   }
 
-
   render() {
-    const { codeOfConduct, codeOfConductDraft, handleChange, isCodeBoxDisplay, saveCodeOfConduct, saveDraftCodeOfConduct } = this.props
-    const isDraftChanges = (this.state.input !== codeOfConductDraft.text)
-    const isPublishChanges = (this.state.input !== codeOfConduct.text)
+    const {
+      codeOfConduct,
+      codeOfConductDraft,
+      handleChange,
+      isCodeBoxDisplay,
+      saveCodeOfConduct,
+      saveDraftCodeOfConduct,
+    } = this.props
+    const isDraftChanges = this.state.input !== codeOfConductDraft.text
+    const isPublishChanges = this.state.input !== codeOfConduct.text
     const currentState = this.findCurrentState()
-    const publishTime = codeOfConduct.publishTime ? new Date(codeOfConduct.publishTime).toLocaleString() : ""
+    const publishTime = codeOfConduct.publishTime
+      ? new Date(codeOfConduct.publishTime).toLocaleString()
+      : ''
     const inputIsNotEmpty = this.state.input ? this.state.input.trim().length > 0 : false
     return (
       <div className="sectionContainer">
         <div className="codeOfConductContainerRow">
           <h2 className="titleWithDescription">Code of Conduct</h2>
-          {currentState === "Published" && <p className="statusTextGreen">{currentState}</p>}
-          {currentState === "Draft" && <p className="statusTextYellow">{currentState}</p>}
+          {currentState === 'Published' && <p className="statusTextGreen">{currentState}</p>}
+          {currentState === 'Draft' && <p className="statusTextYellow">{currentState}</p>}
           {isCodeBoxDisplay && <p className="timeText">{publishTime}</p>}
-          <div className="flex"/>
-          <button className="displayButton" onClick={() => handleChange("isCodeBoxDisplay", !isCodeBoxDisplay)}>{(isCodeBoxDisplay ? "Hide Section" : "Show Section")}</button>
+          <div className="flex" />
+          <button
+            className="displayButton"
+            onClick={() => handleChange('isCodeBoxDisplay', !isCodeBoxDisplay)}
+          >
+            {isCodeBoxDisplay ? 'Hide Section' : 'Show Section'}
+          </button>
         </div>
-        { isCodeBoxDisplay && <div>
-          {this.state.showStaticBox && !codeOfConductDraft.text ? <div onClick={this.openEditText} value="boxButton"  className="placeHolderTextBox">
-            <span className="placeHolderTextLine">
-              <p className="placeHolderText">Enter code of conduct text here or</p>
-              <button value="defaultButton"  onClick={this.addDefaultCode} className="noBorderButtonBlue">add default code of conduct</button>
-            </span>
-          </div> : <TextInput 
-            multiline
-            autoFocus={!this.state.showStaticBox}
-            value={this.state.input}
-            onChange={e => this.setState({input: e.target.value})}
-            className="completeText" /> }
+        {isCodeBoxDisplay && (
+          <div>
+            {this.state.showStaticBox && !codeOfConductDraft.text ? (
+              <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
+                <span className="placeHolderTextLine">
+                  <p className="placeHolderText">Enter code of conduct text here or</p>
+                  <button
+                    value="defaultButton"
+                    onClick={this.addDefaultCode}
+                    className="noBorderButtonBlue"
+                  >
+                    add default code of conduct
+                  </button>
+                </span>
+              </div>
+            ) : (
+              <TextInput
+                multiline
+                autoFocus={!this.state.showStaticBox}
+                value={this.state.input}
+                onChange={e => this.setState({ input: e.target.value })}
+                className="completeText"
+              />
+            )}
             <div className="codeButtonsContainer">
-              <p>DoubleDutch hereby disclaims any and all liability in connection with this Code of Conduct.</p>
-              <div style={{flex: 1}}/>
-              { isDraftChanges && inputIsNotEmpty && <button onClick={() => saveDraftCodeOfConduct(this.state.input)}className="dd-bordered">Save as Draft</button> }
-              { isPublishChanges && inputIsNotEmpty && <button onClick={() => saveCodeOfConduct(this.state.input)}className="dd-bordered button-margin">Publish to App</button> }
+              <p>
+                DoubleDutch hereby disclaims any and all liability in connection with this Code of
+                Conduct.
+              </p>
+              <div style={{ flex: 1 }} />
+              {isDraftChanges && inputIsNotEmpty && (
+                <button
+                  onClick={() => saveDraftCodeOfConduct(this.state.input)}
+                  className="dd-bordered"
+                >
+                  Save as Draft
+                </button>
+              )}
+              {isPublishChanges && inputIsNotEmpty && (
+                <button
+                  onClick={() => saveCodeOfConduct(this.state.input)}
+                  className="dd-bordered button-margin"
+                >
+                  Publish to App
+                </button>
+              )}
             </div>
-          </div> }
-        </div>
+          </div>
+        )}
+      </div>
     )
   }
 
   findCurrentState = () => {
-    let stateText = ""
+    let stateText = ''
     if (this.props.codeOfConductDraft.text) {
       if (this.props.codeOfConduct.text === this.props.codeOfConductDraft.text) {
-        stateText = "Published"
-      }
-      else {
-        stateText = "Draft"
+        stateText = 'Published'
+      } else {
+        stateText = 'Draft'
       }
     }
     return stateText
   }
 
-  openEditText = (e) => {
-    if (e.target.value !== "defaultButton") this.setState({showStaticBox: false, input: this.props.codeOfConductDraft.text || ''})
+  openEditText = e => {
+    if (e.target.value !== 'defaultButton')
+      this.setState({ showStaticBox: false, input: this.props.codeOfConductDraft.text || '' })
   }
 
-  addDefaultCode = (e) => {
-    this.setState({showStaticBox: false, input: defaultCode, clickable: false})
+  addDefaultCode = e => {
+    this.setState({ showStaticBox: false, input: defaultCode, clickable: false })
   }
-
 }
 
 const defaultCode = `All attendees, speakers, sponsors and volunteers at our event are required to agree with the following code of conduct. Organizers will enforce this code throughout the event. We are expecting cooperation from all participants to help ensure a safe environment for everybody. 

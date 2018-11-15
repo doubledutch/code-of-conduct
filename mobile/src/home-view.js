@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,10 +19,10 @@ import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native'
 
 // rn-client must be imported before FirebaseConnector
 import client, { TitleBar } from '@doubledutch/rn-client'
-import {provideFirebaseConnectorToReactComponent} from '@doubledutch/firebase-connector'
-import AcceptView from "./AcceptView"
-import AppView from "./AppView"
-import LoadingView from "./LoadingView"
+import { provideFirebaseConnectorToReactComponent } from '@doubledutch/firebase-connector'
+import AcceptView from './AcceptView'
+import AppView from './AppView'
+import LoadingView from './LoadingView'
 
 class HomeView extends PureComponent {
   constructor(props) {
@@ -32,149 +32,191 @@ class HomeView extends PureComponent {
       reports: [],
       currentReport: {},
       userStatus: {},
-      currentAppPage: "home",
+      currentAppPage: 'home',
       admins: [],
       isLoggedIn: false,
-      logInFailed: false
+      logInFailed: false,
     }
 
-    this.signin = props.fbc.signin()
-      .then(user => this.user = user)
+    this.signin = props.fbc.signin().then(user => (this.user = user))
     this.signin.catch(err => console.error(err))
   }
 
   componentDidMount() {
-    const {fbc} = this.props
-    client.getCurrentEvent().then(currentEvent => this.setState({currentEvent}))
-    client.getPrimaryColor().then(primaryColor => this.setState({primaryColor}))
+    const { fbc } = this.props
+    client.getCurrentEvent().then(currentEvent => this.setState({ currentEvent }))
+    client.getPrimaryColor().then(primaryColor => this.setState({ primaryColor }))
     client.getCurrentUser().then(currentUser => {
-      this.setState({currentUser})
-      this.signin.then(() => {
-        const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
-        const userStatusRef = fbc.database.private.adminableUserRef('status')
-        const userReportsRef = fbc.database.private.adminableUserRef('reports')
-        const adminsRef = fbc.database.public.adminRef("admins")
-        const wireListeners = () => {
-          codeOfConductRef.on('value', data => {
-            const codeOfConduct = data.val() || {}
-            this.setState({ codeOfConduct})
-          })
-  
-          adminsRef.on('child_added', data => {
-            this.setState({ admins: [...this.state.admins, {...data.val(), key: data.key }] })
-          })
-    
-          adminsRef.on('child_removed', data => {
-            this.setState({ admins: this.state.admins.filter(x => x.key !== data.key) })
-          })
-  
-          userStatusRef.on('child_added', data => {
-            this.setState({ userStatus: {...data.val(), key: data.key} })
-          })
-  
-          userReportsRef.on('child_added', data => {
-            this.setState({ reports: [...this.state.reports, {...data.val(), key: data.key }] })
-          })
-  
-          userReportsRef.on('child_changed', data => {
-            this.setState(prevState => ({reports: prevState.reports.map(r => r.key === data.key ? {...data.val(), key: data.key} : r)}))
-          })
-  
-          //The function below will hide the login screen component with a 1/2 second delay to provide an oppt for firebase data to downlaod
-          this.hideLogInScreen = setTimeout(() => {
-            this.setState({isLoggedIn: true})
-          }, 500)
-  
-        }
-        wireListeners()
-  
-      }).catch(()=> this.setState({logInFailed: true}))
+      this.setState({ currentUser })
+      this.signin
+        .then(() => {
+          const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
+          const userStatusRef = fbc.database.private.adminableUserRef('status')
+          const userReportsRef = fbc.database.private.adminableUserRef('reports')
+          const adminsRef = fbc.database.public.adminRef('admins')
+          const wireListeners = () => {
+            codeOfConductRef.on('value', data => {
+              const codeOfConduct = data.val() || {}
+              this.setState({ codeOfConduct })
+            })
+
+            adminsRef.on('child_added', data => {
+              this.setState({ admins: [...this.state.admins, { ...data.val(), key: data.key }] })
+            })
+
+            adminsRef.on('child_removed', data => {
+              this.setState({ admins: this.state.admins.filter(x => x.key !== data.key) })
+            })
+
+            userStatusRef.on('child_added', data => {
+              this.setState({ userStatus: { ...data.val(), key: data.key } })
+            })
+
+            userReportsRef.on('child_added', data => {
+              this.setState({ reports: [...this.state.reports, { ...data.val(), key: data.key }] })
+            })
+
+            userReportsRef.on('child_changed', data => {
+              this.setState(prevState => ({
+                reports: prevState.reports.map(r =>
+                  r.key === data.key ? { ...data.val(), key: data.key } : r,
+                ),
+              }))
+            })
+
+            // The function below will hide the login screen component with a 1/2 second delay to provide an oppt for firebase data to downlaod
+            this.hideLogInScreen = setTimeout(() => {
+              this.setState({ isLoggedIn: true })
+            }, 500)
+          }
+          wireListeners()
+        })
+        .catch(() => this.setState({ logInFailed: true }))
     })
   }
 
   render() {
-    const {currentEvent, currentUser, primaryColor} = this.state
+    const { currentEvent, currentUser, primaryColor } = this.state
     if (!currentEvent || !currentUser || !primaryColor) return null
     return (
-      <KeyboardAvoidingView style={s.container} behavior={Platform.select({ios: "padding", android: null})}>
-        {this.props.version ? null : <TitleBar title="Code of Conduct" client={client} signin={this.signin} />}
-        {this.state.isLoggedIn ? this.renderPage() : <LoadingView LogInFailed={this.state.LogInFailed}/>}
+      <KeyboardAvoidingView
+        style={s.container}
+        behavior={Platform.select({ ios: 'padding', android: null })}
+      >
+        {this.props.version ? null : (
+          <TitleBar title="Code of Conduct" client={client} signin={this.signin} />
+        )}
+        {this.state.isLoggedIn ? (
+          this.renderPage()
+        ) : (
+          <LoadingView LogInFailed={this.state.LogInFailed} />
+        )}
       </KeyboardAvoidingView>
     )
   }
 
   renderPage = () => {
     if (this.props.version) {
-      return <AcceptView codeOfConduct={this.state.codeOfConduct} markAccepted={this.markAccepted} currentEvent={this.state.currentEvent} primaryColor={this.state.primaryColor} />
+      return (
+        <AcceptView
+          codeOfConduct={this.state.codeOfConduct}
+          markAccepted={this.markAccepted}
+          currentEvent={this.state.currentEvent}
+          primaryColor={this.state.primaryColor}
+        />
+      )
     }
-    else {
-      return <AppView admins={this.state.admins} currentAppPage={this.state.currentAppPage} showReport={this.showReport} showCodeOfConduct={this.showCodeOfConduct} showModal={this.showModal} codeOfConduct={this.state.codeOfConduct} makeNewReport={this.makeNewReport} reports={this.state.reports} currentReport={this.state.currentReport} saveReport={this.saveReport} updateItem={this.updateItem} primaryColor={this.state.primaryColor} currentUser={this.state.currentUser} />
-    }
+
+    return (
+      <AppView
+        admins={this.state.admins}
+        currentAppPage={this.state.currentAppPage}
+        showReport={this.showReport}
+        showCodeOfConduct={this.showCodeOfConduct}
+        showModal={this.showModal}
+        codeOfConduct={this.state.codeOfConduct}
+        makeNewReport={this.makeNewReport}
+        reports={this.state.reports}
+        currentReport={this.state.currentReport}
+        saveReport={this.saveReport}
+        updateItem={this.updateItem}
+        primaryColor={this.state.primaryColor}
+        currentUser={this.state.currentUser}
+      />
+    )
   }
 
   updateItem = (variable, input) => {
-    const updatedItem = Object.assign({},this.state.currentReport)
+    const updatedItem = Object.assign({}, this.state.currentReport)
     updatedItem[variable] = input
-    this.setState({currentReport: updatedItem})
+    this.setState({ currentReport: updatedItem })
   }
 
-  
   markAccepted = () => {
-    const {version} = this.props
-    this.props.fbc.database.private.adminableUserRef('status').child(version).set({
-      accepted: true
-    })
-    .catch(x => console.error(x))
-    .then(() => client.dismissLandingPage(true))    
+    const { version } = this.props
+    this.props.fbc.database.private
+      .adminableUserRef('status')
+      .child(version)
+      .set({
+        accepted: true,
+      })
+      .catch(x => console.error(x))
+      .then(() => client.dismissLandingPage(true))
   }
-  
 
   showModal = () => {
-    const newReport =  Object.assign({}, this.blankReport())
+    const newReport = Object.assign({}, this.blankReport())
     const current = this.state.currentAppPage
-    let switchPage = "modal"
-    if (current === "modal") switchPage = "home"
-    this.setState({currentReport: newReport, currentAppPage: switchPage})
+    let switchPage = 'modal'
+    if (current === 'modal') switchPage = 'home'
+    this.setState({ currentReport: newReport, currentAppPage: switchPage })
   }
 
   showCodeOfConduct = () => {
     const current = this.state.currentAppPage
-    let switchPage = "code"
-    if (current === "code") switchPage = "home"
-    this.setState({currentAppPage: switchPage})
+    let switchPage = 'code'
+    if (current === 'code') switchPage = 'home'
+    this.setState({ currentAppPage: switchPage })
   }
 
-  showReport = (report) => {
+  showReport = report => {
     let currentReport = report
     const current = this.state.currentAppPage
-    let switchPage = "report"
-    if (current === "report") {
-      switchPage = "home"
+    let switchPage = 'report'
+    if (current === 'report') {
+      switchPage = 'home'
       currentReport = Object.assign({}, this.blankReport())
     }
-    this.setState({currentAppPage: switchPage, currentReport})
+    this.setState({ currentAppPage: switchPage, currentReport })
   }
 
   saveReport = () => {
-    const newReport =  Object.assign({}, this.blankReport())
-    let newItem = this.state.currentReport
+    const newReport = Object.assign({}, this.blankReport())
+    const newItem = this.state.currentReport
     newItem.description = newItem.description.trim()
     newItem.dateCreate = new Date().getTime()
-    this.props.fbc.database.private.adminableUserRef('reports').push(newItem)
-    .then(() => this.setState({currentAppPage: "home", currentReport: newReport}))
-    .catch (x => console.error(x)) 
+    this.props.fbc.database.private
+      .adminableUserRef('reports')
+      .push(newItem)
+      .then(() => this.setState({ currentAppPage: 'home', currentReport: newReport }))
+      .catch(x => console.error(x))
   }
 
   blankReport = () => ({
     isAnom: false,
     creator: this.state.currentUser,
-    preferredContact: "",
-    description: "",
-    status: "Received"
+    preferredContact: '',
+    description: '',
+    status: 'Received',
   })
 }
 
-export default provideFirebaseConnectorToReactComponent(client, 'codeofconduct', (props, fbc) => <HomeView {...props} fbc={fbc} />, PureComponent)
+export default provideFirebaseConnectorToReactComponent(
+  client,
+  'codeofconduct',
+  (props, fbc) => <HomeView {...props} fbc={fbc} />,
+  PureComponent,
+)
 
 const fontSize = 18
 const s = StyleSheet.create({
@@ -184,46 +226,46 @@ const s = StyleSheet.create({
   },
   scroll: {
     flex: 1,
-    padding: 15
+    padding: 15,
   },
   task: {
     flex: 1,
     flexDirection: 'row',
-    marginBottom: 10
+    marginBottom: 10,
   },
   checkmark: {
     textAlign: 'center',
-    fontSize
+    fontSize,
   },
   creatorAvatar: {
-    marginRight: 4
+    marginRight: 4,
   },
   creatorEmoji: {
     marginRight: 4,
-    fontSize
+    fontSize,
   },
   taskText: {
     fontSize,
-    flex: 1
+    flex: 1,
   },
   compose: {
     height: 70,
     flexDirection: 'row',
     backgroundColor: 'white',
-    padding: 10
+    padding: 10,
   },
   sendButtons: {
     justifyContent: 'center',
   },
   sendButton: {
     justifyContent: 'center',
-    margin: 5
+    margin: 5,
   },
   sendButtonText: {
     fontSize: 20,
-    color: 'gray'
+    color: 'gray',
   },
   composeText: {
-    flex: 1
-  }
+    flex: 1,
+  },
 })

@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,7 +15,7 @@
  */
 
 import React, { Component } from 'react'
-import {StyleSheet, TouchableOpacity, Text, ScrollView, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, Text, ScrollView, View } from 'react-native'
 import client from '@doubledutch/rn-client'
 
 export default class AcceptView extends Component {
@@ -35,24 +35,37 @@ export default class AcceptView extends Component {
   }
 
   render() {
-    const {codeOfConduct, currentEvent, primaryColor} = this.props
-  
+    const { codeOfConduct, currentEvent, primaryColor } = this.props
+
     return (
       <View style={s.flex}>
-      { codeOfConduct
-        ? codeOfConduct.text
-          ? <ScrollView style={s.scrollView}>
+        {codeOfConduct ? (
+          codeOfConduct.text ? (
+            <ScrollView style={s.scrollView}>
               <View style={s.paddingBottom}>
                 <Text style={s.titleTop}>{currentEvent.name}</Text>
-                <Text style={s.title}>{"Code of Conduct"}</Text>
+                <Text style={s.title}>Code of Conduct</Text>
                 <Text style={s.text}>{this.props.codeOfConduct.text}</Text>
-                <TouchableOpacity style={s.noBorderButton} onPress={()=>client.openURL('dd://leaveevent')}><Text style={s.noBorderText}>I do not agree to the code of conduct</Text></TouchableOpacity>
-                <TouchableOpacity onPress={this.props.markAccepted} style={[s.launchButton, {backgroundColor: primaryColor}]}><Text style={s.launchButtonText}>I agree to the code of conduct</Text></TouchableOpacity>
+                <TouchableOpacity
+                  style={s.noBorderButton}
+                  onPress={() => client.openURL('dd://leaveevent')}
+                >
+                  <Text style={s.noBorderText}>I do not agree to the code of conduct</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={this.props.markAccepted}
+                  style={[s.launchButton, { backgroundColor: primaryColor }]}
+                >
+                  <Text style={s.launchButtonText}>I agree to the code of conduct</Text>
+                </TouchableOpacity>
               </View>
             </ScrollView>
-          : <View style={s.helpTextView}><Text style={s.helpText}>No Code of Conduct has been set</Text></View>
-        : null
-      }
+          ) : (
+            <View style={s.helpTextView}>
+              <Text style={s.helpText}>No Code of Conduct has been set</Text>
+            </View>
+          )
+        ) : null}
       </View>
     )
   }
@@ -61,66 +74,66 @@ export default class AcceptView extends Component {
 const s = StyleSheet.create({
   text: {
     fontSize: 18,
-    color: "#4B4B4B",
+    color: '#4B4B4B',
     margin: 20,
     marginTop: 0,
   },
   helpTextView: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   flex: {
-    flex: 1
+    flex: 1,
   },
   paddingBottom: {
-    paddingBottom: 50
+    paddingBottom: 50,
   },
   scrollView: {
     flex: 1,
-    backgroundColor: "white"
+    backgroundColor: 'white',
   },
   helpText: {
     fontSize: 18,
-    color: "#4B4B4B",
+    color: '#4B4B4B',
     margin: 20,
-    textAlign: "center",
+    textAlign: 'center',
   },
   titleTop: {
     fontSize: 22,
-    color: "#4B4B4B",
+    color: '#4B4B4B',
     margin: 20,
     marginBottom: 5,
-    textAlign: "center"
+    textAlign: 'center',
   },
   title: {
     fontSize: 22,
-    color: "#4B4B4B",
+    color: '#4B4B4B',
     margin: 20,
     marginTop: 0,
-    textAlign: "center"
+    textAlign: 'center',
   },
 
   launchButton: {
     height: 46,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     margin: 20,
     marginTop: 40,
-    borderRadius: 4
+    borderRadius: 4,
   },
   noBorderButton: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     margin: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  noBorderText:{
+  noBorderText: {
     fontSize: 14,
-    color: "#ACACAC"
+    color: '#ACACAC',
   },
   launchButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18
-  }
+    color: '#FFFFFF',
+    fontSize: 18,
+  },
 })

@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,7 +15,7 @@
  */
 
 import React, { Component } from 'react'
-import ReportCell from "./ReportCell"
+import ReportCell from './ReportCell'
 
 export default class LeftReport extends Component {
   constructor() {
@@ -30,21 +30,20 @@ export default class LeftReport extends Component {
   render() {
     const { reports } = this.props
     return (
-      <div style={{flex: 1}}>
+      <div style={{ flex: 1 }}>
         <div className="headerBox">
           <p>New ({reports.length})</p>
-           <div className="flexSpace"/>
-          <button className="noBorderButtonBlue" onClick={this.props.showMakeReport}>Report a Violation</button>
+          <div className="flexSpace" />
+          <button className="noBorderButtonBlue" onClick={this.props.showMakeReport}>
+            Report a Violation
+          </button>
         </div>
         <div className="reportsBox">
-          {reports.map(report =>{
-            return (
-              <ReportCell report={report} resolveItem={this.props.resolveItem} key={report.id}/>
-            )
-          })}
+          {reports.map(report => (
+            <ReportCell report={report} resolveItem={this.props.resolveItem} key={report.id} />
+          ))}
         </div>
       </div>
     )
   }
-
 }

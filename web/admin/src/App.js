@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,15 +23,15 @@ import {
   provideFirebaseConnectorToReactComponent,
   mapPerUserPrivateAdminablePushedDataToStateObjects,
 } from '@doubledutch/firebase-connector'
-import CodeSection from "./CodeSection"
-import AdminSection from "./AdminSection"
-import ReportSection from "./ReportSection"
-import ModalView from "./ModalView"
+import CodeSection from './CodeSection'
+import AdminSection from './AdminSection'
+import ReportSection from './ReportSection'
+import ModalView from './ModalView'
 
 class App extends PureComponent {
   constructor(props) {
     super(props)
-    this.state = { 
+    this.state = {
       allUsers: [],
       admins: [],
       isCodeBoxDisplay: true,
@@ -41,39 +41,57 @@ class App extends PureComponent {
       codeOfConductDraft: {},
       reports: [],
       showModal: false,
-      modal: "resolve",
+      modal: 'resolve',
       currentReport: {},
-      dropDownUsers: []
+      dropDownUsers: [],
     }
-    this.signin = props.fbc.signinAdmin()
-    .then(user => this.user = user)
-    .catch(err => console.error(err))
+    this.signin = props.fbc
+      .signinAdmin()
+      .then(user => (this.user = user))
+      .catch(err => console.error(err))
   }
 
   componentDidMount() {
-    const {fbc} = this.props
+    const { fbc } = this.props
     this.signin.then(() => {
       client.getAttendees().then(users => {
-        let dropDownUsers = []
-        users.forEach(user => dropDownUsers.push(Object.assign({}, {value: user.id, label: user.firstName + " " + user.lastName, className: "dropdownText"})))
-        this.setState({allUsers: users, isSignedIn: true, dropDownUsers})
+        const dropDownUsers = []
+        users.forEach(user =>
+          dropDownUsers.push(
+            Object.assign(
+              {},
+              {
+                value: user.id,
+                label: `${user.firstName} ${user.lastName}`,
+                className: 'dropdownText',
+              },
+            ),
+          ),
+        )
+        this.setState({ allUsers: users, isSignedIn: true, dropDownUsers })
         const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
-        const codeOfConductDraftRef = fbc.database.public.adminRef('codeOfConductDraft')  
-        const adminsRef = fbc.database.public.adminRef("admins")
-        mapPerUserPrivateAdminablePushedDataToStateObjects(fbc, 'reports', this, 'reports', (userId, key, value) => key)
+        const codeOfConductDraftRef = fbc.database.public.adminRef('codeOfConductDraft')
+        const adminsRef = fbc.database.public.adminRef('admins')
+        mapPerUserPrivateAdminablePushedDataToStateObjects(
+          fbc,
+          'reports',
+          this,
+          'reports',
+          (userId, key, value) => key,
+        )
 
         codeOfConductRef.on('value', data => {
           const codeOfConduct = data.val() || {}
           this.setState({ codeOfConduct })
         })
 
-        codeOfConductDraftRef.on('value', data => { 
+        codeOfConductDraftRef.on('value', data => {
           const codeOfConductDraft = data.val() || {}
           this.setState({ codeOfConductDraft })
         })
 
         adminsRef.on('child_added', data => {
-          this.setState({ admins: [...this.state.admins, {...data.val(), key: data.key }] })
+          this.setState({ admins: [...this.state.admins, { ...data.val(), key: data.key }] })
         })
 
         adminsRef.on('child_removed', data => {
@@ -86,70 +104,124 @@ class App extends PureComponent {
   render() {
     return (
       <div className="App">
-        <ModalView modal={this.state.modal} showModal={this.state.showModal} closeModal={this.closeModal} currentReport={this.state.currentReport} completeResolution={this.completeResolution} users={this.state.dropDownUsers} completeReport={this.completeReport}/>
-        <CodeSection handleChange={this.handleChange} isCodeBoxDisplay={this.state.isCodeBoxDisplay} codeOfConduct={this.state.codeOfConduct} codeOfConductDraft={this.state.codeOfConductDraft} saveCodeOfConduct={this.saveCodeOfConduct} saveDraftCodeOfConduct={this.saveDraftCodeOfConduct}/>
-        <AdminSection handleChange={this.handleChange} isAdminBoxDisplay={this.state.isAdminBoxDisplay} admins={this.state.admins} users={this.state.allUsers} onAdminSelected={this.onAdminSelected} onAdminDeselected={this.onAdminDeselected}/>
-        <ReportSection handleChange={this.handleChange} showMakeReport={this.showMakeReport} isReportsBoxDisplay={this.state.isReportsBoxDisplay} reports={this.state.reports} resolveItem={this.resolveItem} viewResolution={this.viewResolution}/>
+        <ModalView
+          modal={this.state.modal}
+          showModal={this.state.showModal}
+          closeModal={this.closeModal}
+          currentReport={this.state.currentReport}
+          completeResolution={this.completeResolution}
+          users={this.state.dropDownUsers}
+          completeReport={this.completeReport}
+        />
+        <CodeSection
+          handleChange={this.handleChange}
+          isCodeBoxDisplay={this.state.isCodeBoxDisplay}
+          codeOfConduct={this.state.codeOfConduct}
+          codeOfConductDraft={this.state.codeOfConductDraft}
+          saveCodeOfConduct={this.saveCodeOfConduct}
+          saveDraftCodeOfConduct={this.saveDraftCodeOfConduct}
+        />
+        <AdminSection
+          handleChange={this.handleChange}
+          isAdminBoxDisplay={this.state.isAdminBoxDisplay}
+          admins={this.state.admins}
+          users={this.state.allUsers}
+          onAdminSelected={this.onAdminSelected}
+          onAdminDeselected={this.onAdminDeselected}
+        />
+        <ReportSection
+          handleChange={this.handleChange}
+          showMakeReport={this.showMakeReport}
+          isReportsBoxDisplay={this.state.isReportsBoxDisplay}
+          reports={this.state.reports}
+          resolveItem={this.resolveItem}
+          viewResolution={this.viewResolution}
+        />
       </div>
     )
   }
 
   onAdminSelected = attendee => {
-    this.props.fbc.database.public.adminRef("admins").push(attendee)
+    this.props.fbc.database.public.adminRef('admins').push(attendee)
   }
 
   onAdminDeselected = attendee => {
     const newAttendee = this.state.admins.find(a => a.id === attendee.id)
-    if (newAttendee.key) this.props.fbc.database.public.adminRef("admins").child(newAttendee.key).remove()
+    if (newAttendee.key)
+      this.props.fbc.database.public
+        .adminRef('admins')
+        .child(newAttendee.key)
+        .remove()
   }
 
   handleChange = (name, value) => {
-    this.setState({[name]: value});
+    this.setState({ [name]: value })
   }
 
-  saveCodeOfConduct = (input) => {
-    if (window.confirm('Are you sure you want to publish the code of conduct? Attendees will have to confirm acceptance of the new code of conduct.')) {
+  saveCodeOfConduct = input => {
+    if (
+      window.confirm(
+        'Are you sure you want to publish the code of conduct? Attendees will have to confirm acceptance of the new code of conduct.',
+      )
+    ) {
       const publishTime = new Date().getTime()
-      this.props.fbc.database.public.adminRef('codeOfConduct').set({text: input, publishTime}).then(() => {
-        updateLandingUrls(input)
-      })
+      this.props.fbc.database.public
+        .adminRef('codeOfConduct')
+        .set({ text: input, publishTime })
+        .then(() => {
+          updateLandingUrls(input)
+        })
       this.saveDraftCodeOfConduct(input)
     }
   }
 
-  resolveItem = (item) => {
-    this.setState({currentReport: item, showModal: true, modal:"resolve"})
+  resolveItem = item => {
+    this.setState({ currentReport: item, showModal: true, modal: 'resolve' })
   }
-  viewResolution = (item) => {
-    this.setState({currentReport: item, showModal: true, modal:"resolution"})
+
+  viewResolution = item => {
+    this.setState({ currentReport: item, showModal: true, modal: 'resolution' })
   }
 
   showMakeReport = () => {
-    this.setState({showModal: true, modal:"report"})
+    this.setState({ showModal: true, modal: 'report' })
   }
+
   completeResolution = (resolution, resolutionPerson) => {
-    this.props.fbc.database.private.adminableUsersRef(this.state.currentReport.userId).child('reports').child(this.state.currentReport.id).update({status: "Resolved", resolution, resolutionPerson, dateCreate: new Date().getTime()})
-    this.setState({currentReport: {}, showModal: false})
+    this.props.fbc.database.private
+      .adminableUsersRef(this.state.currentReport.userId)
+      .child('reports')
+      .child(this.state.currentReport.id)
+      .update({
+        status: 'Resolved',
+        resolution,
+        resolutionPerson,
+        dateCreate: new Date().getTime(),
+      })
+    this.setState({ currentReport: {}, showModal: false })
   }
 
   completeReport = (report, reportPerson, userID) => {
     const behalfUser = this.state.allUsers.find(user => user.id === userID)
-    const newReport =  Object.assign({}, blankReport)
+    const newReport = Object.assign({}, blankReport)
     newReport.description = report
     newReport.dateCreate = new Date().getTime()
     newReport.creator = behalfUser
     newReport.reportPerson = reportPerson
-    this.props.fbc.database.private.adminableUsersRef(userID).child('reports').push(newReport)
-    .then(() => this.setState({showModal: false}))
+    this.props.fbc.database.private
+      .adminableUsersRef(userID)
+      .child('reports')
+      .push(newReport)
+      .then(() => this.setState({ showModal: false }))
   }
 
   closeModal = () => {
-    this.setState({showModal: false})
+    this.setState({ showModal: false })
   }
 
-  saveDraftCodeOfConduct = (input) => {
-      const publishTime = new Date().getTime()
-      this.props.fbc.database.public.adminRef('codeOfConductDraft').set({"text": input, publishTime})
+  saveDraftCodeOfConduct = input => {
+    const publishTime = new Date().getTime()
+    this.props.fbc.database.public.adminRef('codeOfConductDraft').set({ text: input, publishTime })
   }
 }
 
@@ -172,7 +244,9 @@ function updateLandingUrls(codeOfConductText) {
         // Default to starting with an empty list.
       }
 
-      const existingIndex = landingUrls.findIndex(url => url.startsWith('dd://extensions/codeofconduct'))
+      const existingIndex = landingUrls.findIndex(url =>
+        url.startsWith('dd://extensions/codeofconduct'),
+      )
       if (existingIndex >= 0) {
         landingUrls[existingIndex] = url
       } else {
@@ -187,11 +261,16 @@ function updateLandingUrls(codeOfConductText) {
   })
 }
 
-export default provideFirebaseConnectorToReactComponent(client, 'codeofconduct', (props, fbc) => <App {...props} fbc={fbc} />, PureComponent)
+export default provideFirebaseConnectorToReactComponent(
+  client,
+  'codeofconduct',
+  (props, fbc) => <App {...props} fbc={fbc} />,
+  PureComponent,
+)
 
 const blankReport = {
   isAnom: false,
-  preferredContact: "",
-  description: "",
-  status: "Received"
+  preferredContact: '',
+  description: '',
+  status: 'Received',
 }
