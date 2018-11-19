@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, View, ScrollView } from 'react-native'
+import { translate as t } from '@doubledutch/rn-client'
 
 export default class ViewReportModal extends Component {
   render() {
@@ -33,11 +34,11 @@ export default class ViewReportModal extends Component {
       <View style={s.container}>
         <View style={s.boxHeader}>
           <View style={s.leftRow}>
-            <Text style={s.headingText}>Reported:</Text>
+            <Text style={s.headingText}>{t('reported')}</Text>
             <Text style={s.description}>{this.convertTime(currentReport.dateCreate)}</Text>
           </View>
           <View style={s.row}>
-            <Text style={s.headingText}>Status: </Text>
+            <Text style={s.headingText}>{t('status')}</Text>
             <Text style={currentReport.status === 'Received' ? s.yellowText : s.greenText}>
               {currentReport.status}
             </Text>
@@ -66,7 +67,7 @@ export default class ViewReportModal extends Component {
         <TouchableOpacity style={s.headerButton} onPress={() => this.props.showReport('')}>
           <Text style={[s.headerButtonText, { color: primaryColor }]}>X</Text>
         </TouchableOpacity>
-        <Text style={s.headerTitle}>Reported Violation</Text>
+        <Text style={s.headerTitle}>{t('reportedViolation')}</Text>
         <View style={{ width: 20, height: 10 }} />
       </View>
     )

@@ -52,8 +52,9 @@ html, body, select{
   border-radius: 5px;	
   flex: 1;
   margin-bottom: 40px;
-  min-height: 400px;
-  background-color: #FCFCFC
+  height: 450px;
+  background-color: #FCFCFC;
+  overflow: auto;
 }
 
 

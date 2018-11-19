@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, Text, View, FlatList } from 'react-native'
+import { translate as t } from '@doubledutch/rn-client'
 import ReportsSubViewCell from './ReportsSubViewCell'
 
 export default class ReportsSubView extends Component {
@@ -26,7 +27,7 @@ export default class ReportsSubView extends Component {
     reports.sort((a, b) => b.dateCreate - a.dateCreate)
     return (
       <View style={s.container}>
-        <Text style={s.titleText}>REPORTED VIOLATIONS</Text>
+        <Text style={s.titleText}>{t('reportedViolations')}</Text>
         <View style={s.border} />
         <View style={s.listContainer}>
           <FlatList

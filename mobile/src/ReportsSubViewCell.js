@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native'
+import { translate as t } from '@doubledutch/rn-client'
 
 export default class ReportsSubViewCell extends Component {
   render() {
@@ -30,11 +31,11 @@ export default class ReportsSubViewCell extends Component {
               </Text>
               <View style={s.bottomRow}>
                 <View style={s.row}>
-                  <Text style={s.headingText}>Reported: </Text>
+                  <Text style={s.headingText}>{t('reported')}</Text>
                   <Text style={s.timeText}>{this.convertTime(report.dateCreate)}</Text>
                 </View>
                 <View style={s.row}>
-                  <Text style={s.headingText}>Status: </Text>
+                  <Text style={s.headingText}>{t('status')}</Text>
                   <Text style={report.status === 'Received' ? s.yellowText : s.greenText}>
                     {report.status}
                   </Text>

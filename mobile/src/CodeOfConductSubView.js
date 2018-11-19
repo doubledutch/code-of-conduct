@@ -16,19 +16,17 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native'
-import client from '@doubledutch/rn-client'
+import client, { translate as t } from '@doubledutch/rn-client'
 
 export default class CodeOfConductSubView extends Component {
   render() {
     const code = this.props.codeOfConduct ? this.props.codeOfConduct.text : ''
     return (
       <View style={s.container}>
-        <Text style={s.titleText}>CODE OF CONDUCT</Text>
+        <Text style={s.titleText}>{t('titleCap')}</Text>
         <Text style={s.shortCode}>{code}</Text>
         <TouchableOpacity style={s.tabButton} onPress={this.props.showCodeOfConduct}>
-          <Text style={[s.tabButtonText, { color: this.props.primaryColor }]}>
-            {'View Full Code of Conduct'}
-          </Text>
+          <Text style={[s.tabButtonText, { color: this.props.primaryColor }]}>{t('viewFull')}</Text>
         </TouchableOpacity>
       </View>
     )

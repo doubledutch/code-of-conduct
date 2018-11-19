@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, View, ScrollView } from 'react-native'
+import { translate as t } from '@doubledutch/rn-client'
 
 export default class CodeOfConductModal extends Component {
   render() {
@@ -37,7 +38,7 @@ export default class CodeOfConductModal extends Component {
         <TouchableOpacity style={s.headerButton} onPress={this.props.showCodeOfConduct}>
           <Text style={[s.headerButtonText, { color: primaryColor }]}>X</Text>
         </TouchableOpacity>
-        <Text style={s.headerTitle}>Code of Conduct</Text>
+        <Text style={s.headerTitle}>{t('title')}</Text>
         <View style={{ width: 20, height: 10 }} />
       </View>
     )

@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native'
-import client, { Avatar } from '@doubledutch/rn-client'
+import client, { Avatar, translate as t } from '@doubledutch/rn-client'
 
 export default class MakeReportSubView extends Component {
   constructor(props) {
@@ -44,25 +44,19 @@ export default class MakeReportSubView extends Component {
 
   renderTopBox = () => (
     <View>
-      <Text style={s.headerTitleText}>REPORT A VIOLATION</Text>
-      <Text style={s.title}>Message the Organizers</Text>
-      <Text style={s.description}>
-        Send a description of the violation to the event organizer, and they will see to it until
-        the situation is resolved
-      </Text>
+      <Text style={s.headerTitleText}>{t('reportAViolationCap')}</Text>
+      <Text style={s.title}>{t('messageOrg')}</Text>
+      <Text style={s.description}>{t('reportDes')}</Text>
       <TouchableOpacity style={[s.button, this.s.primaryBorder]} onPress={this.props.showModal}>
-        <Text style={[s.buttonText, this.s.primary]}>Report a Violation</Text>
+        <Text style={[s.buttonText, this.s.primary]}>{t('reportAViolation')}</Text>
       </TouchableOpacity>
     </View>
   )
 
   renderBottomBox = () => (
     <View>
-      <Text style={s.title}>Trusted Persons</Text>
-      <Text style={s.description}>
-        If you've experienced a violation of the code of conduct seek out or message a Trusted
-        Person, all of whom are specially trained to help.
-      </Text>
+      <Text style={s.title}>{t('trusted')}</Text>
+      <Text style={s.description}>{t('trustedDes')}</Text>
       {this.trustedPersonsTable()}
     </View>
   )
@@ -83,7 +77,7 @@ export default class MakeReportSubView extends Component {
                 style={[s.messageButton, this.s.primaryBorder]}
                 onPress={() => client.openURL(`dd://profile/${person.id}`)}
               >
-                <Text style={[s.buttonText, this.s.primary]}>Message</Text>
+                <Text style={[s.buttonText, this.s.primary]}>{t('message')}</Text>
               </TouchableOpacity>
             </View>
           ))}
