@@ -15,27 +15,19 @@
  */
 
 import React, { Component } from 'react'
+import { translate as t } from '@doubledutch/admin-client'
 import ReportCell from './ReportCell'
 
 export default class LeftReport extends Component {
-  constructor() {
-    super()
-    this.state = {
-      // admins: [],
-      // input: "",
-      // clickable:true
-    }
-  }
-
   render() {
     const { reports } = this.props
     return (
       <div style={{ flex: 1 }}>
         <div className="headerBox">
-          <p>New ({reports.length})</p>
+          <p>{t('newReport', { total: reports.length })}</p>
           <div className="flexSpace" />
           <button className="noBorderButtonBlue" onClick={this.props.showMakeReport}>
-            Report a Violation
+            {t('reportViolation')}
           </button>
         </div>
         <div className="reportsBox">

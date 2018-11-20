@@ -16,19 +16,11 @@
 
 import React, { Component } from 'react'
 import { CSVLink } from 'react-csv'
+import { translate as t } from '@doubledutch/admin-client'
 import LeftReport from './LeftReport'
 import RightReport from './RightReport'
 
 export default class ReportSection extends Component {
-  constructor() {
-    super()
-    this.state = {
-      // admins: [],
-      // input: "",
-      // clickable:true
-    }
-  }
-
   render() {
     const reports = Object.values(this.props.reports)
     const newReports = reports
@@ -40,14 +32,14 @@ export default class ReportSection extends Component {
     return (
       <div className="sectionContainerSpace">
         <div className="containerRow">
-          <h2 className="titleWithDescription">Reported Violations</h2>
+          <h2 className="titleWithDescription">{t('reported')}</h2>
           <button
             className="displayButton"
             onClick={() =>
               this.props.handleChange('isReportsBoxDisplay', !this.props.isReportsBoxDisplay)
             }
           >
-            {this.props.isReportsBoxDisplay ? 'Hide Section' : 'Show Section'}
+            {this.props.isReportsBoxDisplay ? t('hide') : t('view')}
           </button>
         </div>
         {this.props.isReportsBoxDisplay && (
@@ -62,7 +54,7 @@ export default class ReportSection extends Component {
           </div>
         )}
         <CSVLink className="csvButton" data={getCsvData(reports)} filename="questions.csv">
-          Export list
+          {t('export')}
         </CSVLink>
       </div>
     )

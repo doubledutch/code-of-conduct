@@ -17,6 +17,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import { TextInput } from '@doubledutch/react-components'
+import { translate as t } from '@doubledutch/admin-client'
 
 export default class CodeSection extends Component {
   constructor() {
@@ -53,7 +54,7 @@ export default class CodeSection extends Component {
     return (
       <div className="sectionContainer">
         <div className="codeOfConductContainerRow">
-          <h2 className="titleWithDescription">Code of Conduct</h2>
+          <h2 className="titleWithDescription">{t('code')}</h2>
           {currentState === 'Published' && <p className="statusTextGreen">{currentState}</p>}
           {currentState === 'Draft' && <p className="statusTextYellow">{currentState}</p>}
           {isCodeBoxDisplay && <p className="timeText">{publishTime}</p>}
@@ -70,13 +71,13 @@ export default class CodeSection extends Component {
             {this.state.showStaticBox && !codeOfConductDraft.text ? (
               <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
                 <span className="placeHolderTextLine">
-                  <p className="placeHolderText">Enter code of conduct text here or</p>
+                  <p className="placeHolderText">{t('enterCode')}</p>
                   <button
                     value="defaultButton"
                     onClick={this.addDefaultCode}
                     className="noBorderButtonBlue"
                   >
-                    add default code of conduct
+                    {t('addCode')}
                   </button>
                 </span>
               </div>
@@ -90,17 +91,14 @@ export default class CodeSection extends Component {
               />
             )}
             <div className="codeButtonsContainer">
-              <p>
-                DoubleDutch hereby disclaims any and all liability in connection with this Code of
-                Conduct.
-              </p>
+              <p>{t('disclaimer')}</p>
               <div style={{ flex: 1 }} />
               {isDraftChanges && inputIsNotEmpty && (
                 <button
                   onClick={() => saveDraftCodeOfConduct(this.state.input)}
                   className="dd-bordered"
                 >
-                  Save as Draft
+                  {t('draft')}
                 </button>
               )}
               {isPublishChanges && inputIsNotEmpty && (
@@ -108,7 +106,7 @@ export default class CodeSection extends Component {
                   onClick={() => saveCodeOfConduct(this.state.input)}
                   className="dd-bordered button-margin"
                 >
-                  Publish to App
+                  {t('publishApp')}
                 </button>
               )}
             </div>

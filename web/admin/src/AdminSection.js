@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react'
 import './App.css'
-import client from '@doubledutch/admin-client'
+import client, { translate as t } from '@doubledutch/admin-client'
 import { AttendeeSelector } from '@doubledutch/react-components'
 
 export default class AdminSection extends Component {
@@ -29,27 +29,23 @@ export default class AdminSection extends Component {
     return (
       <div className="sectionContainer">
         <div className="containerRow">
-          <h2 className="titleWithDescription">Trusted Persons</h2>
+          <h2 className="titleWithDescription">{t('trustedPersons')}</h2>
           <button
             className="displayButton"
             onClick={() =>
               this.props.handleChange('isAdminBoxDisplay', !this.props.isAdminBoxDisplay)
             }
           >
-            {this.props.isAdminBoxDisplay ? 'Hide Section' : 'Show Section'}
+            {this.props.isAdminBoxDisplay ? t('hide') : t('view')}
           </button>
         </div>
         {this.props.isAdminBoxDisplay && (
           <div className="attendeeBox">
-            <p className="titleDescription">
-              Trusted Persons are people that are able to listen and handle reported incidents. They
-              should have training in this area and an image attached to their attendee profile to
-              help attendees find them easily.
-            </p>
+            <p className="titleDescription">{t('trustedPersonsDes')}</p>
             <AttendeeSelector
               client={client}
-              searchTitle="Select Trusted Persons"
-              selectedTitle="Current Trusted Persons"
+              searchTitle={t('selectPerson')}
+              selectedTitle={t('currentPerson')}
               onSelected={this.props.onAdminSelected}
               onDeselected={this.props.onAdminDeselected}
               selected={this.props.users.filter(a => this.isAdmin(a.id))}
