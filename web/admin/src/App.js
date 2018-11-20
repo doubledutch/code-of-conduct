@@ -17,7 +17,8 @@
 import React, { PureComponent } from 'react'
 import '@doubledutch/react-components/lib/base.css'
 import './App.css'
-import client from '@doubledutch/admin-client'
+import client, { translate as t, useStrings } from '@doubledutch/admin-client'
+import i18n from './i18n'
 import md5 from 'md5'
 import {
   provideFirebaseConnectorToReactComponent,
@@ -27,6 +28,8 @@ import CodeSection from './CodeSection'
 import AdminSection from './AdminSection'
 import ReportSection from './ReportSection'
 import ModalView from './ModalView'
+
+useStrings(i18n)
 
 class App extends PureComponent {
   constructor(props) {
@@ -161,7 +164,7 @@ class App extends PureComponent {
   saveCodeOfConduct = input => {
     if (
       window.confirm(
-        'Are you sure you want to publish the code of conduct? Attendees will have to confirm acceptance of the new code of conduct.',
+        t("publishConfirm"),
       )
     ) {
       const publishTime = new Date().getTime()

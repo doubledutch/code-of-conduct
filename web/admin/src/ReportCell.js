@@ -15,17 +15,9 @@
  */
 
 import React, { Component } from 'react'
+import { translate as t } from '@doubledutch/admin-client'
 
 export default class ReportCell extends Component {
-  constructor() {
-    super()
-    this.state = {
-      // admins: [],
-      // input: "",
-      // clickable:true
-    }
-  }
-
   render() {
     const { report } = this.props
     return (
@@ -33,7 +25,7 @@ export default class ReportCell extends Component {
         {report.isAnom ? (
           <div className="cellTopBox">
             <p className="avatar">?</p>
-            <p className="cellName">Anonymous</p>
+            <p className="cellName">{t('anom')}</p>
             <span className="smallSpacer" />
             <p className="dateText">{new Date(report.dateCreate).toDateString()}</p>
           </div>
@@ -57,14 +49,14 @@ export default class ReportCell extends Component {
         <div className="floatRight">
           {report.status === 'Received' ? (
             <button onClick={() => this.props.resolveItem(report)} className="dd-bordered">
-              Resolve
+              {t('resolve')}
             </button>
           ) : (
             <button
               className="noBorderButtonBlue"
               onClick={() => this.props.viewResolution(report)}
             >
-              View Resolution
+              {t('viewResolution')}
             </button>
           )}
         </div>

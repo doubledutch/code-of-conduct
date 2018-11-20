@@ -18,11 +18,14 @@ import React, { PureComponent } from 'react'
 import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native'
 
 // rn-client must be imported before FirebaseConnector
-import client, { TitleBar } from '@doubledutch/rn-client'
+import client, { TitleBar, translate as t, useStrings } from '@doubledutch/rn-client'
 import { provideFirebaseConnectorToReactComponent } from '@doubledutch/firebase-connector'
 import AcceptView from './AcceptView'
+import i18n from './i18n'
 import AppView from './AppView'
 import LoadingView from './LoadingView'
+
+useStrings(i18n)
 
 class HomeView extends PureComponent {
   constructor(props) {
@@ -104,7 +107,7 @@ class HomeView extends PureComponent {
         behavior={Platform.select({ ios: 'padding', android: null })}
       >
         {this.props.version ? null : (
-          <TitleBar title="Code of Conduct" client={client} signin={this.signin} />
+          <TitleBar title={t('title')} client={client} signin={this.signin} />
         )}
         {this.state.isLoggedIn ? (
           this.renderPage()

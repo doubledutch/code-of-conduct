@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, ScrollView, View } from 'react-native'
-import client from '@doubledutch/rn-client'
+import client, { translate as t } from '@doubledutch/rn-client'
 
 export default class AcceptView extends Component {
   constructor(props) {
@@ -44,25 +44,25 @@ export default class AcceptView extends Component {
             <ScrollView style={s.scrollView}>
               <View style={s.paddingBottom}>
                 <Text style={s.titleTop}>{currentEvent.name}</Text>
-                <Text style={s.title}>Code of Conduct</Text>
+                <Text style={s.title}>{t('title')}</Text>
                 <Text style={s.text}>{this.props.codeOfConduct.text}</Text>
                 <TouchableOpacity
                   style={s.noBorderButton}
                   onPress={() => client.openURL('dd://leaveevent')}
                 >
-                  <Text style={s.noBorderText}>I do not agree to the code of conduct</Text>
+                  <Text style={s.noBorderText}>{t('deny')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={this.props.markAccepted}
                   style={[s.launchButton, { backgroundColor: primaryColor }]}
                 >
-                  <Text style={s.launchButtonText}>I agree to the code of conduct</Text>
+                  <Text style={s.launchButtonText}>{t('accept')}</Text>
                 </TouchableOpacity>
               </View>
             </ScrollView>
           ) : (
             <View style={s.helpTextView}>
-              <Text style={s.helpText}>No Code of Conduct has been set</Text>
+              <Text style={s.helpText}>{t('notSet')}</Text>
             </View>
           )
         ) : null}
@@ -113,7 +113,6 @@ const s = StyleSheet.create({
     marginTop: 0,
     textAlign: 'center',
   },
-
   launchButton: {
     height: 46,
     alignItems: 'center',

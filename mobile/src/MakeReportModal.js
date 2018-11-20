@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, View, Text, Image, TextInput, Platform } from 'react-native'
-import client, { Avatar, Color } from '@doubledutch/rn-client'
+import client, { Avatar, Color, translate as t } from '@doubledutch/rn-client'
 
 export default class MakeReportModal extends Component {
   constructor(props) {
@@ -76,7 +76,7 @@ export default class MakeReportModal extends Component {
           <View style={s.rightBox}>
             {this.state.isError && this.props.currentReport.description.trim().length === 0 && (
               <Text style={{ color: 'red', paddingTop: 2, fontSize: 12, marginLeft: 10 }}>
-                *Please enter a description
+                {t('enterDes')}
               </Text>
             )}
             <View style={s.anomBox}>
@@ -93,7 +93,7 @@ export default class MakeReportModal extends Component {
                     }}
                   />
                 </TouchableOpacity>
-                <Text style={s.anomText}>Report anonymously</Text>
+                <Text style={s.anomText}>{t('reportAnom')}</Text>
               </View>
               <View
                 style={{
@@ -126,7 +126,7 @@ export default class MakeReportModal extends Component {
       <View style={{ display: 'flex', paddingBottom: 40, marginTop: 30 }}>
         {!this.props.currentReport.isAnom && (
           <View>
-            <Text style={s.headerTitleText}>Preferred Contact Method</Text>
+            <Text style={s.headerTitleText}>{t('contact')}</Text>
             <View style={{ marginLeft: 10 }}>
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
@@ -136,7 +136,7 @@ export default class MakeReportModal extends Component {
                   >
                     {this.radioButton(currentReport, 'email')}
                   </TouchableOpacity>
-                  <Text style={s.radioTitle}>Email</Text>
+                  <Text style={s.radioTitle}>{t('email')}</Text>
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                   <TouchableOpacity
@@ -145,7 +145,7 @@ export default class MakeReportModal extends Component {
                   >
                     {this.radioButton(currentReport, 'inapp')}
                   </TouchableOpacity>
-                  <Text style={s.radioTitle}>In-App Message</Text>
+                  <Text style={s.radioTitle}>{t('message')}</Text>
                 </View>
               </View>
               <View style={{ flexDirection: 'row' }}>
@@ -156,12 +156,12 @@ export default class MakeReportModal extends Component {
                   >
                     {this.radioButton(currentReport, 'phone')}
                   </TouchableOpacity>
-                  <Text style={s.radioTitle}>Phone Call</Text>
+                  <Text style={s.radioTitle}>{t('phone')}</Text>
                 </View>
               </View>
               {this.state.isError && currentReport.preferredContact.length === 0 && (
                 <Text style={{ color: 'red', paddingTop: 2, fontSize: 12, marginLeft: 10 }}>
-                  *Please select a preferred contact method
+                  {'selectError'}
                 </Text>
               )}
               {this.props.currentReport.preferredContact === 'phone' && (
@@ -177,7 +177,7 @@ export default class MakeReportModal extends Component {
                 !this.checkPhone() &&
                 this.props.currentReport.preferredContact === 'phone' && (
                   <Text style={{ color: 'red', paddingTop: 2, fontSize: 12, marginLeft: 10 }}>
-                    *Please enter valid phone
+                    {t('phoneError')}
                   </Text>
                 )}
             </View>
@@ -188,7 +188,7 @@ export default class MakeReportModal extends Component {
           disabled={this.state.isSaving}
           onPress={this.checkValues}
         >
-          <Text style={s.sendButtonText}>Report Violation</Text>
+          <Text style={s.sendButtonText}>{t('reportViolation')}</Text>
         </TouchableOpacity>
       </View>
     )

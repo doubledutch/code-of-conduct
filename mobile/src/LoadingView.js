@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import ReactNative, { Text, View } from 'react-native'
+import { translate as t } from '@doubledutch/rn-client'
 import Spinner from 'react-native-loading-spinner-overlay'
 
 export default class LoadingView extends Component {
@@ -23,9 +24,9 @@ export default class LoadingView extends Component {
     return (
       <View style={s.container}>
         {!this.props.logInFailed ? (
-          <Spinner visible textContent="Loading..." textStyle={{ color: '#FFF' }} size="large" />
+          <Spinner visible textContent={t('loading')} textStyle={{ color: '#FFF' }} size="large" />
         ) : (
-          <Text style={s.errorText}>Error connecting to database</Text>
+          <Text style={s.errorText}>{t('loadError')}</Text>
         )}
       </View>
     )

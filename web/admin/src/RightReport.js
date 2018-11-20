@@ -15,24 +15,16 @@
  */
 
 import React, { Component } from 'react'
+import { translate as t } from '@doubledutch/admin-client'
 import ReportCell from './ReportCell'
 
 export default class RightReport extends Component {
-  constructor() {
-    super()
-    this.state = {
-      // admins: [],
-      // input: "",
-      // clickable:true
-    }
-  }
-
   render() {
     const { reports } = this.props
     return (
       <div style={{ flex: 1 }}>
         <div className="headerBox">
-          <p>Resolved ({reports.length})</p>
+          <p>{t('resolvedTotal', { total: reports.length })}</p>
         </div>
         <div className="reportsBox">
           {reports.map(report => (
