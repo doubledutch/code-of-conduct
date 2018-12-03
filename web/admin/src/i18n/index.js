@@ -1,5 +1,5 @@
-import enUS from './code-of-conduct.admin.en-US.json'
-// import deDE from './code-of-conduct.admin.de-DE.json'
+import enUS from './en-us/code-of-conduct.admin.json'
+// import deDE from './de-de/code-of-conduct.admin.json'
 
 export default {
   '': enUS,

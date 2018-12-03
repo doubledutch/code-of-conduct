@@ -1,5 +1,5 @@
-import enUS from './code-of-conduct.mobile.en-US.json'
-// import deDE from './code-of-conduct.mobile.de-DE.json'
+import enUS from './en-us/code-of-conduct.mobile.json'
+// import deDE from './de-de/code-of-conduct.mobile.json'
 
 export default (strings = {
   '': enUS,
