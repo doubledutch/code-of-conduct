@@ -35,17 +35,17 @@ export default class AcceptView extends Component {
   }
 
   render() {
-    const { codeOfConduct, currentEvent, primaryColor } = this.props
-
+    const { codeOfConduct, currentEvent, primaryColor, customCodeOfConduct } = this.props
+    const code = customCodeOfConduct || codeOfConduct
     return (
       <View style={s.flex}>
-        {codeOfConduct ? (
-          codeOfConduct.text ? (
+        {code ? (
+          code.text ? (
             <ScrollView style={s.scrollView}>
               <View style={s.paddingBottom}>
                 <Text style={s.titleTop}>{currentEvent.name}</Text>
                 <Text style={s.title}>{t('title')}</Text>
-                <Text style={s.text}>{this.props.codeOfConduct.text}</Text>
+                <Text style={s.text}>{code.text}</Text>
                 <TouchableOpacity
                   style={s.noBorderButton}
                   onPress={() => client.openURL('dd://leaveevent')}

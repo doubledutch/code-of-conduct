@@ -18,16 +18,19 @@ import React, { PureComponent } from 'react'
 import '@doubledutch/react-components/lib/base.css'
 import './App.css'
 import client, { translate as t, useStrings } from '@doubledutch/admin-client'
-import i18n from './i18n'
 import md5 from 'md5'
+import { HashRouter as Router, Redirect, Route } from 'react-router-dom'
 import {
   provideFirebaseConnectorToReactComponent,
   mapPerUserPrivateAdminablePushedDataToStateObjects,
 } from '@doubledutch/firebase-connector'
+import i18n from './i18n'
+import CustomCodeSection from './CustomCodeSection'
 import CodeSection from './CodeSection'
 import AdminSection from './AdminSection'
 import ReportSection from './ReportSection'
 import ModalView from './ModalView'
+import AssignSection from './AssignSection'
 
 useStrings(i18n)
 
@@ -37,16 +40,23 @@ class App extends PureComponent {
     this.state = {
       allUsers: [],
       admins: [],
+      isAssignBoxDisplay: true,
       isCodeBoxDisplay: true,
       isAdminBoxDisplay: true,
       isReportsBoxDisplay: true,
       codeOfConduct: {},
       codeOfConductDraft: {},
       reports: [],
+      customCodes: {},
+      customCodesDraft: {},
+      selectedCodeOfConduct: {},
+      selectedCodeOfConductDraft: {},
+      selectedKey: '',
       showModal: false,
       modal: 'resolve',
       currentReport: {},
       dropDownUsers: [],
+      perUserInfo: {},
     }
     this.signin = props.fbc
       .signinAdmin()
@@ -75,6 +85,11 @@ class App extends PureComponent {
         const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
         const codeOfConductDraftRef = fbc.database.public.adminRef('codeOfConductDraft')
         const adminsRef = fbc.database.public.adminRef('admins')
+        const customCodeRef = this.props.fbc.database.public.adminRef('customCodeOfConduct')
+        const customCodeDraftRef = this.props.fbc.database.public.adminRef(
+          'customCodeOfConductDraft',
+        )
+        const customRef = fbc.database.private.adminableUsersRef()
         mapPerUserPrivateAdminablePushedDataToStateObjects(
           fbc,
           'reports',
@@ -82,6 +97,21 @@ class App extends PureComponent {
           'reports',
           (userId, key, value) => key,
         )
+
+        customRef.on('value', data => {
+          this.setState({ perUserInfo: data.val() })
+        })
+
+        client.getTiers().then(tiers => this.setState({ tiers }))
+        client.getAttendeeGroups().then(groups => this.setState({ groups }))
+
+        customCodeRef.on('value', data => {
+          this.setState({ customCodes: data.val() || {} })
+        })
+
+        customCodeDraftRef.on('value', data => {
+          this.setState({ customCodesDraft: data.val() || {} })
+        })
 
         codeOfConductRef.on('value', data => {
           const codeOfConduct = data.val() || {}
@@ -107,39 +137,82 @@ class App extends PureComponent {
   render() {
     return (
       <div className="App">
-        <ModalView
-          modal={this.state.modal}
-          showModal={this.state.showModal}
-          closeModal={this.closeModal}
-          currentReport={this.state.currentReport}
-          completeResolution={this.completeResolution}
-          users={this.state.dropDownUsers}
-          completeReport={this.completeReport}
-        />
-        <CodeSection
-          handleChange={this.handleChange}
-          isCodeBoxDisplay={this.state.isCodeBoxDisplay}
-          codeOfConduct={this.state.codeOfConduct}
-          codeOfConductDraft={this.state.codeOfConductDraft}
-          saveCodeOfConduct={this.saveCodeOfConduct}
-          saveDraftCodeOfConduct={this.saveDraftCodeOfConduct}
-        />
-        <AdminSection
-          handleChange={this.handleChange}
-          isAdminBoxDisplay={this.state.isAdminBoxDisplay}
-          admins={this.state.admins}
-          users={this.state.allUsers}
-          onAdminSelected={this.onAdminSelected}
-          onAdminDeselected={this.onAdminDeselected}
-        />
-        <ReportSection
-          handleChange={this.handleChange}
-          showMakeReport={this.showMakeReport}
-          isReportsBoxDisplay={this.state.isReportsBoxDisplay}
-          reports={this.state.reports}
-          resolveItem={this.resolveItem}
-          viewResolution={this.viewResolution}
-        />
+        <Router>
+          <div>
+            <Route
+              exact
+              path="/"
+              render={({ history }) => (
+                <div>
+                  <ModalView
+                    modal={this.state.modal}
+                    showModal={this.state.showModal}
+                    closeModal={this.closeModal}
+                    currentReport={this.state.currentReport}
+                    completeResolution={this.completeResolution}
+                    users={this.state.dropDownUsers}
+                    completeReport={this.completeReport}
+                  />
+                  <CodeSection
+                    handleChange={this.handleChange}
+                    isCodeBoxDisplay={this.state.isCodeBoxDisplay}
+                    codeOfConduct={this.state.codeOfConduct}
+                    codeOfConductDraft={this.state.codeOfConductDraft}
+                    saveCodeOfConduct={this.saveCodeOfConduct}
+                    saveDraftCodeOfConduct={this.saveDraftCodeOfConduct}
+                  />
+                  <AssignSection
+                    handleChange={this.handleChange}
+                    isAssignBoxDisplay={this.state.isAssignBoxDisplay}
+                    addNewCode={this.addNewCode}
+                    history={history}
+                    codes={this.state.customCodesDraft}
+                    editCustomCode={this.editCustomCode}
+                  />
+                  <AdminSection
+                    handleChange={this.handleChange}
+                    isAdminBoxDisplay={this.state.isAdminBoxDisplay}
+                    admins={this.state.admins}
+                    users={this.state.allUsers}
+                    onAdminSelected={this.onAdminSelected}
+                    onAdminDeselected={this.onAdminDeselected}
+                  />
+                  <ReportSection
+                    handleChange={this.handleChange}
+                    showMakeReport={this.showMakeReport}
+                    isReportsBoxDisplay={this.state.isReportsBoxDisplay}
+                    reports={this.state.reports}
+                    resolveItem={this.resolveItem}
+                    viewResolution={this.viewResolution}
+                  />
+                </div>
+              )}
+            />
+            <Route
+              exact
+              path="/content/"
+              render={({ history }) => (
+                <div>
+                  <CustomCodeSection
+                    handleChange={this.handleChange}
+                    isCodeBoxDisplay={this.state.isCodeBoxDisplay}
+                    selectedCodeOfConduct={this.state.selectedCodeOfConduct}
+                    selectedCodeOfConductDraft={this.state.selectedCodeOfConductDraft}
+                    saveCustomCodeOfConduct={this.saveCustomCodeOfConduct}
+                    saveDraftCustomCodeOfConduct={this.saveDraftCustomCodeOfConduct}
+                    deleteCustomCodeOfConduct={this.deleteCustomCodeOfConduct}
+                    getAttendees={this.getAttendees}
+                    allUsers={this.state.allUsers}
+                    history={history}
+                    title={this.state.selectedKey}
+                    fbc={this.props.fbc}
+                    perUserInfo={this.state.perUserInfo}
+                  />
+                </div>
+              )}
+            />
+          </div>
+        </Router>
       </div>
     )
   }
@@ -161,12 +234,32 @@ class App extends PureComponent {
     this.setState({ [name]: value })
   }
 
+  deleteCustomCodeOfConduct = (key, { history }) => {
+    if (window.confirm(t('deleteConfirm'))) {
+      const data = this.state.customCodes[key]
+      if (data.users) {
+        data.users.forEach(user => {
+          this.props.fbc.database.private
+            .adminableUsersRef(user.id)
+            .child('customCode')
+            .remove()
+        })
+      }
+      this.props.fbc.database.public
+        .adminRef('customCodeOfConduct')
+        .child(key)
+        .remove()
+      this.props.fbc.database.public
+        .adminRef('customCodeOfConductDraft')
+        .child(key)
+        .remove()
+      history.push(`/`)
+      this.setState({ selectedCodeOfConduct: {}, selectedCodeOfConductDraft: {}, selectedKey: '' })
+    }
+  }
+
   saveCodeOfConduct = input => {
-    if (
-      window.confirm(
-        t("publishConfirm"),
-      )
-    ) {
+    if (window.confirm(t('publishConfirm'))) {
       const publishTime = new Date().getTime()
       this.props.fbc.database.public
         .adminRef('codeOfConduct')
@@ -177,6 +270,29 @@ class App extends PureComponent {
       this.saveDraftCodeOfConduct(input)
     }
   }
+
+  saveCustomCodeOfConduct = (input, title, users, { history }) => {
+    if (window.confirm(t('publishConfirm'))) {
+      const publishTime = new Date().getTime()
+      this.props.fbc.database.public
+        .adminRef('customCodeOfConduct')
+        .child(title)
+        .set({ text: input, publishTime, users })
+      this.saveDraftCustomCodeOfConduct(input, title, users)
+      history.push(`/`)
+    }
+  }
+
+  editCustomCode = (key, { history }) => {
+    this.setState({
+      selectedCodeOfConduct: this.state.customCodes[key],
+      selectedCodeOfConductDraft: this.state.customCodesDraft[key],
+      selectedKey: key,
+    })
+    history.push(`/content`)
+  }
+
+  getAttendees = query => client.getAttendees(query)
 
   resolveItem = item => {
     this.setState({ currentReport: item, showModal: true, modal: 'resolve' })
@@ -225,6 +341,18 @@ class App extends PureComponent {
   saveDraftCodeOfConduct = input => {
     const publishTime = new Date().getTime()
     this.props.fbc.database.public.adminRef('codeOfConductDraft').set({ text: input, publishTime })
+  }
+
+  saveDraftCustomCodeOfConduct = (input, title, users) => {
+    const publishTime = new Date().getTime()
+    this.props.fbc.database.public
+      .adminRef('customCodeOfConductDraft')
+      .child(title)
+      .set({ text: input, publishTime, users })
+  }
+
+  addNewCode = ({ history }) => {
+    history.push(`/content`)
   }
 }
 

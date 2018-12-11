@@ -20,7 +20,8 @@ import client, { translate as t } from '@doubledutch/rn-client'
 
 export default class CodeOfConductSubView extends Component {
   render() {
-    const code = this.props.codeOfConduct ? this.props.codeOfConduct.text : ''
+    const codeObject = this.props.customCodeOfConduct || this.props.codeOfConduct
+    const code = codeObject ? codeObject.text : ''
     return (
       <View style={s.container}>
         <Text style={s.titleText}>{t('titleCap')}</Text>
