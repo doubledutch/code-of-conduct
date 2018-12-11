@@ -113,6 +113,7 @@ class HomeView extends PureComponent {
 
   render() {
     const { currentEvent, currentUser, primaryColor } = this.state
+    const { suggestedTitle } = this.props
     if (!currentEvent || !currentUser || !primaryColor) return null
     return (
       <KeyboardAvoidingView
@@ -120,7 +121,7 @@ class HomeView extends PureComponent {
         behavior={Platform.select({ ios: 'padding', android: null })}
       >
         {this.props.version ? null : (
-          <TitleBar title={t('title')} client={client} signin={this.signin} />
+          <TitleBar title={suggestedTitle || t('title')} client={client} signin={this.signin} />
         )}
         {this.state.isLoggedIn ? (
           this.renderPage()
