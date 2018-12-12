@@ -20,6 +20,7 @@ import CsvParse from '@vtex/react-csv-parse'
 import { CSVLink } from 'react-csv'
 import { TextInput } from '@doubledutch/react-components'
 import client, { translate as t } from '@doubledutch/admin-client'
+import RadioIcon from './RadioIcon'
 
 export default class CustomCodeSection extends Component {
   constructor() {
@@ -35,33 +36,41 @@ export default class CustomCodeSection extends Component {
       dupError: false,
       importedUsers: [],
       rawData: [],
+      customQuestion: '',
+      isTrueFalse: false,
     }
   }
 
   componentDidMount() {
     const input = this.props.selectedCodeOfConductDraft.text
     const title = this.props.title
-    this.setState({ input, title })
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedCodeOfConductDraft.text) {
-      this.setState({ input: nextProps.selectedCodeOfConductDraft.text })
-    }
+    const customQuestion = this.props.selectedCodeOfConductDraft.question
+      ? this.props.selectedCodeOfConductDraft.question.text
+      : ''
+    const isTrueFalse = this.props.selectedCodeOfConductDraft.question
+      ? this.props.selectedCodeOfConductDraft.question.isTrueFalse
+      : false
+    this.setState({ input, title, customQuestion, isTrueFalse })
   }
 
   render() {
     const {
       selectedCodeOfConduct,
       selectedCodeOfConductDraft,
-      handleChange,
       isCodeBoxDisplay,
-      saveCodeOfConduct,
-      saveDraftCodeOfConduct,
       history,
     } = this.props
-    const isDraftChanges = this.state.input !== selectedCodeOfConductDraft.text
-    const isPublishChanges = this.state.input !== selectedCodeOfConduct.text
+    const questionDraft = selectedCodeOfConductDraft.question
+      ? this.props.selectedCodeOfConductDraft.question.text
+      : ''
+    const question = selectedCodeOfConduct.question
+      ? this.props.selectedCodeOfConductDraft.question.text
+      : ''
+    const isDraftChanges =
+      this.state.input !== selectedCodeOfConductDraft.text ||
+      this.state.customQuestion !== questionDraft
+    const isPublishChanges =
+      this.state.input !== selectedCodeOfConduct.text || this.state.customQuestion !== question
     const currentState = this.findCurrentState()
     const publishTime = selectedCodeOfConduct.publishTime
       ? new Date(selectedCodeOfConduct.publishTime).toLocaleString()
@@ -86,7 +95,6 @@ export default class CustomCodeSection extends Component {
               onChange={e => this.setState({ title: e.target.value })}
               className="titleInput"
             />
-            {/* <p className="titleHelp">{t('titleHelp')}</p> */}
             {this.state.showStaticBox && !selectedCodeOfConductDraft.text ? (
               <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
                 <span className="placeHolderTextLine">
@@ -109,6 +117,22 @@ export default class CustomCodeSection extends Component {
                 className="completeText"
               />
             )}
+            <TextInput
+              label={t('questionTypeLabel')}
+              placeholder="Ex. "
+              value={this.state.customQuestion}
+              onChange={e => this.setState({ customQuestion: e.target.value })}
+            />
+            {this.state.customQuestion.length > 0 ? (
+              <div>
+                <p>{t('questionType')}</p>
+                <RadioIcon
+                  checked={this.state.isTrueFalse}
+                  onTrueFalse={() => this.setState({ isTrueFalse: true })}
+                  onFreeEntry={() => this.setState({ isTrueFalse: false })}
+                />
+              </div>
+            ) : null}
             {this.renderCSVBox()}
             <div className="codeButtonsContainer">
               <p>{t('disclaimer')}</p>
@@ -212,7 +236,13 @@ export default class CustomCodeSection extends Component {
       }
     })
     const history = this.props.history
-    this.props.saveCustomCodeOfConduct(this.state.input, this.state.title, attendees, { history })
+    this.props.saveCustomCodeOfConduct(
+      this.state.input,
+      this.state.title,
+      attendees,
+      { history },
+      { text: this.state.customQuestion, isTrueFalse: this.state.isTrueFalse },
+    )
   }
 
   findCurrentState = () => {

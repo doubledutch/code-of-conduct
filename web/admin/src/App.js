@@ -52,6 +52,7 @@ class App extends PureComponent {
       selectedCodeOfConduct: {},
       selectedCodeOfConductDraft: {},
       selectedKey: '',
+      status: [],
       showModal: false,
       modal: 'resolve',
       currentReport: {},
@@ -95,6 +96,14 @@ class App extends PureComponent {
           'reports',
           this,
           'reports',
+          (userId, key, value) => key,
+        )
+
+        mapPerUserPrivateAdminablePushedDataToStateObjects(
+          fbc,
+          'status',
+          this,
+          'status',
           (userId, key, value) => key,
         )
 
@@ -168,6 +177,8 @@ class App extends PureComponent {
                     history={history}
                     codes={this.state.customCodesDraft}
                     editCustomCode={this.editCustomCode}
+                    status={this.state.status}
+                    client={client}
                   />
                   <AdminSection
                     handleChange={this.handleChange}
@@ -271,14 +282,14 @@ class App extends PureComponent {
     }
   }
 
-  saveCustomCodeOfConduct = (input, title, users, { history }) => {
+  saveCustomCodeOfConduct = (input, title, users, { history }, question) => {
     if (window.confirm(t('publishConfirm'))) {
       const publishTime = new Date().getTime()
       this.props.fbc.database.public
         .adminRef('customCodeOfConduct')
         .child(title)
-        .set({ text: input, publishTime, users })
-      this.saveDraftCustomCodeOfConduct(input, title, users)
+        .set({ text: input, publishTime, users, question })
+      this.saveDraftCustomCodeOfConduct(input, title, users, question)
       history.push(`/`)
     }
   }
@@ -343,12 +354,12 @@ class App extends PureComponent {
     this.props.fbc.database.public.adminRef('codeOfConductDraft').set({ text: input, publishTime })
   }
 
-  saveDraftCustomCodeOfConduct = (input, title, users) => {
+  saveDraftCustomCodeOfConduct = (input, title, users, question) => {
     const publishTime = new Date().getTime()
     this.props.fbc.database.public
       .adminRef('customCodeOfConductDraft')
       .child(title)
-      .set({ text: input, publishTime, users })
+      .set({ text: input, publishTime, users, question })
   }
 
   addNewCode = ({ history }) => {

@@ -46,5 +46,9 @@
   "importListHelp": "This feature allows new code of conducts templates to be assigned to specific individuals. Simply upload a list of email addresses associated with a users DoubleDutch account and you are ready to go!",
   "titleHelp": "*Please ensure you have a Default Code of Conduct titled 'Default'", 
   "addNew": "Add New Code of Conduct",
-  "edit": "Edit"
+  "edit": "Edit",
+  "trueFalse": "True/False",
+  "freeEntry": "Input",
+  "questionType": "True-False or input answer?",
+  "questionTypeLabel": "Add a customizable question (optional)"
 }

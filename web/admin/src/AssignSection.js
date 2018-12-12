@@ -18,11 +18,15 @@ import React, { Component } from 'react'
 import './App.css'
 import { TextInput } from '@doubledutch/react-components'
 import { translate as t } from '@doubledutch/admin-client'
+import { CSVLink, CSVDownload } from 'react-csv'
 
 export default class AssignSection extends Component {
   constructor() {
     super()
-    this.state = {}
+    this.state = {
+      exporting: false,
+      exportList: [],
+    }
   }
 
   componentWillReceiveProps(nextProps) {}
@@ -51,22 +55,66 @@ export default class AssignSection extends Component {
           </button>
         </div>
         {isAssignBoxDisplay && (
-          <div className="codeTable">
-            {codesKeys.map(key => (
-              <div className="codeRow">
-                <p>{key}</p>
-                <div className="flex" />
-                <button
-                  className="noBorderButtonBlue"
-                  onClick={() => this.props.editCustomCode(key, { history })}
-                >
-                  {t('edit')}
-                </button>
-              </div>
-            ))}
+          <div>
+            <div className="codeTable">
+              {codesKeys.map(key => (
+                <div className="codeRow">
+                  <p>{key}</p>
+                  <div className="flex" />
+                  <button
+                    className="noBorderButtonBlue"
+                    onClick={() => this.props.editCustomCode(key, { history })}
+                  >
+                    {t('edit')}
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="csvLinkBox">
+              <button className="button" onClick={this.prepareCSV}>
+                {t('export')}
+              </button>
+              {this.state.exporting ? (
+                <CSVDownload data={this.state.exportList} target="_blank" />
+              ) : null}
+            </div>
           </div>
         )}
       </div>
     )
+  }
+
+  prepareCSV = () => {
+    if (this.state.exporting) {
+      return
+    }
+    const status = Object.values(this.props.status)
+    let newList = []
+    const attendeeClickPromises = status.map(result =>
+      this.props.client
+        .getAttendee(result.userId)
+        .then(attendee => ({ ...result, ...attendee, surveyTitle: result.id }))
+        .catch(err => result),
+    )
+    Promise.all(attendeeClickPromises).then(newResults => {
+      // Build CSV and trigger download...
+      newList = this.parseResultsForExport(newResults)
+      this.setState({ exporting: true, exportList: newList })
+      setTimeout(() => this.setState({ exporting: false, newList: [] }), 3000)
+    })
+  }
+
+  parseResultsForExport = results => {
+    const parsedResults = []
+    results.forEach(item => {
+      const newItem = {
+        survey_title: item.surveyTitle,
+        survey_question_response: item.questionResponse,
+        name: `${item.firstName} ${item.lastName}`,
+        email: item.email,
+      }
+      parsedResults.push(newItem)
+    })
+    return parsedResults
   }
 }
