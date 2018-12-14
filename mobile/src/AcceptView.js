@@ -24,7 +24,7 @@ export default class AcceptView extends Component {
     this.checkForNoCodeOfConduct(props)
     this.state = {
       questionResponse: '',
-      isTrue: undefined,
+      isQuestionResponseTrue: undefined,
     }
   }
 
@@ -89,10 +89,15 @@ export default class AcceptView extends Component {
             <View>
               <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
                 <TouchableOpacity
-                  onPress={() => this.setState({ isTrue: true, queestionResponse: 'true' })}
-                  style={[s.radio, this.state.isTrue ? { borderColor: primaryColor } : null]}
+                  onPress={() =>
+                    this.setState({ isQuestionResponseTrue: true, questionResponse: 'true' })
+                  }
+                  style={[
+                    s.radio,
+                    this.state.isQuestionResponseTrue ? { borderColor: primaryColor } : null,
+                  ]}
                 >
-                  {this.state.isTrue ? (
+                  {this.state.isQuestionResponseTrue ? (
                     <View style={[s.radioDot, { backgroundColor: primaryColor }]} />
                   ) : null}
                 </TouchableOpacity>
@@ -100,13 +105,17 @@ export default class AcceptView extends Component {
               </View>
               <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
                 <TouchableOpacity
-                  onPress={() => this.setState({ isTrue: false, questionResponse: 'false' })}
+                  onPress={() =>
+                    this.setState({ isQuestionResponseTrue: false, questionResponse: 'false' })
+                  }
                   style={[
                     s.radio,
-                    this.state.isTrue === false ? { borderColor: primaryColor } : null,
+                    this.state.isQuestionResponseTrue === false
+                      ? { borderColor: primaryColor }
+                      : null,
                   ]}
                 >
-                  {this.state.isTrue === false ? (
+                  {this.state.isQuestionResponseTrue === false ? (
                     <View style={[s.radioDot, { backgroundColor: primaryColor }]} />
                   ) : null}
                 </TouchableOpacity>

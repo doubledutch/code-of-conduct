@@ -113,7 +113,6 @@ export default class CustomCodeSection extends Component {
                 autoFocus={!this.state.showStaticBox}
                 value={this.state.input}
                 onChange={e => this.setState({ input: e.target.value })}
-                className="completeText"
               />
             )}
             <TextInput
