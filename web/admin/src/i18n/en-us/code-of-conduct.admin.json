@@ -50,5 +50,6 @@
   "trueFalse": "True/False",
   "freeEntry": "Input",
   "questionType": "True-False or input answer?",
-  "questionTypeLabel": "Add a customizable question (optional)"
+  "questionTypeLabel": "Add a customizable question (optional)",
+  "downloadUpload": "Download uploaded users"
 }

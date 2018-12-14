@@ -54,18 +54,17 @@ export default class CustomCodeSection extends Component {
   }
 
   render() {
-    const {
-      selectedCodeOfConduct,
-      selectedCodeOfConductDraft,
-      isCodeBoxDisplay,
-      history,
-    } = this.props
+    const { selectedCodeOfConductDraft, isCodeBoxDisplay, history } = this.props
+    const selectedCodeOfConduct = this.props.selectedCodeOfConduct || {
+      input: '',
+      question: { text: '', isTrueFalse: undefined },
+      attendees: [],
+      title: '',
+    }
     const questionDraft = selectedCodeOfConductDraft.question
-      ? this.props.selectedCodeOfConductDraft.question.text
+      ? selectedCodeOfConductDraft.question.text
       : ''
-    const question = selectedCodeOfConduct.question
-      ? this.props.selectedCodeOfConductDraft.question.text
-      : ''
+    const question = selectedCodeOfConduct.question ? selectedCodeOfConduct.question.text : ''
     const isDraftChanges =
       this.state.input !== selectedCodeOfConductDraft.text ||
       this.state.customQuestion !== questionDraft
@@ -144,7 +143,7 @@ export default class CustomCodeSection extends Component {
                 {t('delete')}
               </button>
               {isDraftChanges && inputIsNotEmpty && (
-                <button onClick={null} className="dd-bordered">
+                <button onClick={this.handleDraftSave} className="dd-bordered">
                   {t('draft')}
                 </button>
               )}
@@ -164,13 +163,20 @@ export default class CustomCodeSection extends Component {
     <div>
       <h2 className="importTitle">{t('importList')}</h2>
       <p className="titleHelp">{t('importListHelp')}</p>
-      <CsvParse
-        className="csv-input"
-        keys={['email']}
-        onDataUploaded={this.handleImport}
-        onError={this.props.handleError}
-        render={onChange => <input type="file" onChange={onChange} />}
-      />
+      <div>
+        <CsvParse
+          className="csv-input"
+          keys={['email']}
+          onDataUploaded={this.handleImport}
+          onError={this.props.handleError}
+          render={onChange => <input type="file" onChange={onChange} />}
+        />
+        {this.props.selectedCodeOfConductDraft.users ? (
+          <CSVLink data={this.props.selectedCodeOfConductDraft.users} filename="questions.csv">
+            {t('downloadUpload')}
+          </CSVLink>
+        ) : null}
+      </div>
       {this.state.totalImport > 0 && (
         <h2 className="successText">
           {t('success', {
@@ -223,6 +229,24 @@ export default class CustomCodeSection extends Component {
     })
   }
 
+  handleDraftSave = () => {
+    const attendees = this.state.importedUsers
+    const data = this.state.rawData
+    data.forEach(userInfo => {
+      const currentUser = attendees.find(user => (user ? user.email === userInfo.email : undefined))
+      if (currentUser) {
+        this.props.fbc.database.private
+          .adminableUsersRef(currentUser.id)
+          .child('customCode')
+          .set(this.state.title)
+      }
+    })
+    this.props.saveDraftCustomCodeOfConduct(this.state.input, this.state.title, attendees, {
+      text: this.state.customQuestion || '',
+      isTrueFalse: this.state.isTrueFalse,
+    })
+  }
+
   handleSave = () => {
     const attendees = this.state.importedUsers
     const data = this.state.rawData
@@ -246,9 +270,15 @@ export default class CustomCodeSection extends Component {
   }
 
   findCurrentState = () => {
+    const selectedCodeOfConduct = this.props.selectedCodeOfConduct || {
+      input: '',
+      question: { text: '', isTrueFalse: undefined },
+      attendees: [],
+      title: '',
+    }
     let stateText = ''
     if (this.props.selectedCodeOfConductDraft.text) {
-      if (this.props.selectedCodeOfConduct.text === this.props.selectedCodeOfConductDraft.text) {
+      if (selectedCodeOfConduct.text === this.props.selectedCodeOfConductDraft.text) {
         stateText = 'Published'
       } else {
         stateText = 'Draft'

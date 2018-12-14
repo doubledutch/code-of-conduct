@@ -248,22 +248,24 @@ class App extends PureComponent {
   deleteCustomCodeOfConduct = (key, { history }) => {
     if (window.confirm(t('deleteConfirm'))) {
       const data = this.state.customCodes[key]
-      if (data.users) {
-        data.users.forEach(user => {
-          this.props.fbc.database.private
-            .adminableUsersRef(user.id)
-            .child('customCode')
-            .remove()
-        })
+      if (data) {
+        if (data.users) {
+          data.users.forEach(user => {
+            this.props.fbc.database.private
+              .adminableUsersRef(user.id)
+              .child('customCode')
+              .remove()
+          })
+        }
+        this.props.fbc.database.public
+          .adminRef('customCodeOfConduct')
+          .child(key)
+          .remove()
+        this.props.fbc.database.public
+          .adminRef('customCodeOfConductDraft')
+          .child(key)
+          .remove()
       }
-      this.props.fbc.database.public
-        .adminRef('customCodeOfConduct')
-        .child(key)
-        .remove()
-      this.props.fbc.database.public
-        .adminRef('customCodeOfConductDraft')
-        .child(key)
-        .remove()
       history.push(`/`)
       this.setState({ selectedCodeOfConduct: {}, selectedCodeOfConductDraft: {}, selectedKey: '' })
     }
@@ -355,6 +357,7 @@ class App extends PureComponent {
   }
 
   saveDraftCustomCodeOfConduct = (input, title, users, question) => {
+    console.log(input, title, users, question)
     const publishTime = new Date().getTime()
     this.props.fbc.database.public
       .adminRef('customCodeOfConductDraft')
