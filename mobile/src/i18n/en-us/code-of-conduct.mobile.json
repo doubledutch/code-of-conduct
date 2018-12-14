@@ -26,5 +26,7 @@
   "reportedViolations": "REPORTED VIOLATIONS",
   "reported": "Reported: ",
   "status": "Status: ",
-  "reportedViolation": "Reported Violation"
+  "reportedViolation": "Reported Violation",
+  "true": "True",
+  "false": "False"
 }

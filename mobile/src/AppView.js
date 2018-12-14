@@ -31,6 +31,7 @@ export default class AppView extends Component {
       <ScrollView style={{ flex: 1 }}>
         <CodeOfConductSubView
           codeOfConduct={this.props.codeOfConduct}
+          codeOfConduct={this.props.customCodeOfConduct}
           showCodeOfConduct={this.props.showCodeOfConduct}
           primaryColor={primaryColor}
         />
@@ -71,6 +72,7 @@ export default class AppView extends Component {
         return (
           <CodeOfConductModal
             codeOfConduct={this.props.codeOfConduct}
+            customCodeOfConduct={this.props.customCodeOfConduct}
             showCodeOfConduct={this.props.showCodeOfConduct}
             primaryColor={primaryColor}
           />

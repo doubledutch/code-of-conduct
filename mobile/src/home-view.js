@@ -32,13 +32,14 @@ class HomeView extends PureComponent {
     super(props)
     this.state = {
       codeOfConduct: null,
+      customCodeOfConduct: null,
       reports: [],
       currentReport: {},
-      userStatus: {},
       currentAppPage: 'home',
       admins: [],
       isLoggedIn: false,
       logInFailed: false,
+      version: 'default',
     }
 
     this.signin = props.fbc.signin().then(user => (this.user = user))
@@ -54,10 +55,22 @@ class HomeView extends PureComponent {
       this.signin
         .then(() => {
           const codeOfConductRef = fbc.database.public.adminRef('codeOfConduct')
-          const userStatusRef = fbc.database.private.adminableUserRef('status')
+          const customCodeRef = fbc.database.private.adminableUserRef('customCode')
           const userReportsRef = fbc.database.private.adminableUserRef('reports')
           const adminsRef = fbc.database.public.adminRef('admins')
           const wireListeners = () => {
+            customCodeRef.on('value', data => {
+              if (data.val()) {
+                this.setState({ version: data.val() })
+                fbc.database.public
+                  .adminRef('customCodeOfConduct')
+                  .child(data.val())
+                  .on('value', data => {
+                    const customCodeOfConduct = data.val() || {}
+                    this.setState({ customCodeOfConduct })
+                  })
+              }
+            })
             codeOfConductRef.on('value', data => {
               const codeOfConduct = data.val() || {}
               this.setState({ codeOfConduct })
@@ -70,11 +83,6 @@ class HomeView extends PureComponent {
             adminsRef.on('child_removed', data => {
               this.setState({ admins: this.state.admins.filter(x => x.key !== data.key) })
             })
-
-            userStatusRef.on('child_added', data => {
-              this.setState({ userStatus: { ...data.val(), key: data.key } })
-            })
-
             userReportsRef.on('child_added', data => {
               this.setState({ reports: [...this.state.reports, { ...data.val(), key: data.key }] })
             })
@@ -124,7 +132,9 @@ class HomeView extends PureComponent {
       return (
         <AcceptView
           codeOfConduct={this.state.codeOfConduct}
+          customCodeOfConduct={this.state.customCodeOfConduct}
           markAccepted={this.markAccepted}
+          markAcceptedCustom={this.markAcceptedCustom}
           currentEvent={this.state.currentEvent}
           primaryColor={this.state.primaryColor}
         />
@@ -139,6 +149,7 @@ class HomeView extends PureComponent {
         showCodeOfConduct={this.showCodeOfConduct}
         showModal={this.showModal}
         codeOfConduct={this.state.codeOfConduct}
+        customCodeOfConduct={this.state.customCodeOfConduct}
         makeNewReport={this.makeNewReport}
         reports={this.state.reports}
         currentReport={this.state.currentReport}
@@ -163,6 +174,19 @@ class HomeView extends PureComponent {
       .child(version)
       .set({
         accepted: true,
+      })
+      .catch(x => console.error(x))
+      .then(() => client.dismissLandingPage(true))
+  }
+
+  markAcceptedCustom = response => {
+    const { version } = this.state
+    this.props.fbc.database.private
+      .adminableUserRef('status')
+      .child(version)
+      .set({
+        accepted: true,
+        questionResponse: response || 'N/A',
       })
       .catch(x => console.error(x))
       .then(() => client.dismissLandingPage(true))

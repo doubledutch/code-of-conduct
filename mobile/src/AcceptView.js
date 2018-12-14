@@ -15,13 +15,17 @@
  */
 
 import React, { Component } from 'react'
-import { StyleSheet, TouchableOpacity, Text, ScrollView, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, Text, ScrollView, View, TextInput } from 'react-native'
 import client, { translate as t } from '@doubledutch/rn-client'
 
 export default class AcceptView extends Component {
   constructor(props) {
     super(props)
     this.checkForNoCodeOfConduct(props)
+    this.state = {
+      questionResponse: '',
+      isQuestionResponseTrue: undefined,
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -35,17 +39,18 @@ export default class AcceptView extends Component {
   }
 
   render() {
-    const { codeOfConduct, currentEvent, primaryColor } = this.props
-
+    const { codeOfConduct, currentEvent, primaryColor, customCodeOfConduct } = this.props
+    const code = customCodeOfConduct || codeOfConduct
     return (
       <View style={s.flex}>
-        {codeOfConduct ? (
-          codeOfConduct.text ? (
+        {code ? (
+          code.text ? (
             <ScrollView style={s.scrollView}>
               <View style={s.paddingBottom}>
                 <Text style={s.titleTop}>{currentEvent.name}</Text>
                 <Text style={s.title}>{t('title')}</Text>
-                <Text style={s.text}>{this.props.codeOfConduct.text}</Text>
+                <Text style={s.text}>{code.text}</Text>
+                {code.question && this.renderQuestion(code.question)}
                 <TouchableOpacity
                   style={s.noBorderButton}
                   onPress={() => client.openURL('dd://leaveevent')}
@@ -53,7 +58,11 @@ export default class AcceptView extends Component {
                   <Text style={s.noBorderText}>{t('deny')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={this.props.markAccepted}
+                  onPress={
+                    this.props.customCodeOfConduct
+                      ? () => this.props.markAcceptedCustom(this.state.questionResposne)
+                      : this.props.markAccepted
+                  }
                   style={[s.launchButton, { backgroundColor: primaryColor }]}
                 >
                   <Text style={s.launchButtonText}>{t('accept')}</Text>
@@ -68,6 +77,69 @@ export default class AcceptView extends Component {
         ) : null}
       </View>
     )
+  }
+
+  renderQuestion = question => {
+    const { primaryColor } = this.props
+    if (question.text.length)
+      return (
+        <View style={{ marginLeft: 20, marginRight: 20 }}>
+          <Text>{question.text}</Text>
+          {question.isTrueFalse ? (
+            <View>
+              <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.setState({ isQuestionResponseTrue: true, questionResponse: 'true' })
+                  }
+                  style={[
+                    s.radio,
+                    this.state.isQuestionResponseTrue ? { borderColor: primaryColor } : null,
+                  ]}
+                >
+                  {this.state.isQuestionResponseTrue ? (
+                    <View style={[s.radioDot, { backgroundColor: primaryColor }]} />
+                  ) : null}
+                </TouchableOpacity>
+                <Text>{t('true')}</Text>
+              </View>
+              <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.setState({ isQuestionResponseTrue: false, questionResponse: 'false' })
+                  }
+                  style={[
+                    s.radio,
+                    this.state.isQuestionResponseTrue === false
+                      ? { borderColor: primaryColor }
+                      : null,
+                  ]}
+                >
+                  {this.state.isQuestionResponseTrue === false ? (
+                    <View style={[s.radioDot, { backgroundColor: primaryColor }]} />
+                  ) : null}
+                </TouchableOpacity>
+                <Text>{t('false')}</Text>
+              </View>
+            </View>
+          ) : (
+            <TextInput
+              multiline
+              value={this.state.questionResponse}
+              onChangeText={answer => this.setState({ questionResponse: answer })}
+              style={{
+                height: 60,
+                flex: 1,
+                borderWidth: 1,
+                borderColor: '#c4c4c4',
+                marginTop: 20,
+                borderRadius: 5,
+              }}
+            />
+          )}
+        </View>
+      )
+    return null
   }
 }
 
@@ -98,6 +170,20 @@ const s = StyleSheet.create({
     color: '#4B4B4B',
     margin: 20,
     textAlign: 'center',
+  },
+  radio: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderColor: '#c4c4c4',
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  radioDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   titleTop: {
     fontSize: 22,
