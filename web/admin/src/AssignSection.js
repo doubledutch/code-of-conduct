@@ -108,8 +108,8 @@ export default class AssignSection extends Component {
     const parsedResults = []
     results.forEach(item => {
       const newItem = {
-        survey_title: item.surveyTitle,
-        survey_question_response: item.questionResponse,
+        code_of_conduct_title: item.surveyTitle,
+        custom_question_response: item.questionResponse,
         name: `${item.firstName} ${item.lastName}`,
         email: item.email,
       }
