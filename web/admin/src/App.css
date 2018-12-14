@@ -559,14 +559,6 @@ button.displayButton:focus, button.displayButton:active {
   border-bottom: 1px solid #E3ECF8;
 }
 
-.flex {
-  flex: 1
-}
-
-.completeText {
-
-}
-
 .titleInput {
   width: 30%
 }
