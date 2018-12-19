@@ -51,5 +51,7 @@
   "freeEntry": "Input",
   "questionType": "True-False or input answer?",
   "questionTypeLabel": "Add a customizable question (optional)",
-  "downloadUpload": "Download uploaded users"
+  "downloadUpload": "Download uploaded users",
+  "back": "Back",
+  "noCodeHelp": "No Custom Code of Conducts have been added"
 }

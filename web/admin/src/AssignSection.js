@@ -69,13 +69,18 @@ export default class AssignSection extends Component {
                   </button>
                 </div>
               ))}
+              {codesKeys.length === 0 && (
+                <div className="centerBox">
+                  <h3>{t('noCodeHelp')}</h3>
+                </div>
+              )}
             </div>
             <div className="csvLinkBox">
               <button className="button" onClick={this.prepareCSV}>
                 {t('export')}
               </button>
               {this.state.exporting ? (
-                <CSVDownload data={this.state.exportList} target="_blank" />
+                <CSVDownload data={this.state.exportList} target="_blank" filename="my-file.csv" />
               ) : null}
             </div>
           </div>
