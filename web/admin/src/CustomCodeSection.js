@@ -76,6 +76,7 @@ export default class CustomCodeSection extends Component {
       : ''
     const inputIsNotEmpty = this.state.input ? this.state.input.trim().length > 0 : false
     const isImportedUsers = this.state.importedUsers.length > 0
+    const isTitle = this.state.title ? this.state.title.trim().length > 0 : false
     return (
       <div>
         <button className="dd-bordered" onClick={() => this.props.backAction({ history })}>
@@ -147,13 +148,14 @@ export default class CustomCodeSection extends Component {
                 >
                   {t('delete')}
                 </button>
-                {isDraftChanges && inputIsNotEmpty && (
+                {isDraftChanges && inputIsNotEmpty && isTitle && (
                   <button onClick={this.handleDraftSave} className="dd-bordered">
                     {t('draft')}
                   </button>
                 )}
                 {isPublishChanges &&
                   inputIsNotEmpty &&
+                  isTitle &&
                   (isImportedUsers || this.props.selectedCodeOfConductDraft.users) && (
                     <button onClick={this.handleSave} className="dd-bordered button-margin">
                       {t('publishApp')}
@@ -222,7 +224,7 @@ export default class CustomCodeSection extends Component {
         if (user.id && this.props.perUserInfo) {
           const userData = this.props.perUserInfo[user.id]
           if (userData.customCode) {
-            if (userData.customCode !== this.state.title) {
+            if (userData.customCode !== this.state.title.trim()) {
               this.setState({ dupError: true })
               error = true
             }
