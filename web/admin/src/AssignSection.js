@@ -40,7 +40,7 @@ export default class AssignSection extends Component {
           <h2 className="titleWithDescription">{t('customCode')}</h2>
           {isAssignBoxDisplay && (
             <button
-              onClick={() => this.props.addNewCode({ history })}
+              onClick={() => this.props.addNewCode(history)}
               className="dd-bordered topButton"
             >
               {t('addNew')}
@@ -63,7 +63,7 @@ export default class AssignSection extends Component {
                   <div className="flex" />
                   <button
                     className="noBorderButtonBlue"
-                    onClick={() => this.props.editCustomCode(key, { history })}
+                    onClick={() => this.props.editCustomCode(key, history)}
                   >
                     {t('edit')}
                   </button>

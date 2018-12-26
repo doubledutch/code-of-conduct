@@ -84,7 +84,7 @@ export default class CustomCodeSection extends Component {
       !!this.props.customCodes[this.state.title] && this.props.title !== this.state.title
     return (
       <div>
-        <button className="dd-bordered" onClick={() => this.props.backAction({ history })}>
+        <button className="dd-bordered" onClick={() => this.props.backAction(history)}>
           {t('back')}
         </button>
         <div className="sectionContainer">
@@ -149,9 +149,7 @@ export default class CustomCodeSection extends Component {
                 <p>{t('disclaimer')}</p>
                 <div style={{ flex: 1 }} />
                 <button
-                  onClick={() =>
-                    this.props.deleteCustomCodeOfConduct(this.props.title, { history })
-                  }
+                  onClick={() => this.props.deleteCustomCodeOfConduct(this.props.title, history)}
                   className="dd-bordered button-margin button-red"
                 >
                   {t('delete')}
@@ -277,7 +275,7 @@ export default class CustomCodeSection extends Component {
         text: this.state.customQuestion || '',
         isTrueFalse: this.state.isTrueFalse,
       },
-      { history },
+      history,
     )
   }
 
@@ -294,13 +292,10 @@ export default class CustomCodeSection extends Component {
       }
     })
     const history = this.props.history
-    this.props.saveCustomCodeOfConduct(
-      this.state.input,
-      this.state.title,
-      attendees,
-      { history },
-      { text: this.state.customQuestion, isTrueFalse: this.state.isTrueFalse },
-    )
+    this.props.saveCustomCodeOfConduct(this.state.input, this.state.title, attendees, history, {
+      text: this.state.customQuestion,
+      isTrueFalse: this.state.isTrueFalse,
+    })
   }
 
   findCurrentState = () => {
