@@ -558,6 +558,8 @@ button.displayButton:focus, button.displayButton:active {
 
 .failText {
   color: red;
+  font-size: 12px;
+  margin-top: 0px;
 }
 
 .codeRow {

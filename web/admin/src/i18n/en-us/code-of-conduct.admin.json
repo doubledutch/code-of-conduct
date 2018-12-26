@@ -37,6 +37,7 @@
   "success": "Successfully imported ${successfulImport} of ${totalImport}",
   "fail": "*Please check that your file was formatted correctly and use the template for guidance",
   "failError": "*This file cannot successfully be imported. Please check that emails are valid and its a CSV",
+  "dupErrorTitle": "*Please rename Code of Conduct",
   "dupError": "*This file cannot successfully be imported due to emails associated with another Code of Conduct. Please edit your list before continuing",
   "allAttendees": "All Attendees",
   "tiers": "Tiers",
@@ -53,5 +54,6 @@
   "questionTypeLabel": "Add a customizable question (optional)",
   "downloadUpload": "Download uploaded users",
   "back": "Back",
-  "noCodeHelp": "No Custom Code of Conducts have been added"
+  "noCodeHelp": "No Custom Code of Conducts have been added",
+  "customCodeHelp": "Note: Attendees who have accepted a code of conduct will not be re-prompted if they are later assigned to a new code. Question responses will reflect the code they accepted."
 }

@@ -50,7 +50,10 @@ export default class CustomCodeSection extends Component {
     const isTrueFalse = this.props.selectedCodeOfConductDraft.question
       ? this.props.selectedCodeOfConductDraft.question.isTrueFalse
       : false
-    this.setState({ input, title, customQuestion, isTrueFalse })
+    const importedUsers = this.props.selectedCodeOfConductDraft.users
+      ? this.props.selectedCodeOfConductDraft.users
+      : []
+    this.setState({ input, title, customQuestion, isTrueFalse, importedUsers })
   }
 
   render() {
@@ -77,6 +80,8 @@ export default class CustomCodeSection extends Component {
     const inputIsNotEmpty = this.state.input ? this.state.input.trim().length > 0 : false
     const isImportedUsers = this.state.importedUsers.length > 0
     const isTitle = this.state.title ? this.state.title.trim().length > 0 : false
+    const isDupTitle =
+      !!this.props.customCodes[this.state.title] && this.props.title !== this.state.title
     return (
       <div>
         <button className="dd-bordered" onClick={() => this.props.backAction({ history })}>
@@ -98,7 +103,9 @@ export default class CustomCodeSection extends Component {
                 value={this.state.title}
                 onChange={e => this.setState({ title: e.target.value })}
                 className="titleInput"
+                maxLength={100}
               />
+              {isDupTitle && <h2 className="failText">{t('dupErrorTitle')}</h2>}
               {this.state.showStaticBox && !selectedCodeOfConductDraft.text ? (
                 <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
                   <span className="placeHolderTextLine">
@@ -124,6 +131,7 @@ export default class CustomCodeSection extends Component {
                 label={t('questionTypeLabel')}
                 placeholder="Ex. "
                 value={this.state.customQuestion}
+                maxLength={250}
                 onChange={e => this.setState({ customQuestion: e.target.value })}
               />
               {this.state.customQuestion.length > 0 ? (
@@ -148,7 +156,7 @@ export default class CustomCodeSection extends Component {
                 >
                   {t('delete')}
                 </button>
-                {isDraftChanges && inputIsNotEmpty && isTitle && (
+                {isDraftChanges && inputIsNotEmpty && isTitle && !isDupTitle && (
                   <button onClick={this.handleDraftSave} className="dd-bordered">
                     {t('draft')}
                   </button>
@@ -156,12 +164,14 @@ export default class CustomCodeSection extends Component {
                 {isPublishChanges &&
                   inputIsNotEmpty &&
                   isTitle &&
+                  !isDupTitle &&
                   (isImportedUsers || this.props.selectedCodeOfConductDraft.users) && (
                     <button onClick={this.handleSave} className="dd-bordered button-margin">
                       {t('publishApp')}
                     </button>
                   )}
               </div>
+              <p>{t('customCodeHelp')}</p>
             </div>
           )}
         </div>
@@ -223,10 +233,12 @@ export default class CustomCodeSection extends Component {
       attendees.forEach(user => {
         if (user.id && this.props.perUserInfo) {
           const userData = this.props.perUserInfo[user.id]
-          if (userData.customCode) {
-            if (userData.customCode !== this.state.title.trim()) {
-              this.setState({ dupError: true })
-              error = true
+          if (userData) {
+            if (userData.customCode) {
+              if (userData.customCode !== this.state.title.trim()) {
+                this.setState({ dupError: true })
+                error = true
+              }
             }
           } else {
             newData.push(user)
@@ -234,7 +246,12 @@ export default class CustomCodeSection extends Component {
         }
       })
       if (error === false) {
-        this.setState({ importedUsers: attendees, rawData: data, DupError: false })
+        this.setState({
+          importedUsers: attendees,
+          rawData: data,
+          DupError: false,
+          fileError: false,
+        })
       }
     })
   }

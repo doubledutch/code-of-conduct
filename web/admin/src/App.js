@@ -219,6 +219,7 @@ class App extends PureComponent {
                     fbc={this.props.fbc}
                     perUserInfo={this.state.perUserInfo}
                     backAction={this.backAction}
+                    customCodes={this.state.customCodesDraft}
                   />
                 </div>
               )}
@@ -294,6 +295,33 @@ class App extends PureComponent {
         .set({ text: input, publishTime, users, question })
       this.saveDraftCustomCodeOfConduct(input, title, users, question, { history })
     }
+    if (this.state.selectedKey && this.state.selectedKey !== title) {
+      this.props.fbc.database.public
+        .adminRef('customCodeOfConduct')
+        .child(this.state.selectedKey)
+        .remove()
+    }
+  }
+
+  saveDraftCodeOfConduct = input => {
+    const publishTime = new Date().getTime()
+    this.props.fbc.database.public.adminRef('codeOfConductDraft').set({ text: input, publishTime })
+  }
+
+  saveDraftCustomCodeOfConduct = (input, title, users, question, { history }) => {
+    const publishTime = new Date().getTime()
+    this.props.fbc.database.public
+      .adminRef('customCodeOfConductDraft')
+      .child(title)
+      .set({ text: input, publishTime, users, question })
+    if (this.state.selectedKey && this.state.selectedKey !== title) {
+      this.props.fbc.database.public
+        .adminRef('customCodeOfConductDraft')
+        .child(this.state.selectedKey)
+        .remove()
+    }
+    this.setState({ selectedCodeOfConduct: {}, selectedCodeOfConductDraft: {}, selectedKey: '' })
+    history.push(`/`)
   }
 
   editCustomCode = (key, { history }) => {
@@ -351,26 +379,13 @@ class App extends PureComponent {
     this.setState({ showModal: false })
   }
 
-  saveDraftCodeOfConduct = input => {
-    const publishTime = new Date().getTime()
-    this.props.fbc.database.public.adminRef('codeOfConductDraft').set({ text: input, publishTime })
-  }
-
-  saveDraftCustomCodeOfConduct = (input, title, users, question, { history }) => {
-    const publishTime = new Date().getTime()
-    this.props.fbc.database.public
-      .adminRef('customCodeOfConductDraft')
-      .child(title)
-      .set({ text: input, publishTime, users, question })
-    history.push(`/`)
-  }
-
   addNewCode = ({ history }) => {
     history.push(`/content`)
   }
 
   backAction = ({ history }) => {
     history.push(`/`)
+    this.setState({ selectedCodeOfConduct: {}, selectedCodeOfConductDraft: {}, selectedKey: '' })
   }
 }
 
