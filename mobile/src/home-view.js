@@ -66,7 +66,7 @@ class HomeView extends PureComponent {
                   .adminRef('customCodeOfConduct')
                   .child(data.val())
                   .on('value', data => {
-                    const customCodeOfConduct = data.val() || {}
+                    const customCodeOfConduct = data.val() || null
                     this.setState({ customCodeOfConduct })
                   })
               }

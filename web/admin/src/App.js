@@ -218,6 +218,8 @@ class App extends PureComponent {
                     title={this.state.selectedKey}
                     fbc={this.props.fbc}
                     perUserInfo={this.state.perUserInfo}
+                    backAction={this.backAction}
+                    customCodes={this.state.customCodesDraft}
                   />
                 </div>
               )}
@@ -245,9 +247,9 @@ class App extends PureComponent {
     this.setState({ [name]: value })
   }
 
-  deleteCustomCodeOfConduct = (key, { history }) => {
+  deleteCustomCodeOfConduct = (key, history) => {
     if (window.confirm(t('deleteConfirm'))) {
-      const data = this.state.customCodes[key]
+      const data = this.state.customCodesDraft[key]
       if (data) {
         if (data.users) {
           data.users.forEach(user => {
@@ -258,11 +260,11 @@ class App extends PureComponent {
           })
         }
         this.props.fbc.database.public
-          .adminRef('customCodeOfConduct')
+          .adminRef('customCodeOfConductDraft')
           .child(key)
           .remove()
         this.props.fbc.database.public
-          .adminRef('customCodeOfConductDraft')
+          .adminRef('customCodeOfConduct')
           .child(key)
           .remove()
       }
@@ -284,19 +286,45 @@ class App extends PureComponent {
     }
   }
 
-  saveCustomCodeOfConduct = (input, title, users, { history }, question) => {
+  saveCustomCodeOfConduct = (input, title, users, history, question) => {
     if (window.confirm(t('publishConfirm'))) {
       const publishTime = new Date().getTime()
       this.props.fbc.database.public
         .adminRef('customCodeOfConduct')
         .child(title)
         .set({ text: input, publishTime, users, question })
-      this.saveDraftCustomCodeOfConduct(input, title, users, question)
-      history.push(`/`)
+      this.saveDraftCustomCodeOfConduct(input, title, users, question, history)
+    }
+    if (this.state.selectedKey && this.state.selectedKey !== title) {
+      this.props.fbc.database.public
+        .adminRef('customCodeOfConduct')
+        .child(this.state.selectedKey)
+        .remove()
     }
   }
 
-  editCustomCode = (key, { history }) => {
+  saveDraftCodeOfConduct = input => {
+    const publishTime = new Date().getTime()
+    this.props.fbc.database.public.adminRef('codeOfConductDraft').set({ text: input, publishTime })
+  }
+
+  saveDraftCustomCodeOfConduct = (input, title, users, question, history) => {
+    const publishTime = new Date().getTime()
+    this.props.fbc.database.public
+      .adminRef('customCodeOfConductDraft')
+      .child(title)
+      .set({ text: input, publishTime, users, question })
+    if (this.state.selectedKey && this.state.selectedKey !== title) {
+      this.props.fbc.database.public
+        .adminRef('customCodeOfConductDraft')
+        .child(this.state.selectedKey)
+        .remove()
+    }
+    this.setState({ selectedCodeOfConduct: {}, selectedCodeOfConductDraft: {}, selectedKey: '' })
+    history.push(`/`)
+  }
+
+  editCustomCode = (key, history) => {
     this.setState({
       selectedCodeOfConduct: this.state.customCodes[key],
       selectedCodeOfConductDraft: this.state.customCodesDraft[key],
@@ -351,22 +379,13 @@ class App extends PureComponent {
     this.setState({ showModal: false })
   }
 
-  saveDraftCodeOfConduct = input => {
-    const publishTime = new Date().getTime()
-    this.props.fbc.database.public.adminRef('codeOfConductDraft').set({ text: input, publishTime })
-  }
-
-  saveDraftCustomCodeOfConduct = (input, title, users, question) => {
-    console.log(input, title, users, question)
-    const publishTime = new Date().getTime()
-    this.props.fbc.database.public
-      .adminRef('customCodeOfConductDraft')
-      .child(title)
-      .set({ text: input, publishTime, users, question })
-  }
-
-  addNewCode = ({ history }) => {
+  addNewCode = history => {
     history.push(`/content`)
+  }
+
+  backAction = history => {
+    history.push(`/`)
+    this.setState({ selectedCodeOfConduct: {}, selectedCodeOfConductDraft: {}, selectedKey: '' })
   }
 }
 

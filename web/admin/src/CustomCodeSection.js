@@ -50,7 +50,10 @@ export default class CustomCodeSection extends Component {
     const isTrueFalse = this.props.selectedCodeOfConductDraft.question
       ? this.props.selectedCodeOfConductDraft.question.isTrueFalse
       : false
-    this.setState({ input, title, customQuestion, isTrueFalse })
+    const importedUsers = this.props.selectedCodeOfConductDraft.users
+      ? this.props.selectedCodeOfConductDraft.users
+      : []
+    this.setState({ input, title, customQuestion, isTrueFalse, importedUsers })
   }
 
   render() {
@@ -76,84 +79,100 @@ export default class CustomCodeSection extends Component {
       : ''
     const inputIsNotEmpty = this.state.input ? this.state.input.trim().length > 0 : false
     const isImportedUsers = this.state.importedUsers.length > 0
+    const isTitle = this.state.title ? this.state.title.trim().length > 0 : false
+    const isDupTitle =
+      !!this.props.customCodes[this.state.title] && this.props.title !== this.state.title
     return (
-      <div className="sectionContainer">
-        <div className="codeOfConductContainerRow">
-          <h2 className="titleWithDescription">{t('customCode')}</h2>
-          {currentState === 'Published' && <p className="statusTextGreen">{currentState}</p>}
-          {currentState === 'Draft' && <p className="statusTextYellow">{currentState}</p>}
-          {isCodeBoxDisplay && <p className="timeText">{publishTime}</p>}
-          <div className="flex" />
-        </div>
-        {isCodeBoxDisplay && (
-          <div>
-            <TextInput
-              label="Title"
-              placeholder="Ex. VIPs"
-              value={this.state.title}
-              onChange={e => this.setState({ title: e.target.value })}
-              className="titleInput"
-            />
-            {this.state.showStaticBox && !selectedCodeOfConductDraft.text ? (
-              <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
-                <span className="placeHolderTextLine">
-                  <p className="placeHolderText">{t('enterCode')}</p>
-                  <button
-                    value="defaultButton"
-                    onClick={this.addDefaultCode}
-                    className="noBorderButtonBlue"
-                  >
-                    {t('addCode')}
-                  </button>
-                </span>
-              </div>
-            ) : (
-              <TextInput
-                multiline
-                autoFocus={!this.state.showStaticBox}
-                value={this.state.input}
-                onChange={e => this.setState({ input: e.target.value })}
-              />
-            )}
-            <TextInput
-              label={t('questionTypeLabel')}
-              placeholder="Ex. "
-              value={this.state.customQuestion}
-              onChange={e => this.setState({ customQuestion: e.target.value })}
-            />
-            {this.state.customQuestion.length > 0 ? (
-              <div>
-                <p>{t('questionType')}</p>
-                <RadioIcon
-                  checked={this.state.isTrueFalse}
-                  onTrueFalse={() => this.setState({ isTrueFalse: true })}
-                  onFreeEntry={() => this.setState({ isTrueFalse: false })}
-                />
-              </div>
-            ) : null}
-            {this.renderCSVBox()}
-            <div className="codeButtonsContainer">
-              <p>{t('disclaimer')}</p>
-              <div style={{ flex: 1 }} />
-              <button
-                onClick={() => this.props.deleteCustomCodeOfConduct(this.props.title, { history })}
-                className="dd-bordered button-margin button-red"
-              >
-                {t('delete')}
-              </button>
-              {isDraftChanges && inputIsNotEmpty && (
-                <button onClick={this.handleDraftSave} className="dd-bordered">
-                  {t('draft')}
-                </button>
-              )}
-              {isPublishChanges && inputIsNotEmpty && isImportedUsers && (
-                <button onClick={this.handleSave} className="dd-bordered button-margin">
-                  {t('publishApp')}
-                </button>
-              )}
-            </div>
+      <div>
+        <button className="dd-bordered" onClick={() => this.props.backAction(history)}>
+          {t('back')}
+        </button>
+        <div className="sectionContainer">
+          <div className="codeOfConductContainerRow">
+            <h2 className="titleWithDescription">{t('customCode')}</h2>
+            {currentState === 'Published' && <p className="statusTextGreen">{currentState}</p>}
+            {currentState === 'Draft' && <p className="statusTextYellow">{currentState}</p>}
+            {isCodeBoxDisplay && <p className="timeText">{publishTime}</p>}
+            <div className="flex" />
           </div>
-        )}
+          {isCodeBoxDisplay && (
+            <div>
+              <TextInput
+                label="Title"
+                placeholder="Ex. VIPs"
+                value={this.state.title}
+                onChange={e => this.setState({ title: e.target.value })}
+                className="titleInput"
+                maxLength={100}
+              />
+              {isDupTitle && <h2 className="failText">{t('dupErrorTitle')}</h2>}
+              {this.state.showStaticBox && !selectedCodeOfConductDraft.text ? (
+                <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
+                  <span className="placeHolderTextLine">
+                    <p className="placeHolderText">{t('enterCode')}</p>
+                    <button
+                      value="defaultButton"
+                      onClick={this.addDefaultCode}
+                      className="noBorderButtonBlue"
+                    >
+                      {t('addCode')}
+                    </button>
+                  </span>
+                </div>
+              ) : (
+                <TextInput
+                  multiline
+                  autoFocus={!this.state.showStaticBox}
+                  value={this.state.input}
+                  onChange={e => this.setState({ input: e.target.value })}
+                />
+              )}
+              <TextInput
+                label={t('questionTypeLabel')}
+                placeholder="Ex. "
+                value={this.state.customQuestion}
+                maxLength={250}
+                onChange={e => this.setState({ customQuestion: e.target.value })}
+              />
+              {this.state.customQuestion.length > 0 ? (
+                <div>
+                  <p>{t('questionType')}</p>
+                  <RadioIcon
+                    checked={this.state.isTrueFalse}
+                    onTrueFalse={() => this.setState({ isTrueFalse: true })}
+                    onFreeEntry={() => this.setState({ isTrueFalse: false })}
+                  />
+                </div>
+              ) : null}
+              {this.renderCSVBox()}
+              <div className="codeButtonsContainer">
+                <p>{t('disclaimer')}</p>
+                <div style={{ flex: 1 }} />
+                <button
+                  onClick={() => this.props.deleteCustomCodeOfConduct(this.props.title, history)}
+                  className="dd-bordered button-margin button-red"
+                >
+                  {t('delete')}
+                </button>
+                {isDraftChanges && inputIsNotEmpty && isTitle && !isDupTitle && (
+                  <button onClick={this.handleDraftSave} className="dd-bordered">
+                    {t('draft')}
+                  </button>
+                )}
+                {isPublishChanges &&
+                  inputIsNotEmpty &&
+                  isTitle &&
+                  !isDupTitle &&
+                  (isImportedUsers || this.props.selectedCodeOfConductDraft.users) && (
+                    <button onClick={this.handleSave} className="dd-bordered button-margin">
+                      {t('publishApp')}
+                    </button>
+                  )}
+              </div>
+              <p>{t('customCodeHelp')}</p>
+            </div>
+          )}
+        </div>
       </div>
     )
   }
@@ -212,10 +231,12 @@ export default class CustomCodeSection extends Component {
       attendees.forEach(user => {
         if (user.id && this.props.perUserInfo) {
           const userData = this.props.perUserInfo[user.id]
-          if (userData.customCode) {
-            if (userData.customCode !== this.state.title) {
-              this.setState({ dupError: true })
-              error = true
+          if (userData) {
+            if (userData.customCode) {
+              if (userData.customCode !== this.state.title.trim()) {
+                this.setState({ dupError: true })
+                error = true
+              }
             }
           } else {
             newData.push(user)
@@ -223,7 +244,12 @@ export default class CustomCodeSection extends Component {
         }
       })
       if (error === false) {
-        this.setState({ importedUsers: attendees, rawData: data, DupError: false })
+        this.setState({
+          importedUsers: attendees,
+          rawData: data,
+          DupError: false,
+          fileError: false,
+        })
       }
     })
   }
@@ -231,6 +257,7 @@ export default class CustomCodeSection extends Component {
   handleDraftSave = () => {
     const attendees = this.state.importedUsers
     const data = this.state.rawData
+    const history = this.props.history
     data.forEach(userInfo => {
       const currentUser = attendees.find(user => (user ? user.email === userInfo.email : undefined))
       if (currentUser) {
@@ -240,10 +267,16 @@ export default class CustomCodeSection extends Component {
           .set(this.state.title)
       }
     })
-    this.props.saveDraftCustomCodeOfConduct(this.state.input, this.state.title, attendees, {
-      text: this.state.customQuestion || '',
-      isTrueFalse: this.state.isTrueFalse,
-    })
+    this.props.saveDraftCustomCodeOfConduct(
+      this.state.input,
+      this.state.title,
+      attendees,
+      {
+        text: this.state.customQuestion || '',
+        isTrueFalse: this.state.isTrueFalse,
+      },
+      history,
+    )
   }
 
   handleSave = () => {
@@ -259,13 +292,10 @@ export default class CustomCodeSection extends Component {
       }
     })
     const history = this.props.history
-    this.props.saveCustomCodeOfConduct(
-      this.state.input,
-      this.state.title,
-      attendees,
-      { history },
-      { text: this.state.customQuestion, isTrueFalse: this.state.isTrueFalse },
-    )
+    this.props.saveCustomCodeOfConduct(this.state.input, this.state.title, attendees, history, {
+      text: this.state.customQuestion,
+      isTrueFalse: this.state.isTrueFalse,
+    })
   }
 
   findCurrentState = () => {

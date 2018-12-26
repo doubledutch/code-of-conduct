@@ -540,6 +540,14 @@ button.displayButton:focus, button.displayButton:active {
   margin-top: 10px;
 }
 
+.centerBox {
+  display: flex;
+  flex: 1;
+  margin-top: 100px;
+  align-items: center;
+  justify-content: center;
+}
+
 .successText {
   color: green;
 }
@@ -550,6 +558,8 @@ button.displayButton:focus, button.displayButton:active {
 
 .failText {
   color: red;
+  font-size: 12px;
+  margin-top: 0px;
 }
 
 .codeRow {

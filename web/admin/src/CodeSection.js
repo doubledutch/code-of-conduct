@@ -87,7 +87,6 @@ export default class CodeSection extends Component {
                 autoFocus={!this.state.showStaticBox}
                 value={this.state.input}
                 onChange={e => this.setState({ input: e.target.value })}
-                className="completeText"
               />
             )}
             <div className="codeButtonsContainer">

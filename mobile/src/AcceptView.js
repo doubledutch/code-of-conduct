@@ -64,6 +64,7 @@ export default class AcceptView extends Component {
                       : this.props.markAccepted
                   }
                   style={[s.launchButton, { backgroundColor: primaryColor }]}
+                  disabled={code.question ? this.state.questionResponse.trim().length === 0 : false}
                 >
                   <Text style={s.launchButtonText}>{t('accept')}</Text>
                 </TouchableOpacity>
