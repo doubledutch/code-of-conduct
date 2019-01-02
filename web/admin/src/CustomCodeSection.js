@@ -80,8 +80,11 @@ export default class CustomCodeSection extends Component {
     const inputIsNotEmpty = this.state.input ? this.state.input.trim().length > 0 : false
     const isImportedUsers = this.state.importedUsers.length > 0
     const isTitle = this.state.title ? this.state.title.trim().length > 0 : false
+    const dupTitle = this.props.customCodes[this.state.title]
+      ? this.props.customCodes[this.state.title].toString().toLowerCase()
+      : false
     const isDupTitle =
-      !!this.props.customCodes[this.state.title] && this.props.title !== this.state.title
+      !!dupTitle && this.props.title.toLowerCase() !== this.state.title.toLowerCase()
     return (
       <div>
         <button className="dd-bordered" onClick={() => this.props.backAction(history)}>
