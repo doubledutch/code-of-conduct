@@ -60,10 +60,18 @@ export default class AcceptView extends Component {
                 <TouchableOpacity
                   onPress={
                     this.props.customCodeOfConduct
-                      ? () => this.props.markAcceptedCustom(this.state.questionResposne)
+                      ? () => this.props.markAcceptedCustom(this.state.questionResponse)
                       : this.props.markAccepted
                   }
-                  style={[s.launchButton, { backgroundColor: primaryColor }]}
+                  style={[
+                    s.launchButton,
+                    {
+                      backgroundColor:
+                        code.question && this.state.questionResponse.trim().length === 0
+                          ? 'gray'
+                          : primaryColor,
+                    },
+                  ]}
                   disabled={code.question ? this.state.questionResponse.trim().length === 0 : false}
                 >
                   <Text style={s.launchButtonText}>{t('accept')}</Text>

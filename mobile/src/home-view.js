@@ -70,10 +70,11 @@ class HomeView extends PureComponent {
                     this.setState({ customCodeOfConduct })
                   })
               }
-            })
-            codeOfConductRef.on('value', data => {
-              const codeOfConduct = data.val() || {}
-              this.setState({ codeOfConduct })
+              // ensure custom code of conducts are received first
+              codeOfConductRef.on('value', data => {
+                const codeOfConduct = data.val() || {}
+                this.setState({ codeOfConduct })
+              })
             })
 
             adminsRef.on('child_added', data => {
@@ -128,7 +129,8 @@ class HomeView extends PureComponent {
   }
 
   renderPage = () => {
-    if (this.props.version) {
+    // if (this.props.version) {
+    if (true) {
       return (
         <AcceptView
           codeOfConduct={this.state.codeOfConduct}
