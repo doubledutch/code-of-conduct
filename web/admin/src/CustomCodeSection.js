@@ -199,16 +199,13 @@ export default class CustomCodeSection extends Component {
         ) : null}
       </div>
       {this.state.totalImport > 0 && (
-        <h2 className="successText">
+        <p className="successText">
           {t('success', {
             successfulImport: this.state.successfulImport,
             totalImport: this.state.totalImport,
           })}
-        </h2>
+        </p>
       )}
-      {/* {this.state.totalImport > 0 && this.state.successfulImport === 0 && (
-        <h2 className="failText">{t('fail')}</h2>
-      )} */}
       {this.state.dupError && <h2 className="failText">{t('dupError')}</h2>}
       {this.state.fileError && <h2 className="failText">{t('failError')}</h2>}
     </div>
@@ -216,8 +213,12 @@ export default class CustomCodeSection extends Component {
 
   handleImport = data => {
     const newData = []
+    let invalidFile = false
     const attendeeImportPromises = data
-      .filter(cell => isValid(cell.email) && isValidASC(cell.email))
+      .filter(cell => {
+        if (!isValidASC(cell.email)) invalidFile = true
+        return isValid(cell.email) && isValidASC(cell.email)
+      })
       .map(cell =>
         client
           .getAttendees(cell.email)
@@ -227,6 +228,7 @@ export default class CustomCodeSection extends Component {
     Promise.all(attendeeImportPromises).then(attendees => {
       attendees = attendees.filter(user => user.id)
       let error = false
+      if (invalidFile) attendees = []
       if (attendees.length === 0) {
         error = true
         this.setState({ fileError: true })
@@ -245,6 +247,10 @@ export default class CustomCodeSection extends Component {
             newData.push(user)
           }
         }
+      })
+      this.setState({
+        successfulImport: newData.length,
+        totalImport: data.length,
       })
       if (error === false) {
         this.setState({
