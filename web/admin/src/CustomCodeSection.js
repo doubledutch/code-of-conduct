@@ -225,8 +225,6 @@ export default class CustomCodeSection extends Component {
     </div>
   )
 
-  compareArrays = () => {}
-
   handleImport = data => {
     const newData = []
     let invalidFile = false
