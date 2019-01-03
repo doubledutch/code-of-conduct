@@ -129,7 +129,8 @@ class HomeView extends PureComponent {
   }
 
   renderPage = () => {
-    if (this.props.version) {
+    if (true) {
+      // if (this.props.version) {
       return (
         <AcceptView
           codeOfConduct={this.state.codeOfConduct}

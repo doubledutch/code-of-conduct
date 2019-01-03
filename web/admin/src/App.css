@@ -681,6 +681,7 @@ button.displayButton:focus, button.displayButton:active {
   padding: 2px 10px;
   color: white;
   border-radius: 20px;
+  align-self: center;
 }
 
 .statusTextYellow {
@@ -689,6 +690,25 @@ button.displayButton:focus, button.displayButton:active {
   padding: 2px 10px;
   color: white;
   border-radius: 20px;
+  align-self: center;
+}
+
+.statusTextGreen-inline {
+  margin-right: 10px;
+  background-color: #87CD40;
+  padding: 2px 10px;
+  color: white;
+  border-radius: 20px;
+  align-self: center;
+}
+
+.statusTextYellow-inline {
+  margin-right: 10px;
+  background-color: #FBA821;
+  padding: 2px 10px;
+  color: white;
+  border-radius: 20px;
+  align-self: center;
 }
 
 .button {
@@ -736,65 +756,3 @@ textarea {
   width: 15px;
   margin-left: 5px;
 }
-
-
-/* .field {
-  margin: 0.7em 0;
-  position: relative;
-}
-.field.half {
-  width: 45%;
-} */
-
-/* select {
-  border: none;
-  height: 30px;
-  color: #4A4A4A;
-} */
-/* 
-.catNumbText {
-  width: 30px;
-  border: none;
-  margin-left: 8px;
-  border-bottom: 1px solid #AAB9CA;
-  color: #4A4A4A;
-} */
-
-/* 
-.cellName{
-  max-width: 200px; 
-  overflow:hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-} */
-
-/* .catNameText {
-  width: 190px;
-  border: none;
-  border-bottom: 1px solid #AAB9CA;
-  color: #4A4A4A;
-}
-
-.titleBar {
-  display: flex;
-  padding: 0px 20px;
-  margin: 10px 0px 5px 0px;
-  flex-direction: row;
-}
-
-.titleBar p {
-  width: 200px;
-  font-weight: 600;
-  font-size: 12px;
-  padding: 0;
-  margin: 0px 5px 0 0;
-} */
-/* 
-.payload {
-  color: #888;
-  font-style: italic;
-} */
-/* 
-.is-done {
-  background-color: #58dd63;
-} */

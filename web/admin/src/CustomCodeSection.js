@@ -80,9 +80,9 @@ export default class CustomCodeSection extends Component {
     const inputIsNotEmpty = this.state.input ? this.state.input.trim().length > 0 : false
     const isImportedUsers = this.state.importedUsers.length > 0
     const isTitle = this.state.title ? this.state.title.trim().length > 0 : false
-    const dupTitle = this.props.customCodes[this.state.title]
-      ? this.props.customCodes[this.state.title].toString().toLowerCase()
-      : false
+    const dupTitle = Object.keys(this.props.customCodes).find(
+      title => title.toString().toLowerCase() === this.state.title.toString().toLowerCase(),
+    )
     const isDupTitle =
       !!dupTitle && this.props.title.toLowerCase() !== this.state.title.toLowerCase()
     return (
@@ -132,7 +132,7 @@ export default class CustomCodeSection extends Component {
               )}
               <TextInput
                 label={t('questionTypeLabel')}
-                placeholder="Ex. "
+                placeholder={t('exampleQuestion')}
                 value={this.state.customQuestion}
                 maxLength={250}
                 onChange={e => this.setState({ customQuestion: e.target.value })}

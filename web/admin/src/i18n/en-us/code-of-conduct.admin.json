@@ -55,5 +55,6 @@
   "downloadUpload": "Download uploaded users",
   "back": "Back",
   "noCodeHelp": "No Custom Code of Conducts have been added",
-  "customCodeHelp": "Note: Attendees who have accepted a code of conduct will not be re-prompted if they are later assigned to a new code. Question responses will reflect the code they accepted."
+  "customCodeHelp": "Note: Attendees who have accepted a code of conduct will not be re-prompted if they are later assigned to a new code. Question responses will reflect the code they accepted.",
+  "exampleQuestion": "Ex. Would you like to be added to our email list?"
 }

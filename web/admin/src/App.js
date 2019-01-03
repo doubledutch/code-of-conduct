@@ -176,6 +176,7 @@ class App extends PureComponent {
                     addNewCode={this.addNewCode}
                     history={history}
                     codes={this.state.customCodesDraft}
+                    codesPublished={this.state.customCodes}
                     editCustomCode={this.editCustomCode}
                     status={this.state.status}
                     client={client}

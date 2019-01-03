@@ -41,7 +41,7 @@ export default class AcceptView extends Component {
   render() {
     const { codeOfConduct, currentEvent, primaryColor, customCodeOfConduct } = this.props
     const code = customCodeOfConduct || codeOfConduct
-    const isQuestion = !!customCodeOfConduct.question.text
+    const isQuestion = customCodeOfConduct ? !!customCodeOfConduct.question.text : false
     return (
       <View style={s.flex}>
         {code ? (
