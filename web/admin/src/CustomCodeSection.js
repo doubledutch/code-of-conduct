@@ -117,6 +117,7 @@ export default class CustomCodeSection extends Component {
                 maxLength={100}
               />
               {isDupTitle && <h2 className="failText">{t('dupErrorTitle')}</h2>}
+              {!isValid(this.state.title) && <h2 className="failText">{t('dupErrorTitle')}</h2>}
               {this.state.showStaticBox && !selectedCodeOfConductDraft.text ? (
                 <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
                   <span className="placeHolderTextLine">
@@ -165,14 +166,19 @@ export default class CustomCodeSection extends Component {
                 >
                   {t('delete')}
                 </button>
-                {isDraftChanges && inputIsNotEmpty && isTitle && !isDupTitle && (
-                  <button onClick={this.handleDraftSave} className="dd-bordered">
-                    {t('draft')}
-                  </button>
-                )}
+                {isDraftChanges &&
+                  inputIsNotEmpty &&
+                  isTitle &&
+                  !isDupTitle &&
+                  isValid(this.state.title) && (
+                    <button onClick={this.handleDraftSave} className="dd-bordered">
+                      {t('draft')}
+                    </button>
+                  )}
                 {isPublishChanges &&
                   inputIsNotEmpty &&
                   isTitle &&
+                  isValid(this.state.title) &&
                   !isDupTitle &&
                   (isImportedUsers || this.props.selectedCodeOfConductDraft.users) && (
                     <button onClick={this.handleSave} className="dd-bordered button-margin">
