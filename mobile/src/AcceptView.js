@@ -41,6 +41,7 @@ export default class AcceptView extends Component {
   render() {
     const { codeOfConduct, currentEvent, primaryColor, customCodeOfConduct } = this.props
     const code = customCodeOfConduct || codeOfConduct
+    const isQuestion = customCodeOfConduct ? !!customCodeOfConduct.question.text : false
     return (
       <View style={s.flex}>
         {code ? (
@@ -60,11 +61,19 @@ export default class AcceptView extends Component {
                 <TouchableOpacity
                   onPress={
                     this.props.customCodeOfConduct
-                      ? () => this.props.markAcceptedCustom(this.state.questionResposne)
+                      ? () => this.props.markAcceptedCustom(this.state.questionResponse)
                       : this.props.markAccepted
                   }
-                  style={[s.launchButton, { backgroundColor: primaryColor }]}
-                  disabled={code.question ? this.state.questionResponse.trim().length === 0 : false}
+                  style={[
+                    s.launchButton,
+                    {
+                      backgroundColor:
+                        isQuestion && this.state.questionResponse.trim().length === 0
+                          ? 'gray'
+                          : primaryColor,
+                    },
+                  ]}
+                  disabled={isQuestion ? this.state.questionResponse.trim().length === 0 : false}
                 >
                   <Text style={s.launchButtonText}>{t('accept')}</Text>
                 </TouchableOpacity>

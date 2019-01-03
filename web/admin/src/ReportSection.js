@@ -53,9 +53,11 @@ export default class ReportSection extends Component {
             <RightReport reports={resolvedReports} viewResolution={this.props.viewResolution} />
           </div>
         )}
-        <CSVLink className="csvButton" data={getCsvData(reports)} filename="questions.csv">
-          {t('export')}
-        </CSVLink>
+        {this.props.isReportsBoxDisplay && (
+          <CSVLink className="csvButton" data={getCsvData(reports)} filename="questions.csv">
+            {t('export')}
+          </CSVLink>
+        )}
       </div>
     )
   }

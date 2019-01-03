@@ -38,6 +38,8 @@ export default class CustomCodeSection extends Component {
       rawData: [],
       customQuestion: '',
       isTrueFalse: false,
+      newImport: false,
+      newImportDraft: false,
     }
   }
 
@@ -57,7 +59,7 @@ export default class CustomCodeSection extends Component {
   }
 
   render() {
-    const { selectedCodeOfConductDraft, isCodeBoxDisplay, history } = this.props
+    const { selectedCodeOfConductDraft, isCodeBoxDisplay, history, title } = this.props
     const selectedCodeOfConduct = this.props.selectedCodeOfConduct || {
       input: '',
       question: { text: '', isTrueFalse: undefined },
@@ -70,9 +72,15 @@ export default class CustomCodeSection extends Component {
     const question = selectedCodeOfConduct.question ? selectedCodeOfConduct.question.text : ''
     const isDraftChanges =
       this.state.input !== selectedCodeOfConductDraft.text ||
-      this.state.customQuestion !== questionDraft
+      this.state.customQuestion !== questionDraft ||
+      this.state.newImportDraft ||
+      this.state.title !== title
     const isPublishChanges =
-      this.state.input !== selectedCodeOfConduct.text || this.state.customQuestion !== question
+      this.state.input !== selectedCodeOfConduct.text ||
+      this.state.customQuestion !== question ||
+      this.state.newImport ||
+      this.state.title !== title
+
     const currentState = this.findCurrentState()
     const publishTime = selectedCodeOfConduct.publishTime
       ? new Date(selectedCodeOfConduct.publishTime).toLocaleString()
@@ -80,8 +88,11 @@ export default class CustomCodeSection extends Component {
     const inputIsNotEmpty = this.state.input ? this.state.input.trim().length > 0 : false
     const isImportedUsers = this.state.importedUsers.length > 0
     const isTitle = this.state.title ? this.state.title.trim().length > 0 : false
+    const dupTitle = Object.keys(this.props.customCodes).find(
+      title => title.toString().toLowerCase() === this.state.title.toString().toLowerCase(),
+    )
     const isDupTitle =
-      !!this.props.customCodes[this.state.title] && this.props.title !== this.state.title
+      !!dupTitle && this.props.title.toLowerCase() !== this.state.title.toLowerCase()
     return (
       <div>
         <button className="dd-bordered" onClick={() => this.props.backAction(history)}>
@@ -106,6 +117,7 @@ export default class CustomCodeSection extends Component {
                 maxLength={100}
               />
               {isDupTitle && <h2 className="failText">{t('dupErrorTitle')}</h2>}
+              {!isValid(this.state.title) && <h2 className="failText">{t('dupErrorTitle')}</h2>}
               {this.state.showStaticBox && !selectedCodeOfConductDraft.text ? (
                 <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
                   <span className="placeHolderTextLine">
@@ -129,7 +141,7 @@ export default class CustomCodeSection extends Component {
               )}
               <TextInput
                 label={t('questionTypeLabel')}
-                placeholder="Ex. "
+                placeholder={t('exampleQuestion')}
                 value={this.state.customQuestion}
                 maxLength={250}
                 onChange={e => this.setState({ customQuestion: e.target.value })}
@@ -154,14 +166,19 @@ export default class CustomCodeSection extends Component {
                 >
                   {t('delete')}
                 </button>
-                {isDraftChanges && inputIsNotEmpty && isTitle && !isDupTitle && (
-                  <button onClick={this.handleDraftSave} className="dd-bordered">
-                    {t('draft')}
-                  </button>
-                )}
+                {isDraftChanges &&
+                  inputIsNotEmpty &&
+                  isTitle &&
+                  !isDupTitle &&
+                  isValid(this.state.title) && (
+                    <button onClick={this.handleDraftSave} className="dd-bordered">
+                      {t('draft')}
+                    </button>
+                  )}
                 {isPublishChanges &&
                   inputIsNotEmpty &&
                   isTitle &&
+                  isValid(this.state.title) &&
                   !isDupTitle &&
                   (isImportedUsers || this.props.selectedCodeOfConductDraft.users) && (
                     <button onClick={this.handleSave} className="dd-bordered button-margin">
@@ -196,16 +213,13 @@ export default class CustomCodeSection extends Component {
         ) : null}
       </div>
       {this.state.totalImport > 0 && (
-        <h2 className="successText">
+        <p className="successText">
           {t('success', {
             successfulImport: this.state.successfulImport,
             totalImport: this.state.totalImport,
           })}
-        </h2>
+        </p>
       )}
-      {/* {this.state.totalImport > 0 && this.state.successfulImport === 0 && (
-        <h2 className="failText">{t('fail')}</h2>
-      )} */}
       {this.state.dupError && <h2 className="failText">{t('dupError')}</h2>}
       {this.state.fileError && <h2 className="failText">{t('failError')}</h2>}
     </div>
@@ -213,8 +227,12 @@ export default class CustomCodeSection extends Component {
 
   handleImport = data => {
     const newData = []
+    let invalidFile = false
     const attendeeImportPromises = data
-      .filter(cell => isValid(cell.email) && isValidASC(cell.email))
+      .filter(cell => {
+        if (!isValidASC(cell.email)) invalidFile = true
+        return isValid(cell.email) && isValidASC(cell.email)
+      })
       .map(cell =>
         client
           .getAttendees(cell.email)
@@ -224,6 +242,7 @@ export default class CustomCodeSection extends Component {
     Promise.all(attendeeImportPromises).then(attendees => {
       attendees = attendees.filter(user => user.id)
       let error = false
+      if (invalidFile) attendees = []
       if (attendees.length === 0) {
         error = true
         this.setState({ fileError: true })
@@ -243,12 +262,18 @@ export default class CustomCodeSection extends Component {
           }
         }
       })
+      this.setState({
+        successfulImport: newData.length,
+        totalImport: data.length,
+      })
       if (error === false) {
         this.setState({
           importedUsers: attendees,
           rawData: data,
           DupError: false,
           fileError: false,
+          newImport: true,
+          newImportDraft: true,
         })
       }
     })
@@ -277,6 +302,7 @@ export default class CustomCodeSection extends Component {
       },
       history,
     )
+    this.setState({ newImportDraft: false })
   }
 
   handleSave = () => {
@@ -296,6 +322,7 @@ export default class CustomCodeSection extends Component {
       text: this.state.customQuestion,
       isTrueFalse: this.state.isTrueFalse,
     })
+    this.setState({ newImportDraft: false, newImport: false })
   }
 
   findCurrentState = () => {

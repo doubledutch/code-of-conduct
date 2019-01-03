@@ -57,18 +57,7 @@ export default class AssignSection extends Component {
         {isAssignBoxDisplay && (
           <div>
             <div className="codeTable">
-              {codesKeys.map(key => (
-                <div className="codeRow">
-                  <p>{key}</p>
-                  <div className="flex" />
-                  <button
-                    className="noBorderButtonBlue"
-                    onClick={() => this.props.editCustomCode(key, history)}
-                  >
-                    {t('edit')}
-                  </button>
-                </div>
-              ))}
+              {codesKeys.map(key => this.tableCell(key))}
               {codesKeys.length === 0 && (
                 <div className="centerBox">
                   <h3>{t('noCodeHelp')}</h3>
@@ -87,6 +76,36 @@ export default class AssignSection extends Component {
         )}
       </div>
     )
+  }
+
+  tableCell = key => {
+    const currentState = this.findCurrentState(key)
+    return (
+      <div className="codeRow">
+        <p>{key}</p>
+        <div className="flex" />
+        {currentState === 'Published' && <p className="statusTextGreen-inline">{currentState}</p>}
+        {currentState === 'Draft' && <p className="statusTextYellow-inline">{currentState}</p>}
+        <button
+          className="noBorderButtonBlue"
+          onClick={() => this.props.editCustomCode(key, this.props.history)}
+        >
+          {t('edit')}
+        </button>
+      </div>
+    )
+  }
+
+  findCurrentState = key => {
+    const selectedCodeOfConduct = this.props.codes[key] || {}
+    const selectedCodeOfConductPublished = this.props.codesPublished[key] || {}
+    let stateText = 'Draft'
+    if (selectedCodeOfConductPublished.text) {
+      if (selectedCodeOfConduct.text === selectedCodeOfConductPublished.text) {
+        stateText = 'Published'
+      }
+    }
+    return stateText
   }
 
   prepareCSV = () => {
