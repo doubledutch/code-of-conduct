@@ -70,9 +70,12 @@ export default class CustomCodeSection extends Component {
     const question = selectedCodeOfConduct.question ? selectedCodeOfConduct.question.text : ''
     const isDraftChanges =
       this.state.input !== selectedCodeOfConductDraft.text ||
-      this.state.customQuestion !== questionDraft
+      this.state.customQuestion !== questionDraft ||
+      this.state.importedUsers != selectedCodeOfConductDraft.users
     const isPublishChanges =
-      this.state.input !== selectedCodeOfConduct.text || this.state.customQuestion !== question
+      this.state.input !== selectedCodeOfConduct.text ||
+      this.state.customQuestion !== question ||
+      this.state.importedUsers != selectedCodeOfConduct.users
     const currentState = this.findCurrentState()
     const publishTime = selectedCodeOfConduct.publishTime
       ? new Date(selectedCodeOfConduct.publishTime).toLocaleString()
