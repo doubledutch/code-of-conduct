@@ -38,6 +38,8 @@ export default class CustomCodeSection extends Component {
       rawData: [],
       customQuestion: '',
       isTrueFalse: false,
+      newImport: false,
+      newImportDraft: false,
     }
   }
 
@@ -57,7 +59,7 @@ export default class CustomCodeSection extends Component {
   }
 
   render() {
-    const { selectedCodeOfConductDraft, isCodeBoxDisplay, history } = this.props
+    const { selectedCodeOfConductDraft, isCodeBoxDisplay, history, title } = this.props
     const selectedCodeOfConduct = this.props.selectedCodeOfConduct || {
       input: '',
       question: { text: '', isTrueFalse: undefined },
@@ -71,11 +73,14 @@ export default class CustomCodeSection extends Component {
     const isDraftChanges =
       this.state.input !== selectedCodeOfConductDraft.text ||
       this.state.customQuestion !== questionDraft ||
-      this.state.importedUsers != selectedCodeOfConductDraft.users
+      this.state.newImportDraft ||
+      this.state.title !== title
     const isPublishChanges =
       this.state.input !== selectedCodeOfConduct.text ||
       this.state.customQuestion !== question ||
-      this.state.importedUsers != selectedCodeOfConduct.users
+      this.state.newImport ||
+      this.state.title !== title
+
     const currentState = this.findCurrentState()
     const publishTime = selectedCodeOfConduct.publishTime
       ? new Date(selectedCodeOfConduct.publishTime).toLocaleString()
@@ -214,6 +219,8 @@ export default class CustomCodeSection extends Component {
     </div>
   )
 
+  compareArrays = () => {}
+
   handleImport = data => {
     const newData = []
     let invalidFile = false
@@ -261,6 +268,8 @@ export default class CustomCodeSection extends Component {
           rawData: data,
           DupError: false,
           fileError: false,
+          newImport: true,
+          newImportDraft: true,
         })
       }
     })
@@ -289,6 +298,7 @@ export default class CustomCodeSection extends Component {
       },
       history,
     )
+    this.setState({ newImportDraft: false })
   }
 
   handleSave = () => {
@@ -308,6 +318,7 @@ export default class CustomCodeSection extends Component {
       text: this.state.customQuestion,
       isTrueFalse: this.state.isTrueFalse,
     })
+    this.setState({ newImportDraft: false, newImport: false })
   }
 
   findCurrentState = () => {
