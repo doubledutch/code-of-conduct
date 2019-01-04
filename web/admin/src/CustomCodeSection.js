@@ -119,21 +119,25 @@ export default class CustomCodeSection extends Component {
               {isDupTitle && <h2 className="failText">{t('dupErrorTitle')}</h2>}
               {!isValid(this.state.title) && <h2 className="failText">{t('dupErrorTitle')}</h2>}
               {this.state.showStaticBox && !selectedCodeOfConductDraft.text ? (
-                <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
-                  <span className="placeHolderTextLine">
-                    <p className="placeHolderText">{t('enterCode')}</p>
-                    <button
-                      value="defaultButton"
-                      onClick={this.addDefaultCode}
-                      className="noBorderButtonBlue"
-                    >
-                      {t('addCode')}
-                    </button>
-                  </span>
+                <div>
+                  <p className="staticCodeTitle">Code of Conduct</p>
+                  <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
+                    <span className="placeHolderTextLine">
+                      <p className="placeHolderText">{t('enterCode')}</p>
+                      <button
+                        value="defaultButton"
+                        onClick={this.addDefaultCode}
+                        className="noBorderButtonBlue"
+                      >
+                        {t('addCode')}
+                      </button>
+                    </span>
+                  </div>
                 </div>
               ) : (
                 <TextInput
                   multiline
+                  label="Code of Conduct"
                   autoFocus={!this.state.showStaticBox}
                   value={this.state.input}
                   onChange={e => this.setState({ input: e.target.value })}
@@ -263,7 +267,7 @@ export default class CustomCodeSection extends Component {
         }
       })
       this.setState({
-        successfulImport: newData.length,
+        successfulImport: attendees.length,
         totalImport: data.length,
       })
       if (error === false) {
@@ -306,23 +310,30 @@ export default class CustomCodeSection extends Component {
   }
 
   handleSave = () => {
-    const attendees = this.state.importedUsers
-    const data = this.state.rawData
-    data.forEach(userInfo => {
-      const currentUser = attendees.find(user => (user ? user.email === userInfo.email : undefined))
-      if (currentUser) {
+    if (window.confirm(t('publishConfirm'))) {
+      const attendees = this.state.importedUsers
+      const oldUsers = this.props.selectedCodeOfConductDraft.users
+      if (oldUsers) {
+        oldUsers.forEach(user => {
+          this.props.fbc.database.private
+            .adminableUsersRef(user.id)
+            .child('customCode')
+            .remove()
+        })
+      }
+      attendees.forEach(userInfo => {
         this.props.fbc.database.private
-          .adminableUsersRef(currentUser.id)
+          .adminableUsersRef(userInfo.id)
           .child('customCode')
           .set(this.state.title)
-      }
-    })
-    const history = this.props.history
-    this.props.saveCustomCodeOfConduct(this.state.input, this.state.title, attendees, history, {
-      text: this.state.customQuestion,
-      isTrueFalse: this.state.isTrueFalse,
-    })
-    this.setState({ newImportDraft: false, newImport: false })
+      })
+      const history = this.props.history
+      this.props.saveCustomCodeOfConduct(this.state.input, this.state.title, attendees, history, {
+        text: this.state.customQuestion,
+        isTrueFalse: this.state.isTrueFalse,
+      })
+      this.setState({ newImportDraft: false, newImport: false })
+    }
   }
 
   findCurrentState = () => {

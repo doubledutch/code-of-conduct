@@ -486,7 +486,7 @@ html, body, select{
 }
 
 .placeHolderTextBox {
-  height: 100px; 
+  height: 78.33px; 
   flex: 1;
   border: 0.06em solid #abbac9;
   margin-top: 0.4em;
@@ -720,6 +720,10 @@ button.displayButton:focus, button.displayButton:active {
   padding: 8px 15px;
   margin-left: 20px;
   margin-bottom: 20px;
+}
+
+.staticCodeTitle {
+  margin: 0px;
 }
 
 .containerRow {
