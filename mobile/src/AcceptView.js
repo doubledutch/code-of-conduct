@@ -39,7 +39,7 @@ export default class AcceptView extends Component {
   }
 
   render() {
-    const { codeOfConduct, currentEvent, primaryColor, customCodeOfConduct } = this.props
+    const { currentEvent, primaryColor, codeOfConduct, customCodeOfConduct } = this.props
     const code = customCodeOfConduct || codeOfConduct
     const isQuestion = customCodeOfConduct ? !!customCodeOfConduct.question.text : false
     return (

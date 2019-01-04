@@ -288,20 +288,12 @@ class App extends PureComponent {
   }
 
   saveCustomCodeOfConduct = (input, title, users, history, question) => {
-    if (window.confirm(t('publishConfirm'))) {
-      const publishTime = new Date().getTime()
-      this.props.fbc.database.public
-        .adminRef('customCodeOfConduct')
-        .child(title)
-        .set({ text: input, publishTime, users, question })
-      this.saveDraftCustomCodeOfConduct(input, title, users, question, history)
-    }
-    if (this.state.selectedKey && this.state.selectedKey !== title) {
-      this.props.fbc.database.public
-        .adminRef('customCodeOfConduct')
-        .child(this.state.selectedKey)
-        .remove()
-    }
+    const publishTime = new Date().getTime()
+    this.props.fbc.database.public
+      .adminRef('customCodeOfConduct')
+      .child(title)
+      .set({ text: input, publishTime, users, question })
+    this.saveDraftCustomCodeOfConduct(input, title, users, question, history)
   }
 
   saveDraftCodeOfConduct = input => {

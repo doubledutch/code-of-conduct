@@ -65,11 +65,14 @@ class HomeView extends PureComponent {
                 fbc.database.public
                   .adminRef('customCodeOfConduct')
                   .child(data.val())
-                  .on('value', data => {
+                  .once('value', data => {
                     const customCodeOfConduct = data.val() || null
                     this.setState({ customCodeOfConduct })
                   })
+              } else {
+                this.setState({ customCodeOfConduct: null })
               }
+
               // ensure custom code of conducts are received first
               codeOfConductRef.on('value', data => {
                 const codeOfConduct = data.val() || {}
@@ -129,7 +132,8 @@ class HomeView extends PureComponent {
   }
 
   renderPage = () => {
-    if (this.props.version) {
+    if (true) {
+      // if (this.props.version) {
       return (
         <AcceptView
           codeOfConduct={this.state.codeOfConduct}
