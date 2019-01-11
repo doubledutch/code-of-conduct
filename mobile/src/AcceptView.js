@@ -94,7 +94,7 @@ export default class AcceptView extends Component {
     if (question.text.length)
       return (
         <View style={{ marginLeft: 20, marginRight: 20 }}>
-          <Text>{question.text}</Text>
+          <Text style={s.customQuestion}>{question.text}</Text>
           {question.isTrueFalse ? (
             <View>
               <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
@@ -111,7 +111,7 @@ export default class AcceptView extends Component {
                     <View style={[s.radioDot, { backgroundColor: primaryColor }]} />
                   ) : null}
                 </TouchableOpacity>
-                <Text>{t('true')}</Text>
+                <Text style={s.boolText}>{t('true')}</Text>
               </View>
               <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
                 <TouchableOpacity
@@ -129,7 +129,7 @@ export default class AcceptView extends Component {
                     <View style={[s.radioDot, { backgroundColor: primaryColor }]} />
                   ) : null}
                 </TouchableOpacity>
-                <Text>{t('false')}</Text>
+                <Text style={s.boolText}>{t('false')}</Text>
               </View>
             </View>
           ) : (
@@ -167,6 +167,16 @@ const s = StyleSheet.create({
   },
   flex: {
     flex: 1,
+  },
+  boolText: {
+    marginLeft: 5,
+    marginTop: 2,
+    color: '#4B4B4B',
+  },
+  customQuestion: {
+    fontWeight: 'bold',
+    color: '#4B4B4B',
+    fontSize: 16,
   },
   paddingBottom: {
     paddingBottom: 50,
