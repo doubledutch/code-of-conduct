@@ -49,6 +49,7 @@ export default class CodeSection extends Component {
       isCodeBoxDisplay,
       saveCodeOfConduct,
       saveDraftCodeOfConduct,
+      deleteCodeOfConduct,
     } = this.props
     const isDraftChanges = this.state.input !== codeOfConductDraft.text
     const isPublishChanges = this.state.input !== codeOfConduct.text
@@ -98,6 +99,14 @@ export default class CodeSection extends Component {
             <div className="codeButtonsContainer">
               <p>{t('disclaimer')}</p>
               <div style={{ flex: 1 }} />
+              {inputIsNotEmpty && (
+                <button
+                  onClick={deleteCodeOfConduct}
+                  className="dd-bordered button-red button-margin"
+                >
+                  {t('delete')}
+                </button>
+              )}
               {isDraftChanges && inputIsNotEmpty && (
                 <button
                   onClick={() => saveDraftCodeOfConduct(this.state.input)}

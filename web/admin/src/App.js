@@ -169,6 +169,7 @@ class App extends PureComponent {
                     codeOfConductDraft={this.state.codeOfConductDraft}
                     saveCodeOfConduct={this.saveCodeOfConduct}
                     saveDraftCodeOfConduct={this.saveDraftCodeOfConduct}
+                    deleteCodeOfConduct={this.deleteCodeOfConduct}
                   />
                   <AssignSection
                     handleChange={this.handleChange}
@@ -229,6 +230,18 @@ class App extends PureComponent {
         </Router>
       </div>
     )
+  }
+
+  deleteCodeOfConduct = () => {
+    if (window.confirm(t('deleteConfirmStandard'))) {
+      this.props.fbc.database.public.adminRef('codeOfConduct').remove()
+      this.props.fbc.database.public
+        .adminRef('codeOfConductDraft')
+        .remove()
+        .then(() => {
+          deleteLandingUrls()
+        })
+    }
   }
 
   onAdminSelected = attendee => {
@@ -380,6 +393,42 @@ class App extends PureComponent {
     history.push(`/`)
     this.setState({ selectedCodeOfConduct: {}, selectedCodeOfConductDraft: {}, selectedKey: '' })
   }
+}
+
+function deleteLandingUrls() {
+  const url = ``
+
+  client.cmsRequest('GET', '/api/config').then(config => {
+    if (!config) return
+    // Update the LandingUrls setting. The checksum of the code of conduct ensures
+    // that attendees will have to re-accept.
+
+    const settings = [].concat(...config.Configuration.Groups.map(g => g.Settings))
+    const landingUrlsSetting = settings.find(s => s.Name === 'LandingUrls')
+    if (landingUrlsSetting) {
+      let landingUrls = []
+      try {
+        landingUrls = JSON.parse(landingUrlsSetting.Value).filter(url => url.startsWith)
+        if (!landingUrls.length) landingUrls = []
+      } catch (e) {
+        // Default to starting with an empty list.
+      }
+
+      const existingIndex = landingUrls.findIndex(url =>
+        url.startsWith('dd://extensions/codeofconduct'),
+      )
+      if (existingIndex >= 0) {
+        landingUrls[existingIndex] = url
+      } else {
+        landingUrls.push(url)
+      }
+
+      const newValue = JSON.stringify(landingUrls)
+      console.log(`Updating LandingUrls from ${landingUrlsSetting.Value} to ${newValue}`)
+      landingUrlsSetting.Value = newValue
+      client.cmsRequest('PUT', '/api/config', config)
+    }
+  })
 }
 
 function updateLandingUrls(codeOfConductText) {
