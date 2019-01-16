@@ -25,19 +25,18 @@ export default class CodeSection extends Component {
     this.state = {
       showStaticBox: true,
       input: '',
-      clickable: true,
     }
   }
 
   componentDidMount() {
     if (this.props.codeOfConductDraft.text) {
-      this.setState({ input: this.props.codeOfConductDraft.text })
+      this.setState({ input: this.props.codeOfConductDraft.text, showStaticBox: false })
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.codeOfConductDraft.text) {
-      this.setState({ input: nextProps.codeOfConductDraft.text })
+      this.setState({ input: nextProps.codeOfConductDraft.text, showStaticBox: false })
     }
   }
 
@@ -75,6 +74,18 @@ export default class CodeSection extends Component {
         </div>
         {isCodeBoxDisplay && (
           <div>
+            {!this.state.showStaticBox && (
+              <div className="codeOfConductContainerRow">
+                <div style={{ flex: 1 }} />
+                <button
+                  value="defaultButton"
+                  onClick={this.addDefaultCode}
+                  className="noBorderButtonBlue"
+                >
+                  {t('reset')}
+                </button>
+              </div>
+            )}
             {this.state.showStaticBox && !codeOfConductDraft.text ? (
               <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
                 <span className="placeHolderTextLine">
@@ -148,7 +159,7 @@ export default class CodeSection extends Component {
   }
 
   addDefaultCode = e => {
-    this.setState({ showStaticBox: false, input: defaultCode, clickable: false })
+    this.setState({ showStaticBox: false, input: defaultCode })
   }
 }
 
