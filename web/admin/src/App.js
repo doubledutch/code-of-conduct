@@ -239,7 +239,7 @@ class App extends PureComponent {
         .adminRef('codeOfConductDraft')
         .remove()
         .then(() => {
-          deleteLandingUrls()
+          updateLandingUrls('')
         })
     }
   }
@@ -395,42 +395,6 @@ class App extends PureComponent {
   }
 }
 
-function deleteLandingUrls() {
-  const url = ``
-
-  client.cmsRequest('GET', '/api/config').then(config => {
-    if (!config) return
-    // Update the LandingUrls setting. The checksum of the code of conduct ensures
-    // that attendees will have to re-accept.
-
-    const settings = [].concat(...config.Configuration.Groups.map(g => g.Settings))
-    const landingUrlsSetting = settings.find(s => s.Name === 'LandingUrls')
-    if (landingUrlsSetting) {
-      let landingUrls = []
-      try {
-        landingUrls = JSON.parse(landingUrlsSetting.Value).filter(url => url.startsWith)
-        if (!landingUrls.length) landingUrls = []
-      } catch (e) {
-        // Default to starting with an empty list.
-      }
-
-      const existingIndex = landingUrls.findIndex(url =>
-        url.startsWith('dd://extensions/codeofconduct'),
-      )
-      if (existingIndex >= 0) {
-        landingUrls[existingIndex] = url
-      } else {
-        landingUrls.push(url)
-      }
-
-      const newValue = JSON.stringify(landingUrls)
-      console.log(`Updating LandingUrls from ${landingUrlsSetting.Value} to ${newValue}`)
-      landingUrlsSetting.Value = newValue
-      client.cmsRequest('PUT', '/api/config', config)
-    }
-  })
-}
-
 function updateLandingUrls(codeOfConductText) {
   const url = `dd://extensions/codeofconduct?version=${md5(codeOfConductText)}`
 
@@ -453,7 +417,9 @@ function updateLandingUrls(codeOfConductText) {
       const existingIndex = landingUrls.findIndex(url =>
         url.startsWith('dd://extensions/codeofconduct'),
       )
-      if (existingIndex >= 0) {
+      if (codeOfConductText.length === 0 && existingIndex >= 0) {
+        landingUrls.splice(existingIndex, 1)
+      } else if (existingIndex >= 0) {
         landingUrls[existingIndex] = url
       } else {
         landingUrls.push(url)
