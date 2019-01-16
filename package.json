@@ -4,7 +4,7 @@
   "baseBundleVersion": "0.57.5",
   "private": true,
   "scripts": {
-    "start": "pushd mobile && npm run ios && popd && pushd web/admin && npm start && popd"
+    "start": "pushd mobile && npm start && popd && pushd web/admin && npm start && popd"
   },
   "doubledutch": {
     "extension": true
