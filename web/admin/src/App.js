@@ -169,6 +169,7 @@ class App extends PureComponent {
                     codeOfConductDraft={this.state.codeOfConductDraft}
                     saveCodeOfConduct={this.saveCodeOfConduct}
                     saveDraftCodeOfConduct={this.saveDraftCodeOfConduct}
+                    deleteCodeOfConduct={this.deleteCodeOfConduct}
                   />
                   <AssignSection
                     handleChange={this.handleChange}
@@ -229,6 +230,18 @@ class App extends PureComponent {
         </Router>
       </div>
     )
+  }
+
+  deleteCodeOfConduct = () => {
+    if (window.confirm(t('deleteConfirmStandard'))) {
+      this.props.fbc.database.public.adminRef('codeOfConduct').remove()
+      this.props.fbc.database.public
+        .adminRef('codeOfConductDraft')
+        .remove()
+        .then(() => {
+          updateLandingUrls('')
+        })
+    }
   }
 
   onAdminSelected = attendee => {
@@ -404,7 +417,9 @@ function updateLandingUrls(codeOfConductText) {
       const existingIndex = landingUrls.findIndex(url =>
         url.startsWith('dd://extensions/codeofconduct'),
       )
-      if (existingIndex >= 0) {
+      if (codeOfConductText.length === 0 && existingIndex >= 0) {
+        landingUrls.splice(existingIndex, 1)
+      } else if (existingIndex >= 0) {
         landingUrls[existingIndex] = url
       } else {
         landingUrls.push(url)

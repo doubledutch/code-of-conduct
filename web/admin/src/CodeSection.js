@@ -25,19 +25,18 @@ export default class CodeSection extends Component {
     this.state = {
       showStaticBox: true,
       input: '',
-      clickable: true,
     }
   }
 
   componentDidMount() {
     if (this.props.codeOfConductDraft.text) {
-      this.setState({ input: this.props.codeOfConductDraft.text })
+      this.setState({ input: this.props.codeOfConductDraft.text, showStaticBox: false })
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.codeOfConductDraft.text) {
-      this.setState({ input: nextProps.codeOfConductDraft.text })
+      this.setState({ input: nextProps.codeOfConductDraft.text, showStaticBox: false })
     }
   }
 
@@ -49,6 +48,7 @@ export default class CodeSection extends Component {
       isCodeBoxDisplay,
       saveCodeOfConduct,
       saveDraftCodeOfConduct,
+      deleteCodeOfConduct,
     } = this.props
     const isDraftChanges = this.state.input !== codeOfConductDraft.text
     const isPublishChanges = this.state.input !== codeOfConduct.text
@@ -74,6 +74,18 @@ export default class CodeSection extends Component {
         </div>
         {isCodeBoxDisplay && (
           <div>
+            {!this.state.showStaticBox && (
+              <div className="codeOfConductContainerRow">
+                <div style={{ flex: 1 }} />
+                <button
+                  value="defaultButton"
+                  onClick={this.addDefaultCode}
+                  className="noBorderButtonBlue"
+                >
+                  {t('reset')}
+                </button>
+              </div>
+            )}
             {this.state.showStaticBox && !codeOfConductDraft.text ? (
               <div onClick={this.openEditText} value="boxButton" className="placeHolderTextBox">
                 <span className="placeHolderTextLine">
@@ -98,6 +110,14 @@ export default class CodeSection extends Component {
             <div className="codeButtonsContainer">
               <p>{t('disclaimer')}</p>
               <div style={{ flex: 1 }} />
+              {inputIsNotEmpty && (
+                <button
+                  onClick={deleteCodeOfConduct}
+                  className="dd-bordered button-red button-margin"
+                >
+                  {t('delete')}
+                </button>
+              )}
               {isDraftChanges && inputIsNotEmpty && (
                 <button
                   onClick={() => saveDraftCodeOfConduct(this.state.input)}
@@ -139,7 +159,7 @@ export default class CodeSection extends Component {
   }
 
   addDefaultCode = e => {
-    this.setState({ showStaticBox: false, input: defaultCode, clickable: false })
+    this.setState({ showStaticBox: false, input: defaultCode })
   }
 }
 
