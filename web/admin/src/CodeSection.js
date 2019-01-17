@@ -35,8 +35,10 @@ export default class CodeSection extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.codeOfConductDraft.text) {
-      this.setState({ input: nextProps.codeOfConductDraft.text, showStaticBox: false })
+    const text = nextProps.codeOfConductDraft.text || ''
+    if (text !== this.state.input) {
+      const showStaticBox = !text.length
+      this.setState({ input: text, showStaticBox })
     }
   }
 
