@@ -161,7 +161,7 @@ export default class MakeReportModal extends Component {
               </View>
               {this.state.isError && currentReport.preferredContact.length === 0 && (
                 <Text style={{ color: 'red', paddingTop: 2, fontSize: 12, marginLeft: 10 }}>
-                  {'selectError'}
+                  {t('selectError')}
                 </Text>
               )}
               {this.props.currentReport.preferredContact === 'phone' && (
