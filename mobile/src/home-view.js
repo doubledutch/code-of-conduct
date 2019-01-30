@@ -75,7 +75,7 @@ class HomeView extends PureComponent {
 
               // ensure custom code of conducts are received first
               codeOfConductRef.on('value', data => {
-                const codeOfConduct = data.val() || {}
+                const codeOfConduct = data.val() || {text: 'No Code of Conduct has been set'}
                 this.setState({ codeOfConduct })
               })
             })
@@ -106,7 +106,10 @@ class HomeView extends PureComponent {
           }
           wireListeners()
         })
-        .catch(() => this.setState({ logInFailed: true }))
+        .catch(() => {
+          client.openURL('dd://leaveevent')
+          this.setState({ logInFailed: true })
+        })
     })
   }
 

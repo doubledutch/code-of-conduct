@@ -112,7 +112,7 @@ export default class CodeSection extends Component {
             <div className="codeButtonsContainer">
               <p>{t('disclaimer')}</p>
               <div style={{ flex: 1 }} />
-              {inputIsNotEmpty && (
+              {codeOfConductDraft.text && (
                 <button
                   onClick={deleteCodeOfConduct}
                   className="dd-bordered button-red button-margin"
