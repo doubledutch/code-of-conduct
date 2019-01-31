@@ -107,14 +107,21 @@ class HomeView extends PureComponent {
           wireListeners()
         })
         .catch(() => {
-          client.openURL('dd://leaveevent')
-          this.setState({ logInFailed: true })
+          this.errorLoading()
         })
     })
     .catch(() => {
-      client.openURL('dd://leaveevent')
-      this.setState({ logInFailed: true })
+      this.errorLoading()
     })
+  }
+
+  errorLoading = () => {
+    if (this.props.version){
+      client.openURL('dd://leaveevent')
+    }
+    else {
+      this.setState({ logInFailed: true })
+    }
   }
 
   render() {
