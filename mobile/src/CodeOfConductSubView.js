@@ -25,9 +25,9 @@ export default class CodeOfConductSubView extends Component {
     return (
       <View style={s.container}>
         <Text style={s.titleText}>{t('titleCap')}</Text>
-        <Text style={s.shortCode}>{code}</Text>
-        <TouchableOpacity style={s.tabButton} onPress={this.props.showCodeOfConduct} disabled={code === 'No Code of Conduct has been set'}>
-          <Text style={[s.tabButtonText, { color: code === 'No Code of Conduct has been set' ? "gray" : this.props.primaryColor }]}>{t('viewFull')}</Text>
+        <Text style={s.shortCode}>{code ? code : 'No Code of Conduct has been set'}</Text>
+        <TouchableOpacity style={s.tabButton} onPress={this.props.showCodeOfConduct} disabled={!code}>
+          <Text style={[s.tabButtonText, { color: code ? this.props.primaryColor : "gray" }]}>{t('viewFull')}</Text>
         </TouchableOpacity>
       </View>
     )

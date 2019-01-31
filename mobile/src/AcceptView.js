@@ -21,20 +21,9 @@ import client, { translate as t } from '@doubledutch/rn-client'
 export default class AcceptView extends Component {
   constructor(props) {
     super(props)
-    this.checkForNoCodeOfConduct(props)
     this.state = {
       questionResponse: '',
       isQuestionResponseTrue: undefined,
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    this.checkForNoCodeOfConduct(this.props)
-  }
-
-  checkForNoCodeOfConduct(props) {
-    if (props.codeOfConduct && !props.codeOfConduct.text) {
-      client.dismissLandingPage(false)
     }
   }
 

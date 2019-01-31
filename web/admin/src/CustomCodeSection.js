@@ -17,7 +17,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import CsvParse from '@vtex/react-csv-parse'
-import { CSVLink } from 'react-csv'
+import { CSVLink } from '@doubledutch/react-csv'
 import { TextInput } from '@doubledutch/react-components'
 import client, { translate as t } from '@doubledutch/admin-client'
 import RadioIcon from './RadioIcon'

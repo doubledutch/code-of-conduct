@@ -15,7 +15,7 @@
  */
 
 import React, { Component } from 'react'
-import { CSVLink } from 'react-csv'
+import { CSVLink } from '@doubledutch/react-csv'
 import { translate as t } from '@doubledutch/admin-client'
 import LeftReport from './LeftReport'
 import RightReport from './RightReport'

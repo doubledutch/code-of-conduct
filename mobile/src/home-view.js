@@ -75,8 +75,12 @@ class HomeView extends PureComponent {
 
               // ensure custom code of conducts are received first
               codeOfConductRef.on('value', data => {
-                const codeOfConduct = data.val() || {text: 'No Code of Conduct has been set'}
+                const codeOfConduct = data.val() || {}
                 this.setState({ codeOfConduct })
+                if (this.props.version && !codeOfConduct.text){
+                  this.clearTimer()
+                  client.dismissLandingPage(false)
+                }
               })
             })
 
@@ -99,7 +103,7 @@ class HomeView extends PureComponent {
               }))
             })
 
-            // The function below will hide the login screen component with a 1/2 second delay to provide an oppt for firebase data to downlaod
+            // The function below will hide the login screen component with a 1/2 second delay to provide an oppt for firebase data to download
             this.hideLogInScreen = setTimeout(() => {
               this.setState({ isLoggedIn: true })
             }, 500)
@@ -113,6 +117,16 @@ class HomeView extends PureComponent {
     .catch(() => {
       this.errorLoading()
     })
+  }
+
+  componentWillUnmount() {
+    this.clearTimer()
+  }
+
+  clearTimer = () => {
+    if (this.hideLogInScreen) {
+      clearTimeout(this.hideLogInScreen)
+    }
   }
 
   errorLoading = () => {

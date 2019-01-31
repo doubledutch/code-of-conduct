@@ -18,7 +18,7 @@ import React, { Component } from 'react'
 import './App.css'
 import { TextInput } from '@doubledutch/react-components'
 import { translate as t } from '@doubledutch/admin-client'
-import { CSVLink, CSVDownload } from 'react-csv'
+import { CSVLink, CSVDownload } from '@doubledutch/react-csv'
 
 export default class AssignSection extends Component {
   constructor() {
