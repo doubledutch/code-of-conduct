@@ -111,6 +111,10 @@ class HomeView extends PureComponent {
           this.setState({ logInFailed: true })
         })
     })
+    .catch(() => {
+      client.openURL('dd://leaveevent')
+      this.setState({ logInFailed: true })
+    })
   }
 
   render() {
