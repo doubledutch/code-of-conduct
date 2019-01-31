@@ -116,6 +116,7 @@ class HomeView extends PureComponent {
   }
 
   errorLoading = () => {
+    //Since this app can launch as a custom landing page we need different actions upon an error loading
     if (this.props.version){
       client.openURL('dd://leaveevent')
     }
