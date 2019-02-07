@@ -43,7 +43,7 @@ class HomeView extends PureComponent {
     }
 
     this.signin = props.fbc.signin().then(user => (this.user = user))
-    this.signin.catch(err => console.error(err))
+    this.signin.catch(err => this.errorLoading())
   }
 
   componentDidMount() {
@@ -109,9 +109,6 @@ class HomeView extends PureComponent {
             }, 500)
           }
           wireListeners()
-        })
-        .catch(() => {
-          this.errorLoading()
         })
     })
     .catch(() => {
