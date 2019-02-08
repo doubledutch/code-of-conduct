@@ -69,15 +69,23 @@ export default class CustomCodeSection extends Component {
     const questionDraft = selectedCodeOfConductDraft.question
       ? selectedCodeOfConductDraft.question.text
       : ''
+    const questionTypeDraft = selectedCodeOfConductDraft.question
+      ? selectedCodeOfConductDraft.question.isTrueFalse
+      : false
+    const questionType = selectedCodeOfConduct.question
+      ? selectedCodeOfConduct.question.isTrueFalse
+      : false
     const question = selectedCodeOfConduct.question ? selectedCodeOfConduct.question.text : ''
     const isDraftChanges =
       this.state.input !== selectedCodeOfConductDraft.text ||
       this.state.customQuestion !== questionDraft ||
+      this.state.isTrueFalse !== questionTypeDraft ||
       this.state.newImportDraft ||
       this.state.title !== title
     const isPublishChanges =
       this.state.input !== selectedCodeOfConduct.text ||
       this.state.customQuestion !== question ||
+      this.state.isTrueFalse !== questionType ||
       this.state.newImport ||
       this.state.title !== title
 
@@ -164,12 +172,14 @@ export default class CustomCodeSection extends Component {
               <div className="codeButtonsContainer">
                 <p>{t('disclaimer')}</p>
                 <div style={{ flex: 1 }} />
-                <button
-                  onClick={() => this.props.deleteCustomCodeOfConduct(this.props.title, history)}
-                  className="dd-bordered button-margin button-red"
-                >
-                  {t('delete')}
-                </button>
+                {this.props.selectedCodeOfConductDraft.text && (
+                  <button
+                    onClick={() => this.props.deleteCustomCodeOfConduct(this.props.title, history)}
+                    className="dd-bordered button-margin button-red"
+                  >
+                    {t('delete')}
+                  </button>
+                )}
                 {isDraftChanges &&
                   inputIsNotEmpty &&
                   isTitle &&
@@ -230,7 +240,6 @@ export default class CustomCodeSection extends Component {
   )
 
   handleImport = data => {
-    const newData = []
     let invalidFile = false
     const attendeeImportPromises = data
       .filter(cell => {
@@ -261,8 +270,6 @@ export default class CustomCodeSection extends Component {
                 error = true
               }
             }
-          } else {
-            newData.push(user)
           }
         }
       })
@@ -345,7 +352,11 @@ export default class CustomCodeSection extends Component {
     }
     let stateText = ''
     if (this.props.selectedCodeOfConductDraft.text) {
-      if (selectedCodeOfConduct.text === this.props.selectedCodeOfConductDraft.text) {
+      if (
+        selectedCodeOfConduct.text === this.props.selectedCodeOfConductDraft.text &&
+        JSON.stringify(selectedCodeOfConduct.question) ===
+          JSON.stringify(this.props.selectedCodeOfConductDraft.question)
+      ) {
         stateText = 'Published'
       } else {
         stateText = 'Draft'

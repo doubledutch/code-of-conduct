@@ -101,7 +101,11 @@ export default class AssignSection extends Component {
     const selectedCodeOfConductPublished = this.props.codesPublished[key] || {}
     let stateText = 'Draft'
     if (selectedCodeOfConductPublished.text) {
-      if (selectedCodeOfConduct.text === selectedCodeOfConductPublished.text) {
+      if (
+        selectedCodeOfConduct.text === selectedCodeOfConductPublished.text &&
+        JSON.stringify(selectedCodeOfConduct.question) ===
+          JSON.stringify(selectedCodeOfConductPublished.question)
+      ) {
         stateText = 'Published'
       }
     }
@@ -131,13 +135,15 @@ export default class AssignSection extends Component {
   parseResultsForExport = results => {
     const parsedResults = []
     results.forEach(item => {
-      const newItem = {
-        code_of_conduct_title: item.surveyTitle,
-        custom_question_response: item.questionResponse,
-        name: `${item.firstName} ${item.lastName}`,
-        email: item.email,
+      if (item.firstName) {
+        const newItem = {
+          code_of_conduct_title: item.surveyTitle,
+          custom_question_response: item.questionResponse,
+          name: `${item.firstName} ${item.lastName}`,
+          email: item.email,
+        }
+        parsedResults.push(newItem)
       }
-      parsedResults.push(newItem)
     })
     return parsedResults
   }
