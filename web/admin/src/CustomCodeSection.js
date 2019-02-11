@@ -149,7 +149,6 @@ export default class CustomCodeSection extends Component {
                   multiline
                   name="Code of Conduct"
                   label="Code of Conduct"
-                  autoFocus={testBool}
                   autoFocus={!this.state.showStaticBox}
                   value={this.state.input}
                   onChange={e => this.setState({ input: e.target.value })}
