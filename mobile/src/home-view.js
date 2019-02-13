@@ -81,6 +81,10 @@ class HomeView extends PureComponent {
                   this.clearTimer()
                   client.dismissLandingPage(false)
                 }
+                // The function below will hide the login screen component with a 1/2 second delay to provide an oppt for firebase data to download
+                this.hideLogInScreen = setTimeout(() => {
+                  this.setState({ isLoggedIn: true })
+                }, 200)
               })
             })
 
@@ -102,11 +106,6 @@ class HomeView extends PureComponent {
                 ),
               }))
             })
-
-            // The function below will hide the login screen component with a 1/2 second delay to provide an oppt for firebase data to download
-            this.hideLogInScreen = setTimeout(() => {
-              this.setState({ isLoggedIn: true })
-            }, 500)
           }
           wireListeners()
         })
