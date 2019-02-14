@@ -88,9 +88,6 @@ export default class CustomCodeSection extends Component {
       this.state.isTrueFalse !== questionType ||
       this.state.newImport ||
       this.state.title !== title
-
-    const testBool = true
-
     const currentState = this.findCurrentState()
     const publishTime = selectedCodeOfConduct.publishTime
       ? new Date(selectedCodeOfConduct.publishTime).toLocaleString()
@@ -147,8 +144,7 @@ export default class CustomCodeSection extends Component {
               ) : (
                 <TextInput
                   multiline
-                  name="Code of Conduct"
-                  label="Code of Conduct"
+                  label={t('code')}
                   autoFocus={!this.state.showStaticBox}
                   value={this.state.input}
                   onChange={e => this.setState({ input: e.target.value })}
