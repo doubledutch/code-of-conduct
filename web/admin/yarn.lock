@@ -756,9 +756,10 @@
     babel-runtime "^6.26.0"
     firebase "^5.5.8"
 
-"@doubledutch/react-components@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@doubledutch/react-components/-/react-components-0.1.0.tgz#c903b3a23e8b44fbd2341cc8cfef7c1b69e75450"
+"@doubledutch/react-components@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@doubledutch/react-components/-/react-components-0.2.1.tgz#be9f298bd2cbe1f7d2a0c4de4d24daaee8709fcb"
+  integrity sha512-OoeW17PpEb8Cf93ANOyRf397is3UCMijfjClQSYPX9RpSZg6SxlNXM8yv08Dvldybv8wPazfAiRaMuWSw6qAsQ==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
     "@fortawesome/fontawesome-free-solid" "^5.0.13"
