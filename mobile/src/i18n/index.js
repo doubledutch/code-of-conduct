@@ -1,12 +1,12 @@
-import enUS from './en-us/code-of-conduct.admin.json'
+import enUS from './en-us/code-of-conduct.mobile.json'
 
-import arINT from './ar-int/code-of-conduct.admin.json'
-import deDE from './de-de/code-of-conduct.admin.json'
-import esES from './es-es/code-of-conduct.admin.json'
-import frFR from './fr-fr/code-of-conduct.admin.json'
-import itIT from './it-it/code-of-conduct.admin.json'
-import jaJP from './ja-jp/code-of-conduct.admin.json'
-import nlNL from './nl-nl/code-of-conduct.admin.json'
+import arINT from './ar-int/code-of-conduct.mobile.json'
+import deDE from './de-de/code-of-conduct.mobile.json'
+import esES from './es-es/code-of-conduct.mobile.json'
+import frFR from './fr-fr/code-of-conduct.mobile.json'
+import itIT from './it-it/code-of-conduct.mobile.json'
+import jaJP from './ja-jp/code-of-conduct.mobile.json'
+import nlNL from './nl-nl/code-of-conduct.mobile.json'
 
 export default {
   '': enUS,
