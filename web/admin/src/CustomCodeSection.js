@@ -241,8 +241,8 @@ export default class CustomCodeSection extends Component {
   handleImport = data => {
     let invalidFile = false
     const attendeeImportPromises = data
-      .filter(cell => {
-        if (!isValidASC(cell.email)) invalidFile = true
+      .filter((cell, index) => {
+        if (!isValidASC(cell.email) && index === 0) invalidFile = true
         return isValid(cell.email) && isValidASC(cell.email)
       })
       .map(cell =>
