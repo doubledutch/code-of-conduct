@@ -72,12 +72,12 @@ class HomeView extends PureComponent {
               } else {
                 this.setState({ customCodeOfConduct: null })
               }
-
               // ensure custom code of conducts are received first
               codeOfConductRef.on('value', data => {
                 const codeOfConduct = data.val() || {}
+                const isCodeOfConductEmpty = codeOfConduct.text ? !codeOfConduct.text.trim() : true
                 this.setState({ codeOfConduct })
-                if (this.props.version && !codeOfConduct.text){
+                if (this.props.version && isCodeOfConductEmpty){
                   this.clearTimer()
                   client.dismissLandingPage(false)
                 }
@@ -157,6 +157,7 @@ class HomeView extends PureComponent {
   }
 
   renderPage = () => {
+    
     if (this.props.version) {
       return (
         <AcceptView
