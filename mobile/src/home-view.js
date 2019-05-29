@@ -157,7 +157,6 @@ class HomeView extends PureComponent {
   }
 
   renderPage = () => {
-    
     if (this.props.version) {
       return (
         <AcceptView
