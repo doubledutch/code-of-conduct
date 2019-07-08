@@ -1,6 +1,6 @@
 {
   "name": "codeofconduct",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "baseBundleVersion": "0.59.1",
   "private": true,
   "scripts": {
