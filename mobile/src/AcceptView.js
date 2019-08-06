@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, ScrollView, View, TextInput } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import client, { translate as t } from '@doubledutch/rn-client'
 
 export default class AcceptView extends Component {
@@ -35,7 +36,12 @@ export default class AcceptView extends Component {
       <View style={s.flex}>
         {code ? (
           code.text ? (
-            <ScrollView style={s.scrollView}>
+            <KeyboardAwareScrollView style={s.scrollView}
+              viewIsInsideTabBar
+              enableAutomaticScroll
+              extraScrollHeight={200}
+              keyboardShouldPersistTaps="always"
+            >
               <View style={s.paddingBottom}>
                 <Text style={s.titleTop}>{currentEvent.name}</Text>
                 <Text style={s.title}>{t('title')}</Text>
@@ -67,7 +73,7 @@ export default class AcceptView extends Component {
                   <Text style={s.launchButtonText}>{t('accept')}</Text>
                 </TouchableOpacity>
               </View>
-            </ScrollView>
+            </KeyboardAwareScrollView>
           ) : (
             <View style={s.helpTextView}>
               <Text style={s.helpText}>{t('notSet')}</Text>

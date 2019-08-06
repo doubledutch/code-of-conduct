@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { StyleSheet, TouchableOpacity, View, Text, Image, TextInput, Platform } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, Text, Image, TextInput, Platform, KeyboardAvoidingView } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import client, { Avatar, Color, translate as t } from '@doubledutch/rn-client'
 
 export default class MakeReportModal extends Component {
@@ -123,7 +124,7 @@ export default class MakeReportModal extends Component {
       backgroundColor: new Color(primaryColor).limitLightness(0.9).rgbString(),
     }
     return (
-      <View style={{ display: 'flex', paddingBottom: 40, marginTop: 30 }}>
+      <KeyboardAwareScrollView style={{ display: 'flex', paddingBottom: 40, marginTop: 30 }}>
         {!this.props.currentReport.isAnom && (
           <View>
             <Text style={s.headerTitleText}>{t('contact')}</Text>
@@ -190,7 +191,7 @@ export default class MakeReportModal extends Component {
         >
           <Text style={s.sendButtonText}>{t('reportViolation')}</Text>
         </TouchableOpacity>
-      </View>
+      </KeyboardAwareScrollView>
     )
   }
 
