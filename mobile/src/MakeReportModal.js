@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, TouchableOpacity, View, Text, Image, TextInput, Platform, KeyboardAvoidingView } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { StyleSheet, TouchableOpacity, View, Text, Image, TextInput, Platform, ScrollView } from 'react-native'
 import client, { Avatar, Color, translate as t } from '@doubledutch/rn-client'
 
 export default class MakeReportModal extends Component {
@@ -56,7 +55,7 @@ export default class MakeReportModal extends Component {
     const borderStyle = { borderColor }
 
     return (
-      <View style={{ backgroundColor: 'white' }}>
+      <ScrollView style={{ backgroundColor: 'white', height: 0 }}>
         <View style={[s.modal, borderStyle]}>
           <TextInput
             style={Platform.select({
@@ -114,7 +113,7 @@ export default class MakeReportModal extends Component {
           </View>
         </View>
         {this.radioButtonsSection()}
-      </View>
+      </ScrollView>
     )
   }
 
@@ -124,7 +123,7 @@ export default class MakeReportModal extends Component {
       backgroundColor: new Color(primaryColor).limitLightness(0.9).rgbString(),
     }
     return (
-      <KeyboardAwareScrollView style={{ display: 'flex', paddingBottom: 40, marginTop: 30 }}>
+      <View style={{ display: 'flex', paddingBottom: 40, marginTop: 30, backgroundColor: "blue" }}>
         {!this.props.currentReport.isAnom && (
           <View>
             <Text style={s.headerTitleText}>{t('contact')}</Text>
@@ -191,7 +190,7 @@ export default class MakeReportModal extends Component {
         >
           <Text style={s.sendButtonText}>{t('reportViolation')}</Text>
         </TouchableOpacity>
-      </KeyboardAwareScrollView>
+      </View>
     )
   }
 
