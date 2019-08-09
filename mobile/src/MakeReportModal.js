@@ -55,7 +55,7 @@ export default class MakeReportModal extends Component {
     const borderStyle = { borderColor }
 
     return (
-      <ScrollView style={{ backgroundColor: 'white', height: 0 }}>
+      <ScrollView style={{ backgroundColor: 'white'}}>
         <View style={[s.modal, borderStyle]}>
           <TextInput
             style={Platform.select({
@@ -123,7 +123,7 @@ export default class MakeReportModal extends Component {
       backgroundColor: new Color(primaryColor).limitLightness(0.9).rgbString(),
     }
     return (
-      <View style={{ display: 'flex', paddingBottom: 40, marginTop: 30, backgroundColor: "blue" }}>
+      <View style={{ display: 'flex', paddingBottom: 40, marginTop: 30 }}>
         {!this.props.currentReport.isAnom && (
           <View>
             <Text style={s.headerTitleText}>{t('contact')}</Text>
