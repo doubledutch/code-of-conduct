@@ -39,7 +39,7 @@ export default class AcceptView extends Component {
             <KeyboardAwareScrollView style={s.scrollView}
               viewIsInsideTabBar
               enableAutomaticScroll
-              extraScrollHeight={200}
+              extraScrollHeight={250}
               keyboardShouldPersistTaps="always"
             >
               <View style={s.paddingBottom}>
