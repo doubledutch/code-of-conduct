@@ -36,10 +36,9 @@ export default class AcceptView extends Component {
       <View style={s.flex}>
         {code ? (
           code.text ? (
-            <KeyboardAwareScrollView style={s.scrollView}
+            <KeyboardAwareScrollView
               viewIsInsideTabBar
               enableAutomaticScroll
-              extraScrollHeight={250}
               keyboardShouldPersistTaps="always"
             >
               <View style={s.paddingBottom}>
@@ -154,6 +153,7 @@ const s = StyleSheet.create({
     color: '#4B4B4B',
     margin: 20,
     marginTop: 0,
+    flex: 1,
   },
   helpTextView: {
     flex: 1,
@@ -162,6 +162,7 @@ const s = StyleSheet.create({
   },
   flex: {
     flex: 1,
+    backgroundColor: 'white',
   },
   boolText: {
     marginLeft: 5,
@@ -174,11 +175,7 @@ const s = StyleSheet.create({
     fontSize: 16,
   },
   paddingBottom: {
-    paddingBottom: 50,
-  },
-  scrollView: {
-    flex: 1,
-    backgroundColor: 'white',
+    paddingBottom: 200,
   },
   helpText: {
     fontSize: 18,
