@@ -53,6 +53,9 @@ export default class ReportCell extends Component {
             Preferred Contact: {contact.email || 'Email Unavailable'}
           </p>
         )}
+        {report.preferredContact === 'inapp' && (
+          <p className="cellDescription">Preferred Contact: In App</p>
+        )}
         <div className="floatRight">
           {report.status === 'Received' ? (
             <button onClick={() => this.props.resolveItem(report)} className="dd-bordered">

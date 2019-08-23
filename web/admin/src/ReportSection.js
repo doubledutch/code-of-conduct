@@ -69,11 +69,13 @@ function getCsvData(reports) {
       ? 'anonymous'
       : `${report.creator.firstName} ${report.creator.lastName}`
     const dateCreated = new Date(report.dateCreate).toDateString()
+    const preferredContact = report.phone ? report.phone : report.preferredContact
     return {
       dateCreated,
       user,
       description: report.description,
       status: report.status,
+      preferredContact,
       reportMadeBy: report.reportPerson || user,
       resolution: report.resolution,
       resolutionBy: report.resolutionPerson,
