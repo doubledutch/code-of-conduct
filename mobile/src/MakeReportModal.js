@@ -55,7 +55,7 @@ export default class MakeReportModal extends Component {
     const borderStyle = { borderColor }
 
     return (
-      <ScrollView style={{ backgroundColor: 'white'}}>
+      <ScrollView style={{ backgroundColor: 'white', flex: 1}}>
         <View style={[s.modal, borderStyle]}>
           <TextInput
             style={Platform.select({

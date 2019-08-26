@@ -17,7 +17,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, ScrollView, View, TextInput } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import client, { translate as t } from '@doubledutch/rn-client'
+import { translate as t } from '@doubledutch/rn-client'
 
 export default class AcceptView extends Component {
   constructor(props) {
