@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react'
 import { CSVLink } from '@doubledutch/react-csv'
-import { translate as t } from '@doubledutch/admin-client'
+import client, { translate as t } from '@doubledutch/admin-client'
 import LeftReport from './LeftReport'
 import RightReport from './RightReport'
 
@@ -73,6 +73,7 @@ function getCsvData(reports) {
     return {
       dateCreated,
       user,
+      email: report.isAnom ? 'Anonymous' : report.creator.email,
       description: report.description,
       status: report.status,
       preferredContact,
