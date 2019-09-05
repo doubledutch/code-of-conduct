@@ -20,6 +20,7 @@ import { translate as t } from '@doubledutch/admin-client'
 export default class ReportCell extends Component {
   render() {
     const { report } = this.props
+    const contact = report.creator || {}
     return (
       <div className="reportCellBox">
         {report.isAnom ? (
@@ -46,6 +47,15 @@ export default class ReportCell extends Component {
           </div>
         )}
         <p className="cellDescription">{report.description}</p>
+        {report.phone && <p className="cellDescription">Preferred Contact: {report.phone}</p>}
+        {report.preferredContact === 'email' && (
+          <p className="cellDescription">
+            Preferred Contact: {contact.email || 'Email Unavailable'}
+          </p>
+        )}
+        {report.preferredContact === 'inapp' && (
+          <p className="cellDescription">Preferred Contact: In App</p>
+        )}
         <div className="floatRight">
           {report.status === 'Received' ? (
             <button onClick={() => this.props.resolveItem(report)} className="dd-bordered">

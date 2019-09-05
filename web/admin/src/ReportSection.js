@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react'
 import { CSVLink } from '@doubledutch/react-csv'
-import { translate as t } from '@doubledutch/admin-client'
+import client, { translate as t } from '@doubledutch/admin-client'
 import LeftReport from './LeftReport'
 import RightReport from './RightReport'
 
@@ -54,7 +54,7 @@ export default class ReportSection extends Component {
           </div>
         )}
         {this.props.isReportsBoxDisplay && (
-          <CSVLink className="csvButton" data={getCsvData(reports)} filename="questions.csv">
+          <CSVLink className="csvButton" data={getCsvData(reports)} filename="reports.csv">
             {t('export')}
           </CSVLink>
         )}
@@ -69,11 +69,14 @@ function getCsvData(reports) {
       ? 'anonymous'
       : `${report.creator.firstName} ${report.creator.lastName}`
     const dateCreated = new Date(report.dateCreate).toDateString()
+    const preferredContact = report.phone ? report.phone : report.preferredContact
     return {
       dateCreated,
       user,
+      email: report.isAnom ? 'Anonymous' : report.creator.email,
       description: report.description,
       status: report.status,
+      preferredContact,
       reportMadeBy: report.reportPerson || user,
       resolution: report.resolution,
       resolutionBy: report.resolutionPerson,

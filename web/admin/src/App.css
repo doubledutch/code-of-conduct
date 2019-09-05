@@ -187,17 +187,20 @@ html, body, select{
 .Modal {
   position: absolute;
   width: 650px;
+  top: 5%;
+  left: 20%;
   border: 1px solid #CDCDCD;
   border-radius: 4px;
   background-color: #FFFFFF;
-  /* padding: 16px 21px; */
 }
 
 .Overlay {
   position: fixed;
-  top: 20%;
-  left: 20%;
-  background-color: #ffffff;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .errorText {

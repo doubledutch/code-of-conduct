@@ -113,23 +113,22 @@ export default class AssignSection extends Component {
   }
 
   prepareCSV = () => {
-    if (this.state.exporting) {
-      return
+    if (!this.state.exporting) {
+      const status = Object.values(this.props.status)
+      let newList = []
+      const attendeeClickPromises = status.map(result =>
+        this.props.client
+          .getAttendee(result.userId)
+          .then(attendee => ({ ...result, ...attendee, surveyTitle: result.id }))
+          .catch(err => result),
+      )
+      Promise.all(attendeeClickPromises).then(newResults => {
+        // Build CSV and trigger download...
+        newList = this.parseResultsForExport(newResults)
+        this.setState({ exporting: true, exportList: newList })
+        setTimeout(() => this.setState({ exporting: false, newList: [] }), 3000)
+      })
     }
-    const status = Object.values(this.props.status)
-    let newList = []
-    const attendeeClickPromises = status.map(result =>
-      this.props.client
-        .getAttendee(result.userId)
-        .then(attendee => ({ ...result, ...attendee, surveyTitle: result.id }))
-        .catch(err => result),
-    )
-    Promise.all(attendeeClickPromises).then(newResults => {
-      // Build CSV and trigger download...
-      newList = this.parseResultsForExport(newResults)
-      this.setState({ exporting: true, exportList: newList })
-      setTimeout(() => this.setState({ exporting: false, newList: [] }), 3000)
-    })
   }
 
   parseResultsForExport = results => {

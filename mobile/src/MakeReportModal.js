@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, TouchableOpacity, View, Text, Image, TextInput, Platform } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, Text, Image, TextInput, Platform, ScrollView } from 'react-native'
 import client, { Avatar, Color, translate as t } from '@doubledutch/rn-client'
 
 export default class MakeReportModal extends Component {
@@ -55,7 +55,7 @@ export default class MakeReportModal extends Component {
     const borderStyle = { borderColor }
 
     return (
-      <View style={{ backgroundColor: 'white' }}>
+      <ScrollView style={{ backgroundColor: 'white', flex: 1}}>
         <View style={[s.modal, borderStyle]}>
           <TextInput
             style={Platform.select({
@@ -113,7 +113,7 @@ export default class MakeReportModal extends Component {
           </View>
         </View>
         {this.radioButtonsSection()}
-      </View>
+      </ScrollView>
     )
   }
 
