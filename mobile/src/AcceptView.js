@@ -16,6 +16,7 @@
 
 import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, ScrollView, View, TextInput } from 'react-native'
+import client from '@doubledutch/rn-client'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { translate as t } from '@doubledutch/rn-client'
 
