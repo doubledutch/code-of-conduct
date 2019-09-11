@@ -54,6 +54,7 @@ export default class CodeSection extends Component {
     } = this.props
     const isDraftChanges = this.state.input !== codeOfConductDraft.text
     const isPublishChanges = this.state.input !== codeOfConduct.text
+    const isNotDefault = this.state.input !== defaultCode
     const currentState = this.findCurrentState()
     const publishTime = codeOfConduct.publishTime
       ? new Date(codeOfConduct.publishTime).toLocaleString()
@@ -76,7 +77,7 @@ export default class CodeSection extends Component {
         </div>
         {isCodeBoxDisplay && (
           <div>
-            {!this.state.showStaticBox && (
+            {!this.state.showStaticBox && isNotDefault && (
               <div className="codeOfConductContainerRow">
                 <div style={{ flex: 1 }} />
                 <button
