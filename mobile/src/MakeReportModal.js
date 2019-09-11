@@ -67,6 +67,7 @@ export default class MakeReportModal extends Component {
             onChangeText={report => this.updateItem('description', report)}
             maxLength={250}
             multiline
+            autoFocus
             placeholderTextColor="#9B9B9B"
             onContentSizeChange={event => this._handleSizeChange(event)}
           />

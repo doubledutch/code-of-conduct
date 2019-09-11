@@ -40,6 +40,7 @@ export default class ModalView extends Component {
       <Modal
         isOpen={this.props.showModal}
         onRequestClose={this.props.closeModal}
+        shouldCloseOnOverlayClick={false}
         contentLabel="Modal"
         className="Modal"
         overlayClassName="Overlay"
