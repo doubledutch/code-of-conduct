@@ -107,9 +107,9 @@ export default class ModalView extends Component {
   }
 
   renderReportModal = () => {
-    const sample = { value: '', label: 'Select a User', className: 'dropdownText' }
+    // const sample = { value: '', label: 'Select a User', className: 'dropdownText' }
     const users = this.state.search ? this.props.users : []
-    const userName = this.state.currentUser.value ? this.state.currentUser : sample
+    const userName = this.state.currentUser.value ? this.state.currentUser : null
     return (
       <div>
         <div className="topModalBox">
@@ -162,6 +162,7 @@ export default class ModalView extends Component {
                 options={users}
                 maxMenuHeight={50}
                 disabled={false}
+                placeholder="Select a User"
               />
               {this.state.isError && userName.value.length === 0 && (
                 <p className="errorText">{t('userError')}</p>
