@@ -69,6 +69,10 @@ html, body, select{
   width: 280px;
 }
 
+.react-select__placeholder{
+  color: #abbac9 !important;
+}
+
 .react-select__control{
   height: 42.8px;
   border: 0.06em solid #abbac9 !important;
