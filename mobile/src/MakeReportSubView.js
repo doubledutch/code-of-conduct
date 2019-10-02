@@ -66,21 +66,25 @@ export default class MakeReportSubView extends Component {
     if (admins.length > 0)
       return (
         <View style={s.table}>
-          {admins.map((person, i) => (
-            <View style={s.userCell} key={i}>
-              <Avatar user={person} size={40} />
-              <Text numberOfLines={2} ellipsizeMode="tail" style={s.name}>{`${person.firstName} ${
-                person.lastName
-              }`}</Text>
-              <View style={{ flex: 1 }} />
-              <TouchableOpacity
-                style={[s.messageButton, this.s.primaryBorder]}
-                onPress={() => client.openURL(`dd://profile/${person.id}`)}
-              >
-                <Text style={[s.buttonText, this.s.primary]}>{t('message')}</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+          {admins.map((person, i) => {
+            const isUser = person.id === this.props.currentUser.id
+            return (
+              <View style={s.userCell} key={i}>
+                <Avatar user={person} size={40} />
+                <Text numberOfLines={2} ellipsizeMode="tail" style={s.name}>{`${person.firstName} ${
+                  person.lastName
+                }`}</Text>
+                <View style={{ flex: 1 }} />
+                {!isUser && <TouchableOpacity
+                  style={[s.messageButton, this.s.primaryBorder]}
+                  onPress={() => client.openURL(`dd://profile/${person.id}`)}
+                >
+                  <Text style={[s.buttonText, this.s.primary]}>{t('message')}</Text>
+                </TouchableOpacity>}
+              </View>
+              )
+            }
+          )}
         </View>
       )
   }

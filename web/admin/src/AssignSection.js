@@ -81,7 +81,7 @@ export default class AssignSection extends Component {
   tableCell = key => {
     const currentState = this.findCurrentState(key)
     return (
-      <div className="codeRow">
+      <div className="codeRow" key={key}>
         <p>{key}</p>
         <div className="flex" />
         {currentState === 'Published' && <p className="statusTextGreen-inline">{currentState}</p>}

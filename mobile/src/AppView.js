@@ -25,7 +25,7 @@ import ViewReportModal from './ViewReportModal'
 
 export default class AppView extends Component {
   renderHome() {
-    const { primaryColor } = this.props
+    const { primaryColor, currentUser } = this.props
     const reports = this.props.reports || []
     return (
       <ScrollView style={{ flex: 1 }}>
@@ -46,6 +46,7 @@ export default class AppView extends Component {
           showModal={this.props.showModal}
           admins={this.props.admins}
           primaryColor={primaryColor}
+          currentUser={currentUser}
         />
       </ScrollView>
     )

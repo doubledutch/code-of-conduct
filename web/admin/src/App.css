@@ -69,13 +69,20 @@ html, body, select{
   width: 280px;
 }
 
+.react-select__placeholder{
+  color: #abbac9 !important;
+}
+
 .react-select__control{
-  height: 43px;
+  height: 42.8px;
+  border: 0.06em solid #abbac9 !important;
+  border-radius: 0.4em !important;
+  margin-top: 0.4em !important;
 }
 
 .selectTitle{
   margin-top: 10px;
-  margin-bottom: 0.4em;
+  margin-bottom: 0px;
 }
 
 .dropdownTitle{
