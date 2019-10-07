@@ -107,7 +107,6 @@ export default class ModalView extends Component {
   }
 
   renderReportModal = () => {
-    // const sample = { value: '', label: 'Select a User', className: 'dropdownText' }
     const users = this.state.search ? this.props.users : []
     const userName = this.state.currentUser.value ? this.state.currentUser : null
     return (
